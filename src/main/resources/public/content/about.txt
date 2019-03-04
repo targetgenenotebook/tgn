@@ -1,0 +1,19 @@
+Target Gene Notebook was developed to enable more efficient linking of genetic associations to functional biological information. This process is essential to translating genetic insights into therapeutic hypotheses and, eventually, drug discovery.  While many browsers and databases provide access to unfiltered genome annotations and genetic results, there is currently no way to maintain group curation of all the relevant information and to integrate it with proprietary experimental data. Target Gene Notebook is an e-notebook to facilitate the organization of results and we encourage the further development of this resource in the community.
+The data loaded in the example databases provided has been downloaded from Ensembl (1).  We provide this data “as is” so you can experiment with the notebook tool.  Data entered manually can be deleted (see the “X S” feature for delete and save at the end of each row of data).
+Target Gene Notebook was supported and implemented at Eisai’s Andover Innovative Medicine Institute in Andover, MA.   We encourage the further development of this resource in the community and will provide source code upon request.
+
+Target Gene Notebook team:
+Eisai (design, implementation and testing):		
+Andrew Kirby
+Janna Hutz
+Jamey Wierzbowski	
+Mary Pat Reeve
+
+Massachusetts General Hospital (design input):
+Mark Daly
+Hailiang Huang
+
+
+1. Andrew Yates, Wasiu Akanni, M. Ridwan Amode, Daniel Barrell, Konstantinos Billis, Denise Carvalho-Silva, Carla Cummins, Peter Clapham, Stephen Fitzgerald, Laurent Gil1 Carlos Garcín Girón, Leo Gordon, Thibaut Hourlier, Sarah E. Hunt, Sophie H. Janacek, Nathan Johnson, Thomas Juettemann, Stephen Keenan, Ilias Lavidas, Fergal J. Martin, Thomas Maurel, William McLaren, Daniel N. Murphy, Rishi Nag, Michael Nuhn, Anne Parker, Mateus Patricio, Miguel Pignatelli, Matthew Rahtz, Harpreet Singh Riat, Daniel Sheppard, Kieron Taylor, Anja Thormann, Alessandro Vullo, Steven P. Wilder, Amonida Zadissa, Ewan Birney, Jennifer Harrow, Matthieu Muffato, Emily Perry, Magali Ruffier, Giulietta Spudich, Stephen J. Trevanion, Fiona Cunningham, Bronwen L. Aken, Daniel R. Zerbino, Paul Flicek
+Ensembl 2016.
+Nucleic Acids Res. 2016 44 Database issue:D710-6.

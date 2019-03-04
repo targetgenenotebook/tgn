@@ -1,0 +1,36 @@
+The following external framworks/libraries are used in TGN:
+
+	jQuery 2.2.4
+		MIT license
+
+	FileSaver.js 1.3.2
+		MIT license
+
+	tablesorter 2.28.14
+		MIT license
+
+	Select2 4.0.3
+		MIT license
+
+	Lightbox2 2.9.0
+		MIT license
+
+	jQuery UI 1.12.1
+		MIT license
+
+	Bootstrap 3.3.7
+		MIT license
+
+	Huebee 2.0.0
+	        MIT license
+
+	Spark micro framework (sparkjava.com)
+		Apache 2 License
+
+	Spark dependencies (Java libraries):
+		sqlite-jdbc 3.7.2
+		gson 2.7
+		commons-lang3 3.4
+		commons-io 2.4
+		jsoup 1.8.1
+		slf4j-simple 1.7.21

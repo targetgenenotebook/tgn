@@ -1,0 +1,66 @@
+General Use
+Is there a user guide?
+Target Gene Notebook (TGN) is designed for the scientist to interact with from top to bottom.  When reviewing the human biology evidence for the target, you begin with the genomic overview that shows which neighboring genes are close to the gene of interest.   
+Below the genomic display the first accordion section allows a user to enter a summary of what they have found on the current target for the next person to view the target.
+The user then moves on to the table of association data (similar to what you would find in GWAS catalog).  The columns of this table are clickable so that you can sort by publication date, p value, effect size, etc.  References are hyperlinked throughout TGN and with one click the user can open the publication in PubMed to look at sample size, population, parameters used for GWAS, etc.  The user can then indicate via the checkbox whether or not they wish to display that association as a track on the genomic region.  In some cases there may be a number of smaller cohorts that are later combined into a meta-analysis and the user may just wish to include the meta-analysis rather than all the individual reports.  Once the user selects the checkbox the track will dynamically appear on the regional display at the top.
+The user can then work down through eQTL data.  
+Data that you have added to the plot can be viewed as credible set tracks or can be toggled to show blocks of data related by LD.  If you wish to change the name of a track you can update the display name in the left-most column (an editable default is provided for convenience).
+Similar to an appendix, all the references for the gene are stored in the last section.  Users can enter additional publications and also details and comments on those references.  Details can be recorded as different types - functional variants, expression data, protein, or clinical.  When details of these different types are recorded, they are then pivoted into the appropriate section so all details of one data type can be reviewed together.
+
+What is a credible set for an association?
+Associations are represented as ‘credible sets’ of variants potentially driving the association. Phenotypes with overlapping/identical credible sets may likely share the same driver variant.  While a different index SNP may be listed in different studies, TGN makes it easy to see whether or not these represent the same risk factor.
+‘Credible sets’ are automatically calculated using 1KG population variation patterns. By default, an index SNP in a published reference will be linked to all other variants with r^2 > 0.6 to it. They can also be manually entered from fine-mapping analysis and can be based on any population from 1KG to facilitate understanding the genetic architecture of the region across different populations.  Credible sets for different populations are available via a dropdown menu.  
+
+Why do some associations share the SNP-indicator track and others form a new group?
+Associations that share the same index SNP and same credible set are grouped together, however, if the index SNP or the credible set is different (possibly due to selecting a different population set) then it will form a new group.
+
+Are credible sets different for eQTLs?
+eQTL data from GTEX (via Ensembl) is LD-pruned to create credible sets as defined above.  In addition to the requirement that variants are at r^2 > 0.6 to the most significant SNP for the eQTL/gene/tissue combination, TGN also requires that that the variant exceeds any tissue-specific significance threshold.
+
+What is the meaning of the ticks on the tracks that appear?
+Each tick mark represents a SNP that is part of the credible set for the association or eQTL.  The tick marks are scaled to indicate the r^2 value.  The index SNP is given a boost of 8 pixels to help it stand out.
+
+What is the meaning of a red tick mark in a track?
+Red tick marks indicate a coding variant in the credible set.
+
+I’m tired of mousing-over each tick mark/box to see what it is, is there a way I can get the information for that track/block more easily?
+Clicking directly on display name in the genomic view or an LD-clustered set of boxes will open a table below the regional display showing all the detailed information for that set of data.  In the table that opens you will find there is additional information not available in the flyover data.
+
+I tried to input an association for my favorite SNP, but it can’t be found in the database?
+The databases are created with all SNPs that Ensembl has available for the region under review.   If your SNP is in Ensembl, it may just be that you are using a later version of the data.
+
+What is the “X S” that appears?
+This indicates an option for manually entering data – it could be for an association, eQTL, reference, detail from a reference, or data types added in the future.   X indicates the option to delete the data (perhaps due to an entry error) and S allows you to save the data into the system.  NB: After entering data in the fields, the first click outside the box will activate the 'S'ave indicator, and then you will need to click it again.  User data manually added can be removed with the “X”, whereas the original data loaded from Ensembl can be hidden but not removed.
+Note that if the data is tied to a reference, the reference should first be loaded via PubMed or other ID first in the “References” section so that the details can then be linked to that reference.
+You must always finish and save (or abandon) one type of manual data entry before moving on to another.
+
+How do I add additional publications that I’d like to keep notes on?
+In the “References” accordion you can add new references by PubMed ID, biorXiv ID, a website or from a local file.  Buttons to add references can be found at the bottom of the section.  Once the paper is in the database you can then record more details from the paper and also leave any general comments.
+
+How can I keep more free-form data in the notebook, perhaps a summary data plot or a crystal structure?
+In the References section you can add “details” from a paper via copy/paste or drag and drop into the box provided.  After saving the data with a comment, you can then indicate which accordion you would like it to roll up into (e.g. Expression, Functional, Clinical, Protein/Structure).  Pivoting the data up into these accordion tabs allows you to look at all details of a particular type together in one place and more easily summarize and understand the findings.
+
+How do I get my screen capture/image into the Details box of the References section?
+You can insert data via copy/paste or drag and drop.
+
+Technical Details
+What is the best browser to run TGN in?
+The best environment for running TGN is Chrome with Javascript and cookies enabled.
+
+Where does the data automatically loaded originate from?
+Data is loaded from Ensembl; the particular version of Ensembl used to build the database is displayed in the title of the “Summary” accordion at the top.
+
+Where can I get the source code?
+We strongly support building this into a community resource.  Please contact TargetGeneNotebook@eisai.com to discuss collaboration and requests for source code.
+
+How can I build a database with my target of interest?
+It’s possible that we can build one for you, or get you set up with the script to build your own databases automatically.  Please contact us for more details.  
+
+How can we track which users have entered data?
+This is a functionality we plan to include in later versions.
+
+Can multiple users access the same database?
+Multiple users can concurrently view the database.  TGN does not provide simultaneous editing, nor does it prevent it, so the results may be unpredictable if multiple users are entering the database concurrently.  Future releases may allow for simultaneous usage.  Changes made through one client are not currently actively pushed to other clients viewing that database.
+
+What libraries/technology did you use to implement the software?
+Our infrastructure goal is that collaborators could use this system to share and distribute information and perhaps even add their own data viewing modules.  To facilitate sharing we used freely available components such as SQLite and SparkJava.  The data for the gene region, association data and variant impact is drawn from Ensembl.
