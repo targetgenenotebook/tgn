@@ -1,4 +1,4 @@
-/*! Widget: output - updated 4/2/2017 (v2.28.6) *//*
+/*! Widget: output - updated 9/27/2017 (v2.29.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * Modified from:
  * HTML Table to CSV: http://www.kunalbabre.com/projects/table2CSV.php (License unknown?)
@@ -7,7 +7,7 @@
  */
 /*jshint browser:true, jquery:true, unused:false */
 /*global jQuery:false, alert:false */
-;(function($){
+;(function($) {
 	'use strict';
 
 	var ts = $.tablesorter,
@@ -74,7 +74,7 @@
 					// process rowspans
 					if ($cell.filter('[rowspan]').length) {
 						rowspanLen = parseInt( $cell.attr('rowspan'), 10) - 1;
-						txt = output.formatData( c, wo, $cell, isHeader );
+						txt = output.formatData( c, wo, $cell, isHeader, indx );
 						for (row = 1; row <= rowspanLen; row++) {
 							if (!tmpRow[rowIndex + row]) { tmpRow[rowIndex + row] = []; }
 							tmpRow[rowIndex + row][cellIndex] = isHeader ? txt : dupe ? txt : '';
@@ -84,7 +84,7 @@
 					if ($cell.filter('[colspan]').length) {
 						colspanLen = parseInt( $cell.attr('colspan'), 10) - 1;
 						// allow data-attribute to be an empty string
-						txt = output.formatData( c, wo, $cell, isHeader );
+						txt = output.formatData( c, wo, $cell, isHeader, indx );
 						for (col = 0; col < colspanLen; col++) {
 							// if we're processing the header & making JSON, the header names need to be unique
 							if ($cell.filter('[rowspan]').length) {
@@ -107,7 +107,7 @@
 					while (typeof tmpRow[rowIndex][cellIndex] !== 'undefined') { cellIndex++; }
 
 					tmpRow[rowIndex][cellIndex] = tmpRow[rowIndex][cellIndex] ||
-						output.formatData( c, wo, $cell, isHeader );
+						output.formatData( c, wo, $cell, isHeader, cellIndex );
 					cellIndex++;
 				}
 			}
@@ -131,8 +131,10 @@
 			return data;
 		},
 
-		process : function(c, wo) {
-			var mydata, $this, $rows, headers, csvData, len, rowsLen, tmp,
+		// optional vars $rows and dump added by TheSin to make
+		// process callable via callback for ajaxPager
+		process : function(c, wo, $rows, dump) {
+			var mydata, $this, headers, csvData, len, rowsLen, tmp,
 				hasStringify = window.JSON && JSON.hasOwnProperty('stringify'),
 				indx = 0,
 				tmpData = (wo.output_separator || ',').toLowerCase(),
@@ -162,10 +164,12 @@
 			headers = output.processRow(c, $this, true, outputJSON);
 
 			// all tbody rows - do not include widget added rows (e.g. grouping widget headers)
-			$rows = $el.children('tbody').children('tr').not(c.selectorRemove);
+			if ( !$rows ) {
+				$rows = $el.children('tbody').children('tr').not(c.selectorRemove);
+			}
 
 			// check for a filter callback function first! because
-			// /^f/.test(function(){ console.log('test'); }) is TRUE! (function is converted to a string)
+			// /^f/.test(function() { console.log('test'); }) is TRUE! (function is converted to a string)
 			$rows = typeof saveRows === 'function' ? $rows.filter(saveRows) :
 				// get (f)iltered, (v)isible, all rows (look for the first letter only), or jQuery filter selector
 				/^f/.test(saveRows) ? $rows.not('.' + (wo.filter_filteredRow || 'filtered') ) :
@@ -210,10 +214,15 @@
 				mydata = outputArray && hasStringify ? JSON.stringify(tmpData) : tmpData.join('\n');
 			}
 
+			if (dump) {
+				return mydata;
+			}
+
 			// callback; if true returned, continue processing
 			if ($.isFunction(wo.output_callback)) {
 				tmp = wo.output_callback(c, mydata, c.pager && c.pager.ajaxObject.url || null);
 				if ( tmp === false ) {
+					output.busy = false;
 					return;
 				} else if ( typeof tmp === 'string' ) {
 					mydata = tmp;
@@ -255,7 +264,7 @@
 			return json;
 		},
 
-		formatData : function(c, wo, $el, isHeader) {
+		formatData : function(c, wo, $el, isHeader, colIndex) {
 			var attr = $el.attr(wo.output_dataAttrib),
 				txt = typeof attr !== 'undefined' ? attr : $el.html(),
 				quotes = (wo.output_separator || ',').toLowerCase(),
@@ -279,13 +288,14 @@
 			// JSON & array outputs don't need quotes
 			quotes = separator ? false : wo.output_wrapQuotes || wo.output_regex.test(result) || output.regexQuote.test(result);
 			result = quotes ? '"' + result + '"' : result;
-
 			// formatting callback - added v2.22.4
 			if ( typeof wo.output_formatContent === 'function' ) {
 				return wo.output_formatContent( c, wo, {
-					isHeader : isHeader,
+					isHeader : isHeader || false,
 					$cell : $el,
-					content : result
+					content : result,
+					columnIndex: colIndex,
+					parsed: c.parsers[colIndex].format(result, c.table, $el[0], colIndex)
 				});
 			}
 
@@ -402,11 +412,11 @@
 			output_popupStyle     : 'width=500,height=300',
 			output_saveFileName   : 'mytable.csv',
 			// format $cell content callback
-			output_formatContent  : null, // function(config, widgetOptions, data){ return data.content; }
+			output_formatContent  : null, // function(config, widgetOptions, data) { return data.content; }
 			// callback executed when processing completes
 			// return true to continue download/output
 			// return false to stop delivery & do something else with the data
-			output_callback      : function(config, data){ return true; },
+			output_callback      : function(/* config, data */) { return true; },
 			// JSON callback executed when a colspan is encountered in the header
 			output_callbackJSON  : function($cell, txt, cellIndex) { return txt + '(' + (cellIndex) + ')'; },
 			// the need to modify this for Excel no longer exists
@@ -421,7 +431,7 @@
 		init: function(table, thisWidget, c) {
 			output.init(c);
 		},
-		remove: function(table, c){
+		remove: function(table, c) {
 			output.remove(c);
 		}
 

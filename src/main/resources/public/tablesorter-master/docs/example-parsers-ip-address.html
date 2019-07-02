@@ -48,16 +48,18 @@
 		<em>NOTE!</em>
 	</p>
 	<ul>
-		<li><span class="label warning">NOTE</span> The default "ipAddress" parser (also named "ipv4Address") is included with the original tablesorter; it was moved to the <code>parser-network.js</code> file in <span class="version">v2.18.0</span>.</li>
+		<li><span class="label warning">NOTE</span> The default "ipAddress" parser (also named "ipv4Address") is included with the original tablesorter; it was moved to the <code>parser-network.js</code> file in <span class="version">v2.18.0</span>.<br><br></li>
+
+		<li>In <span class="version">v2.29.3</span>, all included parsers were changed to return a text representation of the network address. The specific issue was that the parsed IPv6 numerical values were too large for javascript to properly recognize the number.</li>
 		<li>A parser for IPv6 was added in <span class="version">v2.12</span> and named "ipv6Address":
 			<ul>
 				<li>Unlike some other custom parsers, this one will auto-detect &amp; check for a valid IPv6 address since the same address can be represented in many different ways. Some examples are shown in the demo table below.</li>
-				<li>IPv6 addresses are stored in the cache in their canonical decimal form, without the colons, for faster &amp; easier numerical sorting.</li>
+				<li>IPv6 addresses are stored in the cache in their canonical decimal form, for faster &amp; easier numerical sorting.</li>
 				<li><a href="../test.html">Extensive unit tests</a> are included with this parser.</li>
 			</ul>
 		</li>
 		<li>If the parser doesn't auto-detect which column has IPv6 addresses, use the headers sorter option to set it:
-			<pre class="prettyprint lang-javascript">$(function(){
+			<pre class="prettyprint lang-javascript">$(function() {
 $('table').tablesorter({
   headers: {
     1: { sorter: 'MAC' },
@@ -105,7 +107,7 @@ $('table').tablesorter({
 &lt;link rel=&quot;stylesheet&quot; href=&quot;../css/theme.blue.css&quot;&gt;
 &lt;script src=&quot;../js/jquery.tablesorter.js&quot;&gt;&lt;/script&gt;
 
-&lt;!-- load ipv6 parser --&gt;
+&lt;!-- load mac, ipv4 and ipv6 parsers --&gt;
 &lt;script src=&quot;../js/parsers/parser-network.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
 $(function() {
@@ -116,8 +118,8 @@ $(function() {
     sortList: [[1, 0]],
     headers: {
       1: { sorter: 'MAC' },
-      // 2: { sorter: 'ipAddress' }, this parser is auto-detected
-      3: { sorter: 'ipv6Address' }
+      // 2: { sorter: 'ipAddress' }, this parser is auto-detected (alias for 'ipv4Address')
+      3: { sorter: 'ipv6Address' } // this parser is also auto-detected
     }
   });
 
@@ -128,7 +130,7 @@ $(function() {
 </div>
 
 <script>
-$(function(){
+$(function() {
 	// add parsed values to columns [0,1]
 	addParsedValues($('table'), [1,2,3]);
 });

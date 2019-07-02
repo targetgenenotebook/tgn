@@ -4,8 +4,6 @@ module.exports = function( grunt ) {
 
 	var pkg = grunt.file.readJSON( 'package.json' ),
 		tasks,
-		widgetFilePrefix,
-		widgetFileSuffix,
 
 		defaults = {
 			dependencies : {
@@ -34,29 +32,30 @@ module.exports = function( grunt ) {
 				parserSuffix: '.js'
 			},
 			wrapperUMD: {
-				// tablesorter core
-				coreBanner: '(function(factory) {\n' +
-					"	if (typeof define === 'function' && define.amd) {\n" +
-					"		define(['jquery'], factory);\n" +
-					"	} else if (typeof module === 'object' && typeof module.exports === 'object') {\n" +
-					"		module.exports = factory(require('jquery'));\n" +
-					'	} else {\n' +
-					'		factory(jQuery);\n' +
-					'	}\n' +
-					'}(function(jQuery) {\n\n',
+				// tablesorter core, widgets & parsers
+				coreBanner: '(function(factory){' +
+					"if (typeof define === 'function' && define.amd){" +
+							"define(['jquery'], factory);" +
+						"} else if (typeof module === 'object' && typeof module.exports === 'object'){" +
+							"module.exports = factory(require('jquery'));" +
+						'} else {' +
+							'factory(jQuery);' +
+						'}' +
+					'}(function(jQuery){\n',
 				// widgets wrapper & combined wrapper - may need a separate entry when this wrapper is redefined to make
 				// widgets a dependency of the core (see https://github.com/Mottie/tablesorter/issues/855)
 				banner: '<%= pkg.banner %>/* Includes widgets ( <%= pkg.selectedWidgets %> <%= pkg.selectedParsers %>) */\n' +
-					'(function(factory) {\n' +
-					"	if (typeof define === 'function' && define.amd) {\n" +
-					"		define(['jquery'], factory);\n" +
-					"	} else if (typeof module === 'object' && typeof module.exports === 'object') {\n" +
-					"		module.exports = factory(require('jquery'));\n" +
-					'	} else {\n' +
-					'		factory(jQuery);\n' +
-					'	}\n' +
-					'}(function(jQuery) {\n\n',
-				footer: '\nreturn jQuery.tablesorter;\n}));\n'
+					'(function(factory){' +
+						"if (typeof define === 'function' && define.amd){" +
+							"define(['jquery'], factory);" +
+						"} else if (typeof module === 'object' && typeof module.exports === 'object'){" +
+							"module.exports = factory(require('jquery'));" +
+						'} else {' +
+							'factory(jQuery);' +
+						'}' +
+					'}(function(jQuery) {\n',
+				footer: 'return jQuery.tablesorter;}));\n',
+				footerMain: 'return jQuery;}));\n'
 			},
 			noModBanner: '/*** This file is dynamically generated ***\n' +
 				'█████▄ ▄████▄   █████▄ ▄████▄ ██████   ███████▄ ▄████▄ █████▄ ██ ██████ ██  ██\n' +
@@ -108,7 +107,7 @@ module.exports = function( grunt ) {
 
 	// minified banner template - updated ##/##/20## (v2.##.##)
 	pkg.banner = '/*! <%= pkg.name %> (FORK) - updated ' +
-		'<%= grunt.template.today("mm-dd-yyyy") %> (v<%= pkg.version %>)*/\n';
+		'<%= grunt.template.today("yyyy-mm-dd") %> (v<%= pkg.version %>)*/\n';
 
 	pkg.buildWidget = defaults.standardWidgetFileName;
 	pkg.buildCombined = 'jquery.tablesorter.combined.js';
@@ -280,11 +279,16 @@ module.exports = function( grunt ) {
 			options: {
 				output: {
 					comments: /^!/,
-					beautify: false
+					beautify: false,
+					ie8: true
 				},
 				report: 'gzip'
 			},
 			allFiles: {
+				options: {
+					banner: defaults.wrapperUMD.coreBanner,
+					footer: defaults.wrapperUMD.footerMain
+				},
 				files: [{
 					expand: true,
 					cwd: './js/', // Src matches are relative to this path.
@@ -294,7 +298,7 @@ module.exports = function( grunt ) {
 						'!_test-*.js',
 						'!**/_test-*.js',
 						'!*.min.js',
-						'!**/semver.js'
+						'!**/semver*.js',
 					],
 					dest: 'dist/js/',
 					ext: '.min.js', // Dist files will have this extension.
@@ -314,9 +318,26 @@ module.exports = function( grunt ) {
 				}]
 			},
 			pageraddon: {
+				options: {
+					banner: defaults.wrapperUMD.coreBanner,
+					footer: defaults.wrapperUMD.footerMain
+				},
 				files: {
 					'dist/js/extras/jquery.tablesorter.pager.min.js': [ 'addons/pager/*.js' ]
 				}
+			},
+			// Semver doesn't need a wrapper
+			semver: {
+				files: [{
+					expand: true,
+					cwd: './js/', // Src matches are relative to this path.
+					src: [
+						'**/semver-mod.js',
+					],
+					dest: 'dist/js/',
+					ext: '.min.js', // Dist files will have this extension.
+					extDot: 'last'  // Extensions in filenames begin after this dot
+				}]
 			}
 		},
 
@@ -427,7 +448,7 @@ module.exports = function( grunt ) {
 	});
 
 	function escapeRegExp(str) {
-		return str.replace(/[$()*+\-.\/?[\\\]^{|}]/g, "\\$&");
+		return str.replace(/[$()*+\-.\/?[\\\]^{|}]/g, '\\$&');
 	}
 
 	// update tablesorter.jquery.json file version numbers to match the package.json version

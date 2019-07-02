@@ -489,7 +489,7 @@ jQuery(function($){
 	sample1 = {
 		'text'      : { 'test': 'test', 'TesT': 'test', '\u00e1 test': '\u00e1 test' },
 		'currency'  : { '\u00a31': 1, '($2.23)': -2.23, '5\u20ac': 5, '(11\u00a4)': -11, '500\u00a5': 500, '25\u00a2': 25, '$1,000.50': 1000.5 },
-		'ipAddress' : { '255.255.255.255': 255255255255, '32.32.32.32': 32032032032, '1.1.1.1': 1001001001 },
+		'ipAddress' : { '255.255.255.255': '255.255.255.255', '32.32.32.32': '032.032.032.032', '1.1.1.1': '001.001.001.001' },
 		'url'       : { 'http://google.com': 'google.com', 'ftp://fred.com': 'fred.com', 'https://github.com': 'github.com' },
 		'isoDate'   : { '2012/12/12': returnTime('2012/12/12'), '2012-12/12': returnTime('2012/12/12'), '2013-1-1': returnTime('2013/1/1'), '2013/1/1 12:34:56 AM': returnTime('2013/1/1 12:34:56 AM') },
 		'percent'   : { '100%': 100, '22%': 22, '%2': 2, '2 %': 2, '(4%)': -4, '1,234.56    %': 1234.56 },
@@ -982,13 +982,19 @@ jQuery(function($){
 		test has widget function
 	************************************************/
 	QUnit.test( 'has & remove zebra widget', function(assert) {
-		assert.expect(3);
+		var done = assert.async();
+		assert.expect(4);
 		c2.widgets = [ 'zebra' ];
-		$table2.trigger('applyWidgets');
-		assert.equal( ts.hasWidget(  table2, 'zebra'), true, 'table has zebra widget (using table element object)' );
-		assert.equal( ts.hasWidget( $table2, 'zebra'), true, 'table has zebra widget (using jQuery table object)' );
-		ts.removeWidget( table2, 'zebra' );
-		assert.equal( zebra() && c2.widgets.length === 0, false, 'zebra removed' );
+		$table2.trigger('applyWidgets', function() {
+			assert.equal( ts.hasWidget(  table2, 'zebra'), true, 'table has zebra widget (using table element object)' );
+			assert.equal( ts.hasWidget( $table2, 'zebra'), true, 'table has zebra widget (using jQuery table object)' );
+			$table2.one( 'widgetRemoveEnd', function() {
+				assert.ok( true, 'widgetRemoveEnd fired');
+				assert.equal( zebra() && c2.widgets.length === 0, false, 'zebra removed' );
+				done();
+			});
+			ts.removeWidget( table2, 'zebra' );
+		});
 	});
 
 	/************************************************

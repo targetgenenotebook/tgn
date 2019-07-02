@@ -85,10 +85,10 @@
 });</script>
 
 	<script>
-	$(function(){
+	$(function() {
 
 		// filter button demo code
-		$('button.filter').click(function(){
+		$('button.filter').click(function() {
 			var col = $(this).data('column'),
 				txt = $(this).data('filter');
 			$('table').find('.tablesorter-filter').val('').eq(col).val(txt);
@@ -97,7 +97,7 @@
 		});
 
 		// toggle zebra widget
-		$('button.zebra').click(function(){
+		$('button.zebra').click(function() {
 			var t = $(this).hasClass('btn-success');
 			$('table')
 				.toggleClass('table-striped')[0]
@@ -125,16 +125,29 @@
 <div id="main">
 
 	<div class="alert alert-warning" role="alert">
-		<strong>NOTE!</strong>: Bootstrap v4.x is still in alpha development. Do not use it, or the <code>theme.bootstrap_4.css</code> theme file in production until a stable release is available.
+		<strong>NOTE!</strong>: Bootstrap v4.x is still in beta development. We do not recommend using it, or the <code>theme.bootstrap_4.css</code> theme file <em>in production</em> until a stable release is available.
 	</div>
 
 	<ul>
-		<li>Go to <a href="example-option-theme-bootstrap-v3.html">Bootstrap v3.x</a> or <a href="example-option-theme-bootstrap-v2.html">Bootstrap v2.x</a> demo.<br><br></li>
+		<li>Go to <a href="example-option-theme-bootstrap-v3.html">Bootstrap v3.x</a> or <a href="example-option-theme-bootstrap-v2.html">Bootstrap v2.x</a> demo.</li>
+		<li>Get the current version of <a href="https://getbootstrap.com/">Bootstrap</a> (now v4.x).<br><br></li>
 
-		<li>In <span class="version updated">v2.28.4</span>, added this Bootstrap v4.x demo.</li>
-		<li>This demo uses <a href="https://v4-alpha.getbootstrap.com/">Bootstrap v4.x</a> (currently v4.0.0-alpha.6).</li>
-		<li>This version of the theme <strong>no longer requires the UITheme widget</strong>!</li>
-		<li>For more information like revision history of this theme &amp; why there is a button to enable/disable the zebra widget, please see the <a href="example-option-theme-bootstrap-v3.html">Bootstrap v3.x demo</a>.</li>
+		<li>In <span class="version updated">v2.29.3</span>
+			<ul>
+				<li>Updated to use Bootstrap v4.0.0-beta.2.</li>
+				<li>Updated theme v4 by changing <code>table-inverse</code> to <code>table-dark</code>.</li>
+				<li>Updated theme v4 by changing <code>thead-inverse</code> to <code>thead-dark</code>.</li>
+			</ul>
+		</li>
+		<li>In <span class="version updated">v2.29.0</span>, updated to use Bootstrap v4.0.0-beta.</li>
+		<li>In <span class="version">v2.28.4</span>, added this Bootstrap v4.0.0-alpha.6 demo.</li>
+		<li>Notes:
+			<ul>
+				<li>This version of the theme <strong>no longer requires the UITheme widget</strong>!</li>
+				<li>Bootstrap v4.x no longer includes fonts or images, so I didn't bother including Font Awesome icons on this demo page.</li>
+				<li>For more information like revision history of this theme &amp; why there is a button to enable/disable the zebra widget, please see the <a href="example-option-theme-bootstrap-v3.html">Bootstrap v3.x demo</a>.</li>
+			</ul>
+		</li>
 	</ul>
 
 	<h1>Demo</h1>
@@ -147,7 +160,7 @@
 	<br>
 
 	<div id="demo"><table class="table table-bordered table-striped">
-	<thead> <!-- add class="thead-inverse" for a dark header -->
+	<thead class="thead-dark"> <!-- add class="thead-light" for a light header -->
 		<tr>
 			<th>Name</th>
 			<th>Major</th>

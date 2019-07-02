@@ -19,7 +19,7 @@
 	th { width: 16.7%; }
 	#result1, #result2 { color: red; font-size: .8em; font-weight: normal; vertical-align: text-top; }
 	</style>
-	<script src="../dist/js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.js"></script>
 
 <script id="js">$(function() {
 	$('#table1').tablesorter({
@@ -43,7 +43,7 @@
 <script>
 $(function() {
 	// show sortList
-	$('table').on('sortEnd', function(){
+	$('table').on('sortEnd', function() {
 		var indx,
 			list = '&nbsp;[ ',
 			sortList = this.config.sortList,

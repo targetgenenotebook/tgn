@@ -79,7 +79,7 @@ table.tablesorter tbody tr.even.checked td {
 	<link rel="stylesheet" href="../addons/pager/jquery.tablesorter.pager.css">
 	<script src="../addons/pager/jquery.tablesorter.pager.js"></script>
 	<script>
-	$(function(){
+	$(function() {
 		$('#output-options').tablesorter({
 			theme: 'bootstrap',
 			widthFixed : true,
@@ -90,7 +90,7 @@ table.tablesorter tbody tr.even.checked td {
 		// External search
 		// buttons set up like this:
 		// <button type="button" data-filter-column="4" data-filter-text="2?%">Saved Search</button>
-		$('button[data-filter-column]').click(function(){
+		$('button[data-filter-column]').click(function() {
 			/*** first method *** data-filter-column="2" data-filter-text="!son"
 				add search value to Discount column (zero based index) input */
 			var filters = [],
@@ -134,9 +134,14 @@ table.tablesorter tbody tr.even.checked td {
 			output_wrapQuotes    : false,       // wrap every cell output in quotes
 			output_popupStyle    : 'width=580,height=310',
 			output_saveFileName  : 'mytable.csv',
-			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
-			output_callbackJSON  : function($cell, txt, cellIndex) {
-				return txt + '(' + cellIndex + ')';
+			// callback executed after the content of the table has been processed
+			output_formatContent : function(config, widgetOptions, data) {
+				// data.isHeader (boolean) = true if processing a header cell
+				// data.$cell = jQuery object of the cell currently being processed
+				// data.content = processed cell content (spaces trimmed, quotes added/replaced, etc)
+				// data.columnIndex = column in which the cell is contained
+				// data.parsed = cell content parsed by the associated column parser
+				return data.content;
 			},
 			// callback executed when processing completes
 			output_callback      : function(config, data, url) {
@@ -144,7 +149,10 @@ table.tablesorter tbody tr.even.checked td {
 				// return true OR modified data (v2.25.1) to continue download/output
 				return true;
 			},
-
+			// callbackJSON used when outputting JSON & any header cells has a colspan - unique names required
+			output_callbackJSON  : function($cell, txt, cellIndex) {
+				return txt + '(' + cellIndex + ')';
+			},
 			// the need to modify this for Excel no longer exists
 			output_encoding      : 'data:application/octet-stream;charset=utf8,',
 			// override internal save file code and use an external plugin such as
@@ -177,21 +185,21 @@ table.tablesorter tbody tr.even.checked td {
 	// set up download buttons for two table groups
 	var demos = ['.group1', '.group2'];
 
-	$.each(demos, function(groupIndex){
+	$.each(demos, function(groupIndex) {
 		var $this = $(demos[groupIndex]);
 
-		$this.find('.dropdown-toggle').click(function(e){
+		$this.find('.dropdown-toggle').click(function(e) {
 			// this is needed because clicking inside the dropdown will close
 			// the menu with only bootstrap controlling it.
 			$this.find('.dropdown-menu').toggle();
 			return false;
 		});
 		// make separator & replace quotes buttons update the value
-		$this.find('.output-separator').click(function(){
+		$this.find('.output-separator').click(function() {
 			$this.find('.output-separator').removeClass('active');
 			var txt = $(this).addClass('active').html();
 			$this.find('.output-separator-input').val( txt );
-			$this.find('.output-filename').val(function(i, v){
+			$this.find('.output-filename').val(function(i, v) {
 				// change filename extension based on separator
 				var filetype = (txt === 'json' || txt === 'array') ? 'js' :
 					txt === ',' ? 'csv' : 'txt';
@@ -199,18 +207,18 @@ table.tablesorter tbody tr.even.checked td {
 			});
 			return false;
 		});
-		$this.find('.output-quotes').click(function(){
+		$this.find('.output-quotes').click(function() {
 			$this.find('.output-quotes').removeClass('active');
 			$this.find('.output-replacequotes').val( $(this).addClass('active').text() );
 			return false;
 		});
 		// header/footer toggle buttons
-		$this.find('.output-header, .output-footer').click(function(){
+		$this.find('.output-header, .output-footer').click(function() {
 			$(this).toggleClass('active');
 		});
 		// clicking the download button; all you really need is to
 		// trigger an "output" event on the table
-		$this.find('.download').click(function(){
+		$this.find('.download').click(function() {
 			var typ,
 				$table = $this.find('table'),
 				wo = $table[0].config.widgetOptions,
@@ -271,6 +279,8 @@ table.tablesorter tbody tr.even.checked td {
 
 			<h4>Changes</h4>
 			<ul>
+				<li>In <span class="version">v2.30.5</span>, the <a class="intlink" href="#output_formatcontent">output_formatContent</a> callback data parameter now includes the column index and parsed value for the cell.</li>
+				<li>In <span class="version">v2.29.0</span>, updated internal function parameters to make it easier to output all table data from the server without modifying the current table, or changing the pager size or page. See the modified <code>output_callback</code> code in the <a class="intlink" href="#setup_example_php">Output all data</a> section.</li>
 				<li>In <span class="version">v2.28.5</span>, triggering of the "outputTable" event multiple times in rapid succession (within 600 milliseconds) will now prevent the opening of multiple popups or cause mutliple downloads.</li>
 				<li>In <span class="version">v2.28.4</span>,
 					<ul>
@@ -280,15 +290,15 @@ table.tablesorter tbody tr.even.checked td {
 					</ul>
 				</li>
 				<li>In <span class="version">v2.27.0</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> now includes a <code>url</code> parameter.</li>
-				<li>In <span class="version">v2.25.2</span>, updated the <a class="intlink" href="#output_saverows"><code>output_saveRows</code></a> option to accept a function.</li>
-				<li>In <span class="version">v2.25.1</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> can return modified data instead of a boolean.</li>
-				<li>In <span class="version">v2.22.4</span>, added <a class="intlink" href="#output_formatcontent"><code>output_formatContent</code></a> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
 			</ul>
 
 			<div class="accordion start-closed">
 				<h3 id="old-notes"><a href="#">Older Notes</a></h3>
 				<div>
 					<ul>
+						<li>In <span class="version">v2.25.2</span>, updated the <a class="intlink" href="#output_saverows"><code>output_saveRows</code></a> option to accept a function.</li>
+						<li>In <span class="version">v2.25.1</span>, the <a class="intlink" href="#output_callback"><code>output_callback</code></a> can return modified data instead of a boolean.</li>
+						<li>In <span class="version">v2.22.4</span>, added <a class="intlink" href="#output_formatcontent"><code>output_formatContent</code></a> callback function which allows for extra formatting of cell content (e.g. convert <code>'&amp;amp;'</code> &rarr; <code>'&amp;'</code>).</li>
 						<li>In <span class="version">v2.22.2</span>,
 							<ul>
 								<li>The data-attribute used by the <code>output_dataAttrib</code> can now be an empty string.</li>
@@ -405,7 +415,7 @@ table.tablesorter tbody tr.even.checked td {
 			<pre class="prettyprint lang-js">$(function () {
     var $table = $('table');
 
-    $('.download').click(function(){
+    $('.download').click(function() {
         // tell the output widget do it's thing
         $table.trigger('outputTable');
     });
@@ -416,7 +426,7 @@ table.tablesorter tbody tr.even.checked td {
     });
 });</pre>
 		Modification of the <code>.htaccess</code> is no longer required
-			<div class="fade">
+			<div class="ts-fade">
 			<h4>.htaccess</h4>
 			The Content-disposition headers <em>may need to be set</em> in order to make downloads work properly in IE. So <code>.htaccess</code> can look like:
 			<pre class="prettyprint lang-xml">&lt;FilesMatch "\.(?i:csv|txt)$"&gt;
@@ -427,10 +437,23 @@ table.tablesorter tbody tr.even.checked td {
 		</div>
 
 		<h3><a href="#">Setup Example (php)</a></h3>
+
 		<div>
-			Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for sharing this setup which includes the necessary php to allow file download with the proper filename and extension (<a href="https://gist.github.com/TheSin-/3303c23f033bd973bf34">original Gist</a>)
-			<p></p>
-			<script src="https://gist.github.com/TheSin-/3303c23f033bd973bf34.js"></script>
+			<div class="accordion start-closed">
+				<h3><a href="#">Basic Example</a></h3>
+				<div>
+					Thanks to <a href="https://github.com/TheSin-">TheSin-</a> for sharing this setup which includes the necessary php to allow file download with the proper filename and extension (<a href="https://gist.github.com/TheSin-/3303c23f033bd973bf34">original Gist</a>)
+					<p></p>
+					<script src="https://gist.github.com/TheSin-/3303c23f033bd973bf34.js"></script>
+				</div>
+
+				<h3><a href="#">Output all data</a></h3>
+				<div>
+					This code example can be used in <span class="version updated">v2.29.0+</span> to load in all data to output it directly. It will not manipulate the data currently in the table.
+					<p></p>
+					<script src="https://gist.github.com/TheSin-/ce24a9b551ae3ebd8f4828bae7ea572d.js"></script>
+				</div>
+			</div>
 		</div>
 
 		<h3><a href="#">Rowspan and colspan</a></h3>
@@ -788,7 +811,7 @@ line,value1,value2,value3
 					<tr id="output_formatcontent">
 						<td><a href="#" class="permalink">output_formatContent</a></td>
 						<td>null</td>
-						<td>This callback is executed after the content of a table cell has been processed.
+						<td>This callback is executed after the content of a table cell has been processed (<span class="version">v2.22.4</span>; <span class="version updated">2.30.5</span>).
 							<div class="collapsible">
 								<br>
 								Default setting &amp; how to use this option:
@@ -796,6 +819,8 @@ line,value1,value2,value3
 	// data.isHeader (boolean) = true if processing a header cell
 	// data.$cell = jQuery object of the cell currently being processed
 	// data.content = processed cell content (spaces trimmed, quotes added/replaced, etc)
+	// data.columnIndex = column in which the cell is contained (added v2.30.5)
+	// data.parsed = cell content parsed by the associated column parser (added v2.30.5)
 	// **********
 	// use data.$cell.html() to get the original cell content
 	return data.content
@@ -833,7 +858,7 @@ line,value1,value2,value3
 									</li>
 								</ul>
 								Default setting:
-								<pre class="prettyprint lang-js">function(config, data, url){
+								<pre class="prettyprint lang-js">function(config, data, url) {
     // return data.replace( /Mary Smith/g, 'Mary Smith-Jones' ); // v2.25.1+
     return true;
 }</pre>
@@ -850,7 +875,7 @@ line,value1,value2,value3
     // entire table using the current filters, sort, etc.
     if (url) {
       return $.getJSON(url + "&csv=1")
-        .done(function(data){
+        .done(function(data) {
           return data.csv;
         })
         .fail(function() {
@@ -891,7 +916,7 @@ line,value1,value2,value3
 								<span class="label warning">Note</span> The trailing comma is important!
 								<hr>
 								The information below is no longer relavant:
-								<div class="fade">
+								<div class="ts-fade">
 								With the default settings (utf-8 no BOM), Excel does not properly encode accented characters unless the csv file is imported. Depending on the characters used, there are various methods which will allow proper encoding, but no one method is ideal. So this option can be set to allow the user to try different encodings. Set it as follows:
 								<pre class="prettyprint lang-js">// output data type (with BOM or Windows-1252 is needed for excel)
 // NO BOM   : 'data:text/csv;charset=utf8,'
@@ -956,8 +981,8 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 					<label>Separator: <input class="output-separator-input" type="text" size="2" value="," /></label>
 					<button type="button" class="output-separator btn btn-default btn-xs active" title="comma">,</button>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="semi-colon">;</button>
-					<button type="button" class="output-separator btn btn-default btn-xs" title="tab">	</button>
-					<button type="button" class="output-separator btn btn-default btn-xs" title="space"> </button>
+					<button type="button" class="output-separator btn btn-default btn-xs" title="tab">&#x21e5;</button>
+					<button type="button" class="output-separator btn btn-default btn-xs" title="space">&#x2423;</button>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="output JSON">json</button>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="output Array (see note)">array</button>
 				</li>
@@ -1085,8 +1110,8 @@ $.tablesorter.output.replaceTab = '\x09';</pre>
 					<label>Separator: <input class="output-separator-input" type="text" size="2" value="," /></label>
 					<button type="button" class="output-separator btn btn-default btn-xs active" title="comma">,</button>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="semi-colon">;</button>
-					<button type="button" class="output-separator btn btn-default btn-xs" title="tab">	</button>
-					<button type="button" class="output-separator btn btn-default btn-xs" title="space"> </button>
+					<button type="button" class="output-separator btn btn-default btn-xs" title="tab">&#x21e5;</button>
+					<button type="button" class="output-separator btn btn-default btn-xs" title="space">&#x2423;</button>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="output JSON">json</button>
 					<button type="button" class="output-separator btn btn-default btn-xs" title="output Array (see note)">array</button>
 				</li>

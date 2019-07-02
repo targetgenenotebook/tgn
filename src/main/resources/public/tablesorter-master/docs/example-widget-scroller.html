@@ -8,7 +8,6 @@
 	<script src="js/jquery-latest.min.js"></script>
 
 	<!-- Demo stuff -->
-	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 	<script src="js/jquery-ui.min.js"></script>
 	<link rel="stylesheet" href="css/jq.css">
 	<link href="css/prettify.css" rel="stylesheet">
@@ -16,7 +15,7 @@
 	<script src="js/docs.js"></script>
 
 	<!-- Tablesorter: theme -->
-	<link class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
+	<link id="ui-theme" class="ui-theme" rel="stylesheet" href="css/jquery-ui.min.css">
 	<link class="ui-theme" rel="stylesheet" href="../css/theme.jui.css">
 	<link class="theme default" rel="stylesheet" href="../css/theme.default.css">
 	<link class="theme blue" rel="stylesheet" href="../css/theme.blue.css">
@@ -54,8 +53,8 @@
 
 /* using-x-theme added by the demo code */
 .using-jui-theme .tablesorter-scroller-fixed:after {
-	/* set to -2px for jquery ui themes; use "left" here for RTL pages */
-	right: -2px;
+	/* use "left" here for RTL pages */
+	right: 0;
 }
 .using-green-theme .tablesorter-scroller-fixed:after,
 .using-black-ice-theme .tablesorter-scroller-fixed:after,
@@ -73,7 +72,24 @@
 	min-width: 60px;
 }</style>
 
-	<script id="js">$(function(){
+	<!-- jQuery UI theme switcher: https://github.com/pontikis/jui_theme_switch/ -->
+	<style>
+	.switcher_container { padding: 5px; }
+	.switcher_list { padding: 2px; }
+	.switcher_label { margin-right: 5px; }
+	</style>
+	<script src="js/jquery.jui_theme_switch.min.js"></script>
+	<script>
+	$(function() {
+		$('#switcher').jui_theme_switch({
+			stylesheet_link_id : 'ui-theme',
+			switcher_label     : 'Select jQuery UI Theme:',
+			default_theme      : 'cupertino',
+			datasource_url     : 'assets/theme_switcher.json'
+		});
+	});
+	</script>
+	<script id="js">$(function() {
 
 	$('.tablesorter').tablesorter({
 		theme: 'jui',
@@ -149,17 +165,19 @@ $(function() {
 		o += '<option value="' + t[i] + '">' + t[i] + '</option>';
 	}
 
-	$('select')
+	$('#theme')
 		.append(o)
 		.val('jui')
-		.change(function(){
+		.change(function() {
 			var theme = $(this).val().toLowerCase();
 
+			// show jui select only if jQuery UI selected
+			$('#switcher').toggle(theme === 'jui');
 			// add class so the black border fits the theme
 			$('#main').attr( 'class', 'using-' + theme + '-theme' );
 
 			// refresh uitheme widget class names
-			$('#main .tablesorter').each(function(){
+			$('#main .tablesorter').each(function() {
 				if (this.config) {
 					this.config.theme = theme === 'black-ice' ? 'blackice' : theme;
 				}
@@ -170,7 +188,7 @@ $(function() {
 			$(window).trigger('resize');
 		}).change();
 
-	$('button').click(function(){
+	$('button').click(function() {
 		var jth = $jth.text() === 'true',
 			uas = $uas.text() === 'true';
 		if (this.id === 'jthb') {
@@ -178,7 +196,7 @@ $(function() {
 		} else {
 			uas = !uas;
 		}
-		$('.tablesorter-scroller-table table').each(function(){
+		$('.tablesorter-scroller-table table').each(function() {
 			var c = this.config;
 			if (c) {
 				c.widgetOptions.scroller_jumpToHeader = jth;
@@ -313,6 +331,23 @@ $(function() {
 			<ul>
 				<li>This widget <em>can not</em> be applied to the original plugin and requires jQuery version 1.7+ to function properly; if you need to make it work with older versions of jQuery and the plugin, please use <a href="http://tconnell.com/samples/scroller/">this version</a> of the widget.</li>
 				<li>This widget was originally written by <a href="http://tconnell.com/samples/scroller/">Connell & Associates, Inc.</a> and is dual-licensed under the MIT and GPL licenses. It has been modified to work with tablesorter version 2.9+.</li>
+			</ul>
+		</div>
+
+		<h3><a href="#">Incompatibilities</a></h3>
+		<div>
+			The scroller widget is <em>known</em> to be currently incompatible with these widgets (there may be more):
+			<ul>
+				<li>Editable</li>
+				<li>Math</li>
+				<li>Reorder</li>
+				<li>Resizable</li>
+				<li>StickyHeaders</li>
+			</ul>
+			There is partial compatibility with these widgets:
+			<ul>
+				<li>Filter, except for custom <a href="index.html#widget-filter-functions"><code>filter_functions</code></a> and <a href="index.html#widget-filter-formatter"><code>filter_formatter</code></a>
+				</li>
 			</ul>
 		</div>
 
@@ -525,9 +560,10 @@ $(function() {
 	<p><a href="#fixed-demo">Fixed columns</a> | <a href="#wide-demo">Full-width</a> | <a href="#narrow-demo">Half-width</a></p>
 
 	Choose Theme:
-	<select>
+	<select id="theme">
 		<option value="jui">Jquery UI</option>
 	</select><br>
+	<div id="switcher"></div>
 	<br>
 	<button id="jthb" type="button">Toggle</button> scroller_jumpToHeader : <span id="jth">true</span> (see the note above)<span class="remark">*</span>
 	<br>
