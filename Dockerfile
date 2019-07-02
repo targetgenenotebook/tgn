@@ -4,7 +4,7 @@ COPY ./pom.xml ./pom.xml
 COPY ./src ./src
 RUN mvn clean package
 
-FROM openjdk:7-jre
+FROM openjdk:8-jre
 RUN mkdir /tgn_dbs
 WORKDIR /tgn
 COPY --from=MMM /app/target/tgn-1.0-TGN.jar ./

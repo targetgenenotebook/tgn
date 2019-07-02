@@ -1012,9 +1012,9 @@ public class TGN {
 	static String publicFileFolder;
 	static String databaseFolder;
 	static Hashtable<String, Boolean> gene_synchronize_objects = new Hashtable<>();
-	static String backend_version = "1.2.6";
+	static String backend_version = "1.2.7";
 	static String backend_db_version = "1.1";
-	
+
 	public static void main(String[] args) {
 		int port = 4567;
 		if (args.length <1){
@@ -1035,8 +1035,8 @@ public class TGN {
 			e.printStackTrace();
 		}
 
-		spark.Spark.setPort(port);
-		
+		spark.Spark.port(port);
+
 		databaseFolder = storage_dir;
 		staticFileLocation("/public");
 		/*
@@ -1048,1814 +1048,1693 @@ public class TGN {
 		 */
 
 		final boolean dump_log = false;
-		
-		get(new Route("/favicon.ico") {
-			@Override
-			public Object handle(Request request, Response response) {
-				return "";
-			}
+
+		get("/favicon.ico", (request, response) -> {
+			return "";
 		});
-		
-		get(new Route("/index.html") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				try { 
-					String s = GetDBList(sd);
-					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;
-				} catch (Exception ee) {
-					ee.printStackTrace();
-					return "Unable to load page";
-				}
-			}
-		});
-		
-		get(new Route("/") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				try {
-					String s = GetDBList(sd);
-					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;
-				} catch (Exception ee) {
-					ee.printStackTrace();
-					return "Unable to load page";
-				}
-			}
-		});
-		
-		get(new Route("/_tagdb_") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				try {
-					String s = ExistingTagPage(sd);
-					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;					
-				} catch (Exception ee) {
-					ee.printStackTrace();
-					return "Unable to load page";
-				}
-			}
-		});
-		
-		post(new Route("/unreviewedcheckin") {
-			@Override
-			public Object handle(Request request, Response response) {	
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UnreviewedCheckinPostMsg ucpm = null;
-				Gson gson = new Gson();
-				try {
-					ucpm = gson.fromJson(request.body(), UnreviewedCheckinPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!ucpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-				OutgoingUnreviewedCheckinPostMsg oucpm = new OutgoingUnreviewedCheckinPostMsg();
-				oucpm.isok = "notok";
-				try {
-					oucpm.gene_list = UnreviewedCheckin(sd);
-					oucpm.isok = "ok";
-				} catch (Exception ee) {}
-				String s = gson.toJson(oucpm);
+
+		get("/index.html", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			try { 
+				String s = GetDBList(sd);
 				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;	
+				return s;
+			} catch (Exception ee) {
+				ee.printStackTrace();
+				return "Unable to load page";
 			}
 		});
-		
-		post(new Route("/pushweb"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitPushNewWebPostMsg spnwpm = null;
-				Gson gson = new Gson();
-				try {
-					spnwpm = gson.fromJson(request.body(), SubmitPushNewWebPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPushNewWebPostMsg opnwpm = new OutgoingPushNewWebPostMsg();
-					opnwpm.isok = "notok";
-					return gson.toJson(opnwpm);
-				}
-				
-				if (!spnwpm.backend_version.equals(backend_version)) {
-					OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
-					ostpm.isok = "backend mismatch";
-					return gson.toJson(ostpm);	
-				}
-				
+
+		get("/", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			try { 
+				String s = GetDBList(sd);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			} catch (Exception ee) {
+				ee.printStackTrace();
+				return "Unable to load page";
+			}
+		});
+
+		get("/_tagdb_", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			try {
+				String s = ExistingTagPage(sd);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;					
+			} catch (Exception ee) {
+				ee.printStackTrace();
+				return "Unable to load page";
+			}
+		});
+
+		post("/unreviewedcheckin", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UnreviewedCheckinPostMsg ucpm = null;
+			Gson gson = new Gson();
+			try {
+				ucpm = gson.fromJson(request.body(), UnreviewedCheckinPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!ucpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+			OutgoingUnreviewedCheckinPostMsg oucpm = new OutgoingUnreviewedCheckinPostMsg();
+			oucpm.isok = "notok";
+			try {
+				oucpm.gene_list = UnreviewedCheckin(sd);
+				oucpm.isok = "ok";
+			} catch (Exception ee) {}
+			String s = gson.toJson(oucpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;	
+		});
+
+		post("/pushweb", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitPushNewWebPostMsg spnwpm = null;
+			Gson gson = new Gson();
+			try {
+				spnwpm = gson.fromJson(request.body(), SubmitPushNewWebPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPushNewWebPostMsg opnwpm = new OutgoingPushNewWebPostMsg();
 				opnwpm.isok = "notok";
-				try {
-					opnwpm.messages = PushNewWebToDBs(sd, spnwpm);
-					opnwpm.isok = "ok";
-				} catch (Exception ee) {}
-				String s = gson.toJson(opnwpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(opnwpm);
 			}
-		});	
 
-		post(new Route("/savetag") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitSaveTagPostMsg sstpm = null;
-				Gson gson = new Gson();
-				try {
-					sstpm = gson.fromJson(request.body(), SubmitSaveTagPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
-					ostpm.isok = "notok";
-					return gson.toJson(ostpm);
-				}
-				
-				if (!sstpm.backend_version.equals(backend_version)) {
-					OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
-					ostpm.isok = "backend mismatch";
-					return gson.toJson(ostpm);	
-				}
-				
-				/*
-				 * backend_db_version doesn't really apply here since we aren't
-				 * modifying any actual TGN databases, just the tags db
-				 * 
-				 * we should consider versioning of the tags db at some point
-				 * 
-				*/
-				
+			if (!spnwpm.backend_version.equals(backend_version)) {
+				OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
+				ostpm.isok = "backend mismatch";
+				return gson.toJson(ostpm);	
+			}
+
+			OutgoingPushNewWebPostMsg opnwpm = new OutgoingPushNewWebPostMsg();
+			opnwpm.isok = "notok";
+			try {
+				opnwpm.messages = PushNewWebToDBs(sd, spnwpm);
+				opnwpm.isok = "ok";
+			} catch (Exception ee) {}
+			String s = gson.toJson(opnwpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/savetag", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitSaveTagPostMsg sstpm = null;
+			Gson gson = new Gson();
+			try {
+				sstpm = gson.fromJson(request.body(), SubmitSaveTagPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
 				ostpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey("_tags_")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("_tags_", gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get("_tags_");
-				synchronized(sy) {
-					try {
-						resp = SaveTag(sd, sstpm);
-						ostpm.isok = "ok";
-					} catch (Exception ee) {}
-				}
-				if (ostpm.isok.equals("ok")) {
-					ostpm.errors = resp.get(0);
-					ostpm.trtext = resp.get(1);
-					ostpm.tagid = resp.get(2);
-				}
-				String s = gson.toJson(ostpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});		
-		
-		post(new Route("/deletetag") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitDeleteTagPostMsg sdtpm = null;
-				Gson gson = new Gson();
+				return gson.toJson(ostpm);
+			}
+
+			if (!sstpm.backend_version.equals(backend_version)) {
+				OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
+				ostpm.isok = "backend mismatch";
+				return gson.toJson(ostpm);	
+			}
+
+			/*
+			 * backend_db_version doesn't really apply here since we aren't
+			 * modifying any actual TGN databases, just the tags db
+			 * 
+			 * we should consider versioning of the tags db at some point
+			 * 
+			 */
+
+			OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
+			ostpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey("_tags_")) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put("_tags_", gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get("_tags_");
+			synchronized(sy) {
 				try {
-					sdtpm = gson.fromJson(request.body(), SubmitDeleteTagPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!sdtpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-				
-				/*
-				 * backend_db_version doesn't really apply here since we aren't
-				 * modifying any actual TGN databases, just the tags db
-				 * 
-				 * we should consider versioning of the tags db at some point
-				 * 
-				 * we ARE checking all TGN dbs to make sure tag isn't assigned anywhere,
-				 * but for now we'll assume that part of the schema is stable
-				*/
-				
+					resp = SaveTag(sd, sstpm);
+					ostpm.isok = "ok";
+				} catch (Exception ee) {}
+			}
+			if (ostpm.isok.equals("ok")) {
+				ostpm.errors = resp.get(0);
+				ostpm.trtext = resp.get(1);
+				ostpm.tagid = resp.get(2);
+			}
+			String s = gson.toJson(ostpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/deletetag", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitDeleteTagPostMsg sdtpm = null;
+			Gson gson = new Gson();
+			try {
+				sdtpm = gson.fromJson(request.body(), SubmitDeleteTagPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey("_tags_")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("_tags_", gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get("_tags_");
-				String res = "";
-				synchronized(sy) {
-					try {
-						res = DeleteTag(sd, sdtpm);
-						if (res.equals("")) opm.isok = "ok";
-						else opm.isok = res;
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(opm);
 			}
-		});		
-		
-		post(new Route("/updatetagassign") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitTagAssignPostMsg stapm = null;
-				Gson gson = new Gson();
+
+			if (!sdtpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+
+			/*
+			 * backend_db_version doesn't really apply here since we aren't
+			 * modifying any actual TGN databases, just the tags db
+			 * 
+			 * we should consider versioning of the tags db at some point
+			 * 
+			 * we ARE checking all TGN dbs to make sure tag isn't assigned anywhere,
+			 * but for now we'll assume that part of the schema is stable
+			 */
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey("_tags_")) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put("_tags_", gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get("_tags_");
+			String res = "";
+			synchronized(sy) {
 				try {
-					stapm = gson.fromJson(request.body(), SubmitTagAssignPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!stapm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-				
-				OutgoingPostMsg opm = new OutgoingPostMsg();				
+					res = DeleteTag(sd, sdtpm);
+					if (res.equals("")) opm.isok = "ok";
+					else opm.isok = res;
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/updatetagassign", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitTagAssignPostMsg stapm = null;
+			Gson gson = new Gson();
+			try {
+				stapm = gson.fromJson(request.body(), SubmitTagAssignPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey("_tags_")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("_tags_", gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get("_tags_");
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, stapm.db)) {
-							UpdateTagAssign(sd, stapm);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {
-						opm.isok = "notok";
-					}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(opm);
 			}
+
+			if (!stapm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();				
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey("_tags_")) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put("_tags_", gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get("_tags_");
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, stapm.db)) {
+						UpdateTagAssign(sd, stapm);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {
+					opm.isok = "notok";
+				}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
 
-		post(new Route("/get_all_db_list"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				GetAllDBListPostMsg gadlpm = null;
-				Gson gson = new Gson();
-				try {
-					gadlpm = gson.fromJson(request.body(), GetAllDBListPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
+		post("/get_all_db_list", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			GetAllDBListPostMsg gadlpm = null;
+			Gson gson = new Gson();
+			try {
+				gadlpm = gson.fromJson(request.body(), GetAllDBListPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
 
-				if (!gadlpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
+			if (!gadlpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
 
-				OutgoingDBNameListMsg otam = new OutgoingDBNameListMsg();
-				otam.isok = "notok";
+			OutgoingDBNameListMsg otam = new OutgoingDBNameListMsg();
+			otam.isok = "notok";
+			try {
+				otam.db_name_list = GetDBNameList(sd);
+				otam.isok = "ok";
+			} catch (Exception ee) {}
+			String s = gson.toJson(otam);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});		
+
+		post("/get_db_tag_assigns", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			GetDBTagAssignsPostMsg gdtapm = null;
+			Gson gson = new Gson();
+			try {
+				gdtapm = gson.fromJson(request.body(), GetDBTagAssignsPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!gdtapm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+
+			if (!gene_synchronize_objects.containsKey("__tags__")) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put("__tags__", gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get("__tags__");
+			OutgoingTagAssignsMsg otam = new OutgoingTagAssignsMsg();
+			otam.isok = "notok";
+			synchronized(sy) {
 				try {
-					otam.db_name_list = GetDBNameList(sd);
+					otam.db_tag_assigns = GetDBTagList(sd);
 					otam.isok = "ok";
 				} catch (Exception ee) {}
-				String s = gson.toJson(otam);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
 			}
-		});	
-
-		post(new Route("/get_db_tag_assigns"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				GetDBTagAssignsPostMsg gdtapm = null;
-				Gson gson = new Gson();
-				try {
-					gdtapm = gson.fromJson(request.body(), GetDBTagAssignsPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-
-				if (!gdtapm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-				
-				if (!gene_synchronize_objects.containsKey("__tags__")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("__tags__", gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get("__tags__");
-				OutgoingTagAssignsMsg otam = new OutgoingTagAssignsMsg();
-				otam.isok = "notok";
-				synchronized(sy) {
-					try {
-						otam.db_tag_assigns = GetDBTagList(sd);
-						otam.isok = "ok";
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(otam);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});	
-		
-		post(new Route("/get_tag_class_list"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				GetTagClassListPostMsg gtclpm = null;
-				Gson gson = new Gson();
-				try {
-					gtclpm = gson.fromJson(request.body(), GetTagClassListPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-
-				if (!gtclpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-				
-				/*
-				 * backend_db_version doesn't really apply here since we aren't
-				 * reading any actual TGN databases, just the tags db
-				 * 
-				 * we should consider versioning of the tags db at some point
-				 * 
-				*/
-				
-				if (!gene_synchronize_objects.containsKey("__tags__")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("__tags__", gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get("__tags__");
-				OutgoingTagClassListMsg otclm = new OutgoingTagClassListMsg();
-				otclm.isok = "notok";
-				synchronized(sy) {
-					try {
-						otclm.class_list = GetTagClassList(sd);
-						otclm.isok = "ok";
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(otclm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});	
-		
-		post(new Route("/get_pub_list/:symbol"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				GetPubListPostMsg gplpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					gplpm = gson.fromJson(request.body(), GetPubListPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-			
-				if (!gplpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				OutgoingPubListMsg oplm = new OutgoingPubListMsg();
-				oplm.isok = "notok";
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							oplm.pub_list = GetPubList(gs, sd);
-							oplm.isok = "ok";
-						} else {
-							oplm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(oplm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});	
-		
-		post(new Route("/get_pub_and_gene_list/:symbol"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				GetPubAndGeneListPostMsg gpaglpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					gpaglpm = gson.fromJson(request.body(), GetPubAndGeneListPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-			
-				if (!gpaglpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				OutgoingPubAndGeneListMsg opaglm = new OutgoingPubAndGeneListMsg();
-				opaglm.isok = "notok";
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							Vector<String> ret = GetPubAndGeneList(gs, sd);
-							opaglm.pub_list = ret.get(0);
-							opaglm.gene_list = ret.get(1);
-							opaglm.isok = "ok";
-						} else {
-							opaglm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opaglm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
+			String s = gson.toJson(otam);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
-		
-		post(new Route("/updatecomment/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateCommentPostMsg ucpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					ucpm = gson.fromJson(request.body(), UpdateCommentPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!ucpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}
-				
+
+		post("/get_tag_class_list", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			GetTagClassListPostMsg gtclpm = null;
+			Gson gson = new Gson();
+			try {
+				gtclpm = gson.fromJson(request.body(), GetTagClassListPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						if (DBVersionOK(sd, gs)) {
-							UpdateComment(gs, sd, ucpm);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {
-						opm.isok = "notok";
-					}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/createcustomcredibleset/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				CreateCustomCredibleSetPostMsg cccspm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					cccspm = gson.fromJson(request.body(), CreateCustomCredibleSetPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-
-				if (!cccspm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}				
-
-				OutgoingCustomCredibleSetPostMsg ongcspm = new OutgoingCustomCredibleSetPostMsg();
-				ongcspm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = CreateCustomCredibleSet(gs, sd, cccspm);
-							ongcspm.isok = "ok";
-						} else {
-							ongcspm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (ongcspm.isok.equals("ok")) {
-					ongcspm.errors = resp.get(0);
-					ongcspm.csname = resp.get(1);
-				}
-				String s = gson.toJson(ongcspm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(opm);
 			}
-		});
-		
-		post(new Route("/deletegwascustomcredibleset/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				DeleteGWASCustomCredibleSetPostMsg dgcspm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
+
+			if (!gtclpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+
+			/*
+			 * backend_db_version doesn't really apply here since we aren't
+			 * reading any actual TGN databases, just the tags db
+			 * 
+			 * we should consider versioning of the tags db at some point
+			 * 
+			 */
+
+			if (!gene_synchronize_objects.containsKey("__tags__")) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put("__tags__", gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get("__tags__");
+			OutgoingTagClassListMsg otclm = new OutgoingTagClassListMsg();
+			otclm.isok = "notok";
+			synchronized(sy) {
 				try {
-					dgcspm = gson.fromJson(request.body(), DeleteGWASCustomCredibleSetPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!dgcspm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
-				OutgoingOverlapPostMsg opm = new OutgoingOverlapPostMsg();
-				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						if (DBVersionOK(sd, gs)) {
-							Vector<ArrayList<Integer>> v = DeleteGWASCustomCredibleSet(gs, sd, dgcspm);
-							ArrayList<Integer> eqtl_ids = v.elementAt(0);
-							ArrayList<Integer> overlap_counts = v.elementAt(1);
-							ArrayList<Integer> do_redo = v.elementAt(2);
-							opm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-							opm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-							if (do_redo.get(0)==1) opm.sentcontents = GetDBInfo2(gs,sd,2,dgcspm.svg_display_mode,dgcspm.hidenoncoding);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/deleteeqtlcustomcredibleset/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				DeleteEQTLCustomCredibleSetPostMsg decspm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					decspm = gson.fromJson(request.body(), DeleteEQTLCustomCredibleSetPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!decspm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
+					otclm.class_list = GetTagClassList(sd);
+					otclm.isok = "ok";
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(otclm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});		
+
+
+
+		post("/get_pub_list/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			GetPubListPostMsg gplpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				gplpm = gson.fromJson(request.body(), GetPubListPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						if (DBVersionOK(sd, gs)) {
-							boolean redraw = DeleteEQTLCustomCredibleSet(gs, sd, decspm);
-							if (redraw) opm.sentcontents = GetDBInfo2(gs,sd,2,decspm.svg_display_mode,decspm.hidenoncoding);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/updatesourcereview/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateSourceReviewPostMsg usrpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
+				return gson.toJson(opm);
+			}
+
+			if (!gplpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			OutgoingPubListMsg oplm = new OutgoingPubListMsg();
+			oplm.isok = "notok";
+			synchronized(sy) {
 				try {
-					usrpm = gson.fromJson(request.body(), UpdateSourceReviewPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
+					if (DBVersionOK(sd, gs)) {
+						oplm.pub_list = GetPubList(gs, sd);
+						oplm.isok = "ok";
+					} else {
+						oplm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(oplm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});	
+
+		post("/get_pub_and_gene_list/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			GetPubAndGeneListPostMsg gpaglpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				gpaglpm = gson.fromJson(request.body(), GetPubAndGeneListPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!gpaglpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			OutgoingPubAndGeneListMsg opaglm = new OutgoingPubAndGeneListMsg();
+			opaglm.isok = "notok";
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						Vector<String> ret = GetPubAndGeneList(gs, sd);
+						opaglm.pub_list = ret.get(0);
+						opaglm.gene_list = ret.get(1);
+						opaglm.isok = "ok";
+					} else {
+						opaglm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opaglm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});		
+
+		post("/updatecomment/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateCommentPostMsg ucpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				ucpm = gson.fromJson(request.body(), UpdateCommentPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!ucpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {	
+				try {
+					if (DBVersionOK(sd, gs)) {
+						UpdateComment(gs, sd, ucpm);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {
 					opm.isok = "notok";
-					return gson.toJson(opm);
 				}
-				
-				if (!usrpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
-				OutgoingSourceReviewPostMsg osrpm = new OutgoingSourceReviewPostMsg();
-				osrpm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				Vector<String> ret = new Vector<>();
-				synchronized(sy) {	
-					try {
-						if (DBVersionOK(sd, gs)) {
-							ret = UpdateSourceReview(gs, sd, usrpm);
-							osrpm.isok = "ok";
-						} else {
-							osrpm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (osrpm.isok.equals("ok")) {
-					osrpm.unreviewed_count = ret.get(0);
-					osrpm.total_count = ret.get(1);
-				}
-				String s = gson.toJson(osrpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});
-		
-		post(new Route("/savenewgwas/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SaveNewGWASPostMsg sngpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
+
+		post("/createcustomcredibleset/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			CreateCustomCredibleSetPostMsg cccspm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				cccspm = gson.fromJson(request.body(), CreateCustomCredibleSetPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!cccspm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}				
+
+			OutgoingCustomCredibleSetPostMsg ongcspm = new OutgoingCustomCredibleSetPostMsg();
+			ongcspm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {	
 				try {
-					sngpm = gson.fromJson(request.body(), SaveNewGWASPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
-					ongpm.isok = "notok";
-					return gson.toJson(ongpm);
-				}
-				
-				if (!sngpm.backend_version.equals(backend_version)) {
-					OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
-					ongpm.isok = "backend mismatch";
-					return gson.toJson(ongpm);	
-				}	
-				
+					if (DBVersionOK(sd, gs)) {
+						resp = CreateCustomCredibleSet(gs, sd, cccspm);
+						ongcspm.isok = "ok";
+					} else {
+						ongcspm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (ongcspm.isok.equals("ok")) {
+				ongcspm.errors = resp.get(0);
+				ongcspm.csname = resp.get(1);
+			}
+			String s = gson.toJson(ongcspm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/deletegwascustomcredibleset/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			DeleteGWASCustomCredibleSetPostMsg dgcspm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				dgcspm = gson.fromJson(request.body(), DeleteGWASCustomCredibleSetPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!dgcspm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingOverlapPostMsg opm = new OutgoingOverlapPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {	
+				try {
+					if (DBVersionOK(sd, gs)) {
+						Vector<ArrayList<Integer>> v = DeleteGWASCustomCredibleSet(gs, sd, dgcspm);
+						ArrayList<Integer> eqtl_ids = v.elementAt(0);
+						ArrayList<Integer> overlap_counts = v.elementAt(1);
+						ArrayList<Integer> do_redo = v.elementAt(2);
+						opm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+						opm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+						if (do_redo.get(0)==1) opm.sentcontents = GetDBInfo2(gs,sd,2,dgcspm.svg_display_mode,dgcspm.hidenoncoding);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/deleteeqtlcustomcredibleset/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			DeleteEQTLCustomCredibleSetPostMsg decspm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				decspm = gson.fromJson(request.body(), DeleteEQTLCustomCredibleSetPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!decspm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {	
+				try {
+					if (DBVersionOK(sd, gs)) {
+						boolean redraw = DeleteEQTLCustomCredibleSet(gs, sd, decspm);
+						if (redraw) opm.sentcontents = GetDBInfo2(gs,sd,2,decspm.svg_display_mode,decspm.hidenoncoding);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/updatesourcereview/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateSourceReviewPostMsg usrpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				usrpm = gson.fromJson(request.body(), UpdateSourceReviewPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!usrpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingSourceReviewPostMsg osrpm = new OutgoingSourceReviewPostMsg();
+			osrpm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			Vector<String> ret = new Vector<>();
+			synchronized(sy) {	
+				try {
+					if (DBVersionOK(sd, gs)) {
+						ret = UpdateSourceReview(gs, sd, usrpm);
+						osrpm.isok = "ok";
+					} else {
+						osrpm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (osrpm.isok.equals("ok")) {
+				osrpm.unreviewed_count = ret.get(0);
+				osrpm.total_count = ret.get(1);
+			}
+			String s = gson.toJson(osrpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/savenewgwas/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SaveNewGWASPostMsg sngpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				sngpm = gson.fromJson(request.body(), SaveNewGWASPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
 				ongpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SaveNewGWAS(gs, sd, sngpm);
-							ongpm.isok = "ok";
-						} else {
-							ongpm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (ongpm.isok.equals("ok")) {
-					ongpm.errors = resp.get(0);
-					ongpm.trtext = resp.get(1);
-					ongpm.gwasdbid = resp.get(2);
-				}
-				String s = gson.toJson(ongpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/saveneweqtl/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SaveNewEQTLPostMsg snepm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
+				return gson.toJson(ongpm);
+			}
+
+			if (!sngpm.backend_version.equals(backend_version)) {
+				OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
+				ongpm.isok = "backend mismatch";
+				return gson.toJson(ongpm);	
+			}	
+
+			OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
+			ongpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
 				try {
-					snepm = gson.fromJson(request.body(), SaveNewEQTLPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
-					onepm.isok = "notok";
-					return gson.toJson(onepm);
-				}
-				
-				if (!snepm.backend_version.equals(backend_version)) {
-					OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
-					onepm.isok = "backend mismatch";
-					return gson.toJson(onepm);	
-				}	
-				
+					if (DBVersionOK(sd, gs)) {
+						resp = SaveNewGWAS(gs, sd, sngpm);
+						ongpm.isok = "ok";
+					} else {
+						ongpm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (ongpm.isok.equals("ok")) {
+				ongpm.errors = resp.get(0);
+				ongpm.trtext = resp.get(1);
+				ongpm.gwasdbid = resp.get(2);
+			}
+			String s = gson.toJson(ongpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/saveneweqtl/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SaveNewEQTLPostMsg snepm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				snepm = gson.fromJson(request.body(), SaveNewEQTLPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
 				onepm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SaveNewEQTL(gs, sd, snepm);
-							onepm.isok = "ok";
-						} else {
-							onepm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (onepm.isok.equals("ok")) {
-					onepm.errors = resp.get(0);
-					onepm.newrow = resp.get(1);
-					onepm.eqtldbid = resp.get(2);
-				}
-				String s = gson.toJson(onepm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				return gson.toJson(onepm);
+			}
+
+			if (!snepm.backend_version.equals(backend_version)) {
+				OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
+				onepm.isok = "backend mismatch";
+				return gson.toJson(onepm);	
+			}	
+
+			OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
+			onepm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						resp = SaveNewEQTL(gs, sd, snepm);
+						onepm.isok = "ok";
+					} else {
+						onepm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (onepm.isok.equals("ok")) {
+				onepm.errors = resp.get(0);
+				onepm.newrow = resp.get(1);
+				onepm.eqtldbid = resp.get(2);
+			}
+			String s = gson.toJson(onepm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});
 
-		post(new Route("/submitnewdetail/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitNewDetailPostMsg sndpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					sndpm = gson.fromJson(request.body(), SubmitNewDetailPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
-					ondpm.isok = "notok";
-					return gson.toJson(ondpm);
-				}
-				
-				if (!sndpm.backend_version.equals(backend_version)) {
-					OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
-					ondpm.isok = "backend mismatch";
-					return gson.toJson(ondpm);	
-				}	
-				
+		post("/submitnewdetail/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitNewDetailPostMsg sndpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				sndpm = gson.fromJson(request.body(), SubmitNewDetailPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
 				ondpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SubmitNewDetail(gs, sd, sndpm);
-							ondpm.isok = "ok";
-						} else {
-							ondpm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (ondpm.isok.equals("ok")) {
-					ondpm.errors = resp.get(0);
-					ondpm.trtext = resp.get(1);
-					ondpm.detaildbid = resp.get(2);
-				}
-				String s = gson.toJson(ondpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				return gson.toJson(ondpm);
+			}
+
+			if (!sndpm.backend_version.equals(backend_version)) {
+				OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
+				ondpm.isok = "backend mismatch";
+				return gson.toJson(ondpm);	
+			}	
+
+			OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
+			ondpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						resp = SubmitNewDetail(gs, sd, sndpm);
+						ondpm.isok = "ok";
+					} else {
+						ondpm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (ondpm.isok.equals("ok")) {
+				ondpm.errors = resp.get(0);
+				ondpm.trtext = resp.get(1);
+				ondpm.detaildbid = resp.get(2);
+			}
+			String s = gson.toJson(ondpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
 
-		post(new Route("/downloadfile/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				DownloadFilePostMsg dfpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					dfpm = gson.fromJson(request.body(), DownloadFilePostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
-					odfpm.isok = "notok";
-					return gson.toJson(odfpm);
-				}
-				
-				if (!dfpm.backend_version.equals(backend_version)) {
-					OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
-					odfpm.isok = "backend mismatch";
-					return gson.toJson(odfpm);	
-				}	
-				
+		post("/downloadfile/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			DownloadFilePostMsg dfpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				dfpm = gson.fromJson(request.body(), DownloadFilePostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
 				odfpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = DownloadFile(gs, sd, dfpm);
-							odfpm.isok = "ok";
-						} else {
-							odfpm.isok = "backend db mismatch";	
-						}
-					} catch (Exception ee) {}
-				}
-				if (odfpm.isok.equals("ok")) {
-					odfpm.name = resp.get(0);
-					odfpm.b64 = resp.get(1);
-				}
-				String s = gson.toJson(odfpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(odfpm);
 			}
+
+			if (!dfpm.backend_version.equals(backend_version)) {
+				OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
+				odfpm.isok = "backend mismatch";
+				return gson.toJson(odfpm);	
+			}	
+
+			OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
+			odfpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						resp = DownloadFile(gs, sd, dfpm);
+						odfpm.isok = "ok";
+					} else {
+						odfpm.isok = "backend db mismatch";	
+					}
+				} catch (Exception ee) {}
+			}
+			if (odfpm.isok.equals("ok")) {
+				odfpm.name = resp.get(0);
+				odfpm.b64 = resp.get(1);
+			}
+			String s = gson.toJson(odfpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});				
 
-		post(new Route("/oktoremoveref/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				OkToRemoveRefPostMsg otrrpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					otrrpm = gson.fromJson(request.body(), OkToRemoveRefPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
-					ootrrpm.isok = "notok";
-					return gson.toJson(ootrrpm);
-				}
-				
-				if (!otrrpm.backend_version.equals(backend_version)) {
-					OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
-					ootrrpm.isok = "backend mismatch";
-					return gson.toJson(ootrrpm);	
-				}	
-				
+		post("/oktoremoveref/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			OkToRemoveRefPostMsg otrrpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				otrrpm = gson.fromJson(request.body(), OkToRemoveRefPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
 				ootrrpm.isok = "notok";
-				Vector<String> ret = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							ret = OkToRemoveRef(gs, sd, otrrpm);
-							ootrrpm.isok = "ok";
-						} else {
-							ootrrpm.isok = "backend db mismatch";	
-						}
-					} catch (Exception ee) {}
-				}
-				if (ootrrpm.isok.equals("ok")) {
-					ootrrpm.problems = ret.get(0);
-					ootrrpm.unreviewed_count = ret.get(1);
-					ootrrpm.total_count = ret.get(2);
-				}
-				String s = gson.toJson(ootrrpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				return gson.toJson(ootrrpm);
+			}
+
+			if (!otrrpm.backend_version.equals(backend_version)) {
+				OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
+				ootrrpm.isok = "backend mismatch";
+				return gson.toJson(ootrrpm);	
+			}	
+
+			OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
+			ootrrpm.isok = "notok";
+			Vector<String> ret = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						ret = OkToRemoveRef(gs, sd, otrrpm);
+						ootrrpm.isok = "ok";
+					} else {
+						ootrrpm.isok = "backend db mismatch";	
+					}
+				} catch (Exception ee) {}
+			}
+			if (ootrrpm.isok.equals("ok")) {
+				ootrrpm.problems = ret.get(0);
+				ootrrpm.unreviewed_count = ret.get(1);
+				ootrrpm.total_count = ret.get(2);
+			}
+			String s = gson.toJson(ootrrpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});				
 
-		post(new Route("/submitnewpubmed/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitNewPubmedPostMsg snppm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					snppm = gson.fromJson(request.body(), SubmitNewPubmedPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();
-					onppm.isok = "notok";
-					return gson.toJson(onppm);
-				}
-				
-				if (!snppm.backend_version.equals(backend_version)) {
-					OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();
-					onppm.isok = "backend mismatch";
-					return gson.toJson(onppm);	
-				}	
-				
-				OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();				
+		post("/submitnewpubmed/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitNewPubmedPostMsg snppm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				snppm = gson.fromJson(request.body(), SubmitNewPubmedPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();
 				onppm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SubmitNewPubmed(gs, sd, snppm);
-							onppm.isok = "ok";
-						} else {
-							onppm.isok = "backend_db_mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (onppm.isok.equals("ok")) {
-					onppm.errors = resp.get(0);
-					onppm.trtext = resp.get(1);
-					onppm.sourcedocumentsid = resp.get(2);
-					onppm.trtext2 = resp.get(3);
-					onppm.unreviewed_count = resp.get(4);
-					onppm.total_count = resp.get(5);
-				}
-				String s = gson.toJson(onppm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				return gson.toJson(onppm);
+			}
+
+			if (!snppm.backend_version.equals(backend_version)) {
+				OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();
+				onppm.isok = "backend mismatch";
+				return gson.toJson(onppm);	
+			}	
+
+			OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();				
+			onppm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						resp = SubmitNewPubmed(gs, sd, snppm);
+						onppm.isok = "ok";
+					} else {
+						onppm.isok = "backend_db_mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (onppm.isok.equals("ok")) {
+				onppm.errors = resp.get(0);
+				onppm.trtext = resp.get(1);
+				onppm.sourcedocumentsid = resp.get(2);
+				onppm.trtext2 = resp.get(3);
+				onppm.unreviewed_count = resp.get(4);
+				onppm.total_count = resp.get(5);
+			}
+			String s = gson.toJson(onppm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
 
-		post(new Route("/submitnewbiorxiv/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitNewBiorxivPostMsg snbpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					snbpm = gson.fromJson(request.body(), SubmitNewBiorxivPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
-					onbpm.isok = "notok";
-					return gson.toJson(onbpm);
-				}
-				
-				if (!snbpm.backend_version.equals(backend_version)) {
-					OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
-					onbpm.isok = "backend mismatch";
-					return gson.toJson(onbpm);	
-				}	
-				
+		post("/submitnewbiorxiv/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitNewBiorxivPostMsg snbpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				snbpm = gson.fromJson(request.body(), SubmitNewBiorxivPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
 				onbpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SubmitNewBiorxiv(gs, sd, snbpm);
-							onbpm.isok = "ok";
-						} else {
-							onbpm.isok = "backend_db_mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (onbpm.isok.equals("ok")) {
-					onbpm.errors = resp.get(0);
-					onbpm.trtext = resp.get(1);
-					onbpm.sourcedocumentsid = resp.get(2);
-					onbpm.trtext2 = resp.get(3);
-					onbpm.unreviewed_count = resp.get(4);
-					onbpm.total_count = resp.get(5);
-				}
-				String s = gson.toJson(onbpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				return gson.toJson(onbpm);
+			}
+
+			if (!snbpm.backend_version.equals(backend_version)) {
+				OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
+				onbpm.isok = "backend mismatch";
+				return gson.toJson(onbpm);	
+			}	
+
+			OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
+			onbpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						resp = SubmitNewBiorxiv(gs, sd, snbpm);
+						onbpm.isok = "ok";
+					} else {
+						onbpm.isok = "backend_db_mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (onbpm.isok.equals("ok")) {
+				onbpm.errors = resp.get(0);
+				onbpm.trtext = resp.get(1);
+				onbpm.sourcedocumentsid = resp.get(2);
+				onbpm.trtext2 = resp.get(3);
+				onbpm.unreviewed_count = resp.get(4);
+				onbpm.total_count = resp.get(5);
+			}
+			String s = gson.toJson(onbpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
 
-		post(new Route("/submitnewweb/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitNewWebPostMsg snwpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					snwpm = gson.fromJson(request.body(), SubmitNewWebPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
-					onwpm.isok = "notok";
-					return gson.toJson(onwpm);
-				}
-				
-				if (!snwpm.backend_version.equals(backend_version)) {
-					OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
-					onwpm.isok = "backend mismatch";
-					return gson.toJson(onwpm);	
-				}	
-				
+		post("/submitnewweb/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitNewWebPostMsg snwpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				snwpm = gson.fromJson(request.body(), SubmitNewWebPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
 				onwpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SubmitNewWeb(gs, sd, snwpm);
-							onwpm.isok = "ok";
-						} else {
-							onwpm.isok = "backend_db_mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (onwpm.isok.equals("ok")) {
-					onwpm.errors = resp.get(0);
-					onwpm.trtext = resp.get(1);
-					onwpm.sourcedocumentsid = resp.get(2);
-					onwpm.trtext2 = resp.get(3);
-					onwpm.unreviewed_count = resp.get(4);
-					onwpm.total_count = resp.get(5);
-				}
-				String s = gson.toJson(onwpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(onwpm);
 			}
-		});		
-		
-		post(new Route("/submitnewfile/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitNewFilePostMsg snfpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
+
+			if (!snwpm.backend_version.equals(backend_version)) {
+				OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
+				onwpm.isok = "backend mismatch";
+				return gson.toJson(onwpm);	
+			}	
+
+			OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
+			onwpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
 				try {
-					snfpm = gson.fromJson(request.body(), SubmitNewFilePostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
-					onfpm.isok = "notok";
-					return gson.toJson(onfpm);
-				}
-				
-				if (!snfpm.backend_version.equals(backend_version)) {
-					OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
-					onfpm.isok = "backend mismatch";
-					return gson.toJson(onfpm);	
-				}	
-				
+					if (DBVersionOK(sd, gs)) {
+						resp = SubmitNewWeb(gs, sd, snwpm);
+						onwpm.isok = "ok";
+					} else {
+						onwpm.isok = "backend_db_mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (onwpm.isok.equals("ok")) {
+				onwpm.errors = resp.get(0);
+				onwpm.trtext = resp.get(1);
+				onwpm.sourcedocumentsid = resp.get(2);
+				onwpm.trtext2 = resp.get(3);
+				onwpm.unreviewed_count = resp.get(4);
+				onwpm.total_count = resp.get(5);
+			}
+			String s = gson.toJson(onwpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});		
+
+		post("/submitnewfile/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitNewFilePostMsg snfpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				snfpm = gson.fromJson(request.body(), SubmitNewFilePostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
 				onfpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SubmitNewFile(gs, sd, snfpm);
-							onfpm.isok = "ok";
-						} else {
-							onfpm.isok = "backend_db_mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (onfpm.isok.equals("ok")) {
-					onfpm.errors = resp.get(0);
-					onfpm.trtext = resp.get(1);
-					onfpm.sourcedocumentsid = resp.get(2);
-					onfpm.trtext2 = resp.get(3);
-					onfpm.unreviewed_count = resp.get(4);
-					onfpm.total_count = resp.get(5);
-				}
-				String s = gson.toJson(onfpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(onfpm);
 			}
-		});	
-		
-		post(new Route("/submitdetailsectionassignment/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitSectionAssignmentPostMsg ssapm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
+
+			if (!snfpm.backend_version.equals(backend_version)) {
+				OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
+				onfpm.isok = "backend mismatch";
+				return gson.toJson(onfpm);	
+			}	
+
+			OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
+			onfpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
 				try {
-					ssapm = gson.fromJson(request.body(), SubmitSectionAssignmentPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
-					osapm.isok = "notok";
-					return gson.toJson(osapm);
-				}
-				
-				if (!ssapm.backend_version.equals(backend_version)) {
-					OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
-					osapm.isok = "backend mismatch";
-					return gson.toJson(osapm);	
-				}	
-				
+					if (DBVersionOK(sd, gs)) {
+						resp = SubmitNewFile(gs, sd, snfpm);
+						onfpm.isok = "ok";
+					} else {
+						onfpm.isok = "backend_db_mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (onfpm.isok.equals("ok")) {
+				onfpm.errors = resp.get(0);
+				onfpm.trtext = resp.get(1);
+				onfpm.sourcedocumentsid = resp.get(2);
+				onfpm.trtext2 = resp.get(3);
+				onfpm.unreviewed_count = resp.get(4);
+				onfpm.total_count = resp.get(5);
+			}
+			String s = gson.toJson(onfpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});	
+
+		post("/submitdetailsectionassignment/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			SubmitSectionAssignmentPostMsg ssapm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				ssapm = gson.fromJson(request.body(), SubmitSectionAssignmentPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
 				osapm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = SubmitDetailSectionAssignment(gs, sd, ssapm);
-							osapm.isok = "ok";
-						} else {
-							osapm.isok = "backend_db_mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (osapm.isok.equals("ok")) {
-					osapm.old_section_lc = resp.get(0).toLowerCase();
-					osapm.old_section_source_documents_id = resp.get(1);
-					osapm.old_section_revised_rows = resp.get(2);
-					osapm.new_section_lc = resp.get(3).toLowerCase();
-					osapm.new_section_source_documents_id = resp.get(4);
-					osapm.new_section_revised_rows = resp.get(5);
-				}
-				String s = gson.toJson(osapm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(osapm);
 			}
+
+			if (!ssapm.backend_version.equals(backend_version)) {
+				OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
+				osapm.isok = "backend mismatch";
+				return gson.toJson(osapm);	
+			}	
+
+			OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
+			osapm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						resp = SubmitDetailSectionAssignment(gs, sd, ssapm);
+						osapm.isok = "ok";
+					} else {
+						osapm.isok = "backend_db_mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (osapm.isok.equals("ok")) {
+				osapm.old_section_lc = resp.get(0).toLowerCase();
+				osapm.old_section_source_documents_id = resp.get(1);
+				osapm.old_section_revised_rows = resp.get(2);
+				osapm.new_section_lc = resp.get(3).toLowerCase();
+				osapm.new_section_source_documents_id = resp.get(4);
+				osapm.new_section_revised_rows = resp.get(5);
+			}
+			String s = gson.toJson(osapm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
 
-		post(new Route("/removedetail/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				RemoveDetailPostMsg rdpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					rdpm = gson.fromJson(request.body(), RemoveDetailPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
-					ordpm.isok = "notok";
-					return gson.toJson(ordpm);
-				}
-				
-				if (!rdpm.backend_version.equals(backend_version)) {
-					OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
-					ordpm.isok = "backend mismatch";
-					return gson.toJson(ordpm);	
-				}	
-				
+		post("/removedetail/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			RemoveDetailPostMsg rdpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				rdpm = gson.fromJson(request.body(), RemoveDetailPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
 				ordpm.isok = "notok";
-				Vector<String> resp = new Vector<>();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							resp = RemoveDetail(gs, sd, rdpm);
-							ordpm.isok = "ok";
-						} else {
-							ordpm.isok = "backend_db_mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				if (ordpm.isok.equals("ok")) {
-					ordpm.old_section_lc = resp.get(0).toLowerCase();
-					ordpm.old_section_source_documents_id = resp.get(1);
-					ordpm.old_section_revised_rows = resp.get(2);
-					ordpm.source_documents_id = resp.get(3);
-				}
-				String s = gson.toJson(ordpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(ordpm);
 			}
+
+			if (!rdpm.backend_version.equals(backend_version)) {
+				OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
+				ordpm.isok = "backend mismatch";
+				return gson.toJson(ordpm);	
+			}	
+
+			OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
+			ordpm.isok = "notok";
+			Vector<String> resp = new Vector<>();
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						resp = RemoveDetail(gs, sd, rdpm);
+						ordpm.isok = "ok";
+					} else {
+						ordpm.isok = "backend_db_mismatch";
+					}
+				} catch (Exception ee) {}
+			}
+			if (ordpm.isok.equals("ok")) {
+				ordpm.old_section_lc = resp.get(0).toLowerCase();
+				ordpm.old_section_source_documents_id = resp.get(1);
+				ordpm.old_section_revised_rows = resp.get(2);
+				ordpm.source_documents_id = resp.get(3);
+			}
+			String s = gson.toJson(ordpm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
 
-		post(new Route("/removegwasrow/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				RemoveGWASRowPostMsg rgrpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					rgrpm = gson.fromJson(request.body(), RemoveGWASRowPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!rgrpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
-				OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
-				oopm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							Vector<ArrayList<Integer>> v = RemoveGWASRow(gs, sd, rgrpm);
-							ArrayList<Integer> eqtl_ids = v.elementAt(0);
-							ArrayList<Integer> overlap_counts = v.elementAt(1);
-							ArrayList<Integer> do_redo = v.elementAt(2);
-							oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-							oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-							if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,rgrpm.svg_display_mode,rgrpm.hidenoncoding);
-							oopm.isok = "ok";
-						} else {
-							oopm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {ee.printStackTrace();}
-				}
-				String s = gson.toJson(oopm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/removeeqtlrow/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				RemoveEQTLRowPostMsg rerpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					rerpm = gson.fromJson(request.body(), RemoveEQTLRowPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!rerpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
+		post("/removegwasrow/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			RemoveGWASRowPostMsg rgrpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				rgrpm = gson.fromJson(request.body(), RemoveGWASRowPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							if (RemoveEQTLRow(gs, sd, rerpm)) {
-								opm.sentcontents = GetDBInfo2(gs,sd,2,rerpm.svg_display_mode,rerpm.hidenoncoding);
-							}
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-							
-						}
-					} catch (Exception ee) {ee.printStackTrace();}
-				}
-				String s = gson.toJson(opm);	
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				return gson.toJson(opm);
+			}
+
+			if (!rgrpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
+			oopm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						Vector<ArrayList<Integer>> v = RemoveGWASRow(gs, sd, rgrpm);
+						ArrayList<Integer> eqtl_ids = v.elementAt(0);
+						ArrayList<Integer> overlap_counts = v.elementAt(1);
+						ArrayList<Integer> do_redo = v.elementAt(2);
+						oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+						oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+						if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,rgrpm.svg_display_mode,rgrpm.hidenoncoding);
+						oopm.isok = "ok";
+					} else {
+						oopm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {ee.printStackTrace();}
+			}
+			String s = gson.toJson(oopm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});
 
-		post(new Route("/updatesvgdisplayname/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateSVGDisplayNamePostMsg usdnpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					usdnpm = gson.fromJson(request.body(), UpdateSVGDisplayNamePostMsg.class);
-					//usdnpm.svgdisplayname = EncodeLikeJavascript.decodeURIComponent(usdnpm.svgdisplayname);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!usdnpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
+		post("/removeeqtlrow/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			RemoveEQTLRowPostMsg rerpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				rerpm = gson.fromJson(request.body(), RemoveEQTLRowPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							if (UpdateSVGDisplayName(gs, sd, usdnpm)) {
-								opm.sentcontents = GetDBInfo2(gs,sd,2,usdnpm.svg_display_mode,usdnpm.hidenoncoding);
-							}
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
+				return gson.toJson(opm);
+			}
 
-					} catch (Exception ee) {ee.printStackTrace();}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+			if (!rerpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						if (RemoveEQTLRow(gs, sd, rerpm)) {
+							opm.sentcontents = GetDBInfo2(gs,sd,2,rerpm.svg_display_mode,rerpm.hidenoncoding);
+						}
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
+
+					}
+				} catch (Exception ee) {ee.printStackTrace();}
+			}
+			String s = gson.toJson(opm);	
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/updatesvgdisplayname/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateSVGDisplayNamePostMsg usdnpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				usdnpm = gson.fromJson(request.body(), UpdateSVGDisplayNamePostMsg.class);
+				//usdnpm.svgdisplayname = EncodeLikeJavascript.decodeURIComponent(usdnpm.svgdisplayname);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!usdnpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						if (UpdateSVGDisplayName(gs, sd, usdnpm)) {
+							opm.sentcontents = GetDBInfo2(gs,sd,2,usdnpm.svg_display_mode,usdnpm.hidenoncoding);
+						}
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
+					}
+
+				} catch (Exception ee) {ee.printStackTrace();}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});		
 
-		post(new Route("/updatesummary/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateSummaryPostMsg uspm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					uspm = gson.fromJson(request.body(), UpdateSummaryPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!uspm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
+		post("/updatesummary/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateSummaryPostMsg uspm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				uspm = gson.fromJson(request.body(), UpdateSummaryPostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							UpdateSummary(gs, sd, uspm);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return gson.toJson(opm);
 			}
-		});
 
-		post(new Route("/updategwasshowhide/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {	
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateGWASShowHidePostMsg ugshpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					ugshpm = gson.fromJson(request.body(), UpdateGWASShowHidePostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!ugshpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
-				OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
-				oopm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							Vector<ArrayList<Integer>> v = UpdateGWASShowHide(gs, sd, ugshpm);
-							ArrayList<Integer> eqtl_ids = v.elementAt(0);
-							ArrayList<Integer> overlap_counts = v.elementAt(1);
-							ArrayList<Integer> do_redo = v.elementAt(2);
-							oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-							oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-							if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,ugshpm.svg_display_mode,ugshpm.hidenoncoding);
-							oopm.isok = "ok";
-						} else {
-							oopm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(oopm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});
-		
-		post(new Route("/updateshowhidenoncoding/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {	
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateShowHideNonCodingPostMsg ushncpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					ushncpm = gson.fromJson(request.body(), UpdateShowHideNonCodingPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!ushncpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
+			if (!uspm.backend_version.equals(backend_version)) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							opm.sentcontents = GetDBInfo2(gs,sd,2,ushncpm.svg_display_mode,ushncpm.hidenoncoding);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
 			}
-		});
-
-		post(new Route("/updatemarkerforld/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateMarkerForLDPostMsg umflpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
 				try {
-					umflpm = gson.fromJson(request.body(), UpdateMarkerForLDPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!umflpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							UpdateMarkerForLD(gs, sd, umflpm);
-							opm.sentcontents = GetDBInfo2(gs,sd,2,umflpm.svg_display_mode,umflpm.hidenoncoding);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";		
-						}	
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});
-
-		post(new Route("/updateeqtlshowhide/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateEQTLShowHidePostMsg ueshpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					ueshpm = gson.fromJson(request.body(), UpdateEQTLShowHidePostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!ueshpm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							UpdateEQTLShowHide(gs, sd, ueshpm);
-							opm.sentcontents = GetDBInfo2(gs,sd,2,ueshpm.svg_display_mode,ueshpm.hidenoncoding);
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";		
-						}
-					} catch (Exception ee) {}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-
-		post(new Route("/updategwascredibleset/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateGWASCredibleSetPostMsg ugcspm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					ugcspm = gson.fromJson(request.body(), UpdateGWASCredibleSetPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!ugcspm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
-				OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
-				oopm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							Vector<ArrayList<Integer>> v = UpdateGWASCredibleSet(gs, sd, ugcspm);
-							ArrayList<Integer> eqtl_ids = v.elementAt(0);
-							ArrayList<Integer> overlap_counts = v.elementAt(1);
-							ArrayList<Integer> do_redo = v.elementAt(2);
-							oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-							oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-							if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,ugcspm.svg_display_mode,ugcspm.hidenoncoding);
-							oopm.isok = "ok";
-						} else {
-							oopm.isok = "backend db mismatch";							
-						}
-					} catch (Exception ee) {
-						ee.printStackTrace();
+					if (DBVersionOK(sd, gs)) {
+						UpdateSummary(gs, sd, uspm);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
 					}
-				}
-				String s = gson.toJson(oopm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});
-		
-		post(new Route("/updateeqtlcredibleset/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateEQTLCredibleSetPostMsg uecspm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					uecspm = gson.fromJson(request.body(), UpdateEQTLCredibleSetPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				
-				if (!uecspm.backend_version.equals(backend_version)) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "backend mismatch";
-					return gson.toJson(opm);	
-				}	
-				
+
+		post("/updategwasshowhide/:symbol", (request, response) -> {	
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateGWASShowHidePostMsg ugshpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				ugshpm = gson.fromJson(request.body(), UpdateGWASShowHidePostMsg.class);
+			} catch (JsonSyntaxException e) {
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						if (DBVersionOK(sd, gs)) {
-							if (UpdateEQTLCredibleSet(gs, sd, uecspm)) {						
-								opm.sentcontents = GetDBInfo2(gs,sd,2,uecspm.svg_display_mode,uecspm.hidenoncoding);
-							}
-							opm.isok = "ok";
-						} else {
-							opm.isok = "backend db mismatch";
-						}
-					} catch (Exception ee) {
-						ee.printStackTrace();
+				return gson.toJson(opm);
+			}
+
+			if (!ugshpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
+			oopm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						Vector<ArrayList<Integer>> v = UpdateGWASShowHide(gs, sd, ugshpm);
+						ArrayList<Integer> eqtl_ids = v.elementAt(0);
+						ArrayList<Integer> overlap_counts = v.elementAt(1);
+						ArrayList<Integer> do_redo = v.elementAt(2);
+						oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+						oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+						if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,ugshpm.svg_display_mode,ugshpm.hidenoncoding);
+						oopm.isok = "ok";
+					} else {
+						oopm.isok = "backend db mismatch";
 					}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(oopm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
 		});
-		
-		get(new Route("/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						String s = "";
-						if (DBVersionOK(sd, gs)) {						
-							s = GetDBInfo2(gs,sd,-1, "Credible Sets", 0);
-						} else {
-							s = "Database version is incompatible with backend server.";
-						}
-						if (dump_log) System.out.println("RESPONSE: "+s);
-						return s;
-					} catch (Exception ee) {
-						ee.printStackTrace();
-						response.status(400);
-						return "Unable to load gene "+gs;
+
+		post("/updateshowhidenoncoding/:symbol", (request, response) -> {	
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateShowHideNonCodingPostMsg ushncpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				ushncpm = gson.fromJson(request.body(), UpdateShowHideNonCodingPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!ushncpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						opm.sentcontents = GetDBInfo2(gs,sd,2,ushncpm.svg_display_mode,ushncpm.hidenoncoding);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
 					}
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/updatemarkerforld/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateMarkerForLDPostMsg umflpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				umflpm = gson.fromJson(request.body(), UpdateMarkerForLDPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!umflpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						UpdateMarkerForLD(gs, sd, umflpm);
+						opm.sentcontents = GetDBInfo2(gs,sd,2,umflpm.svg_display_mode,umflpm.hidenoncoding);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";		
+					}	
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/updateeqtlshowhide/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateEQTLShowHidePostMsg ueshpm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				ueshpm = gson.fromJson(request.body(), UpdateEQTLShowHidePostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!ueshpm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						UpdateEQTLShowHide(gs, sd, ueshpm);
+						opm.sentcontents = GetDBInfo2(gs,sd,2,ueshpm.svg_display_mode,ueshpm.hidenoncoding);
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";		
+					}
+				} catch (Exception ee) {}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/updategwascredibleset/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateGWASCredibleSetPostMsg ugcspm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				ugcspm = gson.fromJson(request.body(), UpdateGWASCredibleSetPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!ugcspm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
+			oopm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						Vector<ArrayList<Integer>> v = UpdateGWASCredibleSet(gs, sd, ugcspm);
+						ArrayList<Integer> eqtl_ids = v.elementAt(0);
+						ArrayList<Integer> overlap_counts = v.elementAt(1);
+						ArrayList<Integer> do_redo = v.elementAt(2);
+						oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+						oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+						if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,ugcspm.svg_display_mode,ugcspm.hidenoncoding);
+						oopm.isok = "ok";
+					} else {
+						oopm.isok = "backend db mismatch";							
+					}
+				} catch (Exception ee) {
+					ee.printStackTrace();
+				}
+			}
+			String s = gson.toJson(oopm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		post("/updateeqtlcredibleset/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			UpdateEQTLCredibleSetPostMsg uecspm = null;
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			Gson gson = new Gson();
+			try {
+				uecspm = gson.fromJson(request.body(), UpdateEQTLCredibleSetPostMsg.class);
+			} catch (JsonSyntaxException e) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
+				return gson.toJson(opm);
+			}
+
+			if (!uecspm.backend_version.equals(backend_version)) {
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "backend mismatch";
+				return gson.toJson(opm);	
+			}	
+
+			OutgoingPostMsg opm = new OutgoingPostMsg();
+			opm.isok = "notok";
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {
+				try {
+					if (DBVersionOK(sd, gs)) {
+						if (UpdateEQTLCredibleSet(gs, sd, uecspm)) {						
+							opm.sentcontents = GetDBInfo2(gs,sd,2,uecspm.svg_display_mode,uecspm.hidenoncoding);
+						}
+						opm.isok = "ok";
+					} else {
+						opm.isok = "backend db mismatch";
+					}
+				} catch (Exception ee) {
+					ee.printStackTrace();
+				}
+			}
+			String s = gson.toJson(opm);
+			if (dump_log) System.out.println("RESPONSE: "+s);
+			return s;
+		});
+
+		get("/:symbol", (request, response) -> {
+			if (dump_log) System.out.println("REQUEST: "+request.body());
+			String gs = request.params(":symbol");
+			gs = EncodeLikeJavascript.decodeURIComponent(gs);
+			if (!gene_synchronize_objects.containsKey(gs)) {
+				final Boolean gs_sync = true;
+				gene_synchronize_objects.put(gs, gs_sync);
+			}
+			Boolean sy = gene_synchronize_objects.get(gs);
+			synchronized(sy) {	
+				try {
+					String s = "";
+					if (DBVersionOK(sd, gs)) {						
+						s = GetDBInfo2(gs,sd,-1, "Credible Sets", 0);
+					} else {
+						s = "Database version is incompatible with backend server.";
+					}
+					if (dump_log) System.out.println("RESPONSE: "+s);
+					return s;
+				} catch (Exception ee) {
+					ee.printStackTrace();
+					response.status(400);
+					return "Unable to load gene "+gs;
 				}
 			}
 		});
-		
+
 	}
 	
 	public static String GetHTMLStart(String tab_name, String db_version) throws Exception {
