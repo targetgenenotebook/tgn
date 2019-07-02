@@ -204,13 +204,13 @@ class Layout {
 
 	void AssocLayout(Vector<String> index_variants, Hashtable<String, IndexVariant> assoc_result_hash, Document d, Element par, String svg_mode) {
 
-		String vis = "visible";
+		String vis = "";//"visible"; /* don't use explicit visible, since it will override loading hidden of html parent */
 		if (svg_mode.equals("LD Summary")) vis = "hidden";
 
-		Element group_for_mes = SvgGraphics.makeNode(d,
+		Element group_for_cs = SvgGraphics.makeNode(d,
 				par,//parent
 				"g",//type
-				new String[]{"visibility", vis, "id", "group_for_mes"}
+				new String[]{"visibility", vis, "id", "group_for_cs"}
 				);
 		int current_top = (minus_footprints.size()+plus_footprints.size())*gene_line_height+kb_track_height;
 
@@ -253,7 +253,6 @@ class Layout {
 			}
 		}
 		
-		
 		// try to group by member snps
 		
 		if (sorted_index_variants.size()>2) {
@@ -265,19 +264,20 @@ class Layout {
 				vn.add(giv.index_variant_name);
 				for (int j=0; j<giv.gwas_results.size(); ++j) {
 					GWASResult g = giv.gwas_results.get(j);
-					if (!g.marker_equivalence_set.equals("Unset") && g.show_in_svg) {
-						for (int k=0; k<g.mes_locs_starts.size(); ++k) {
-							String n = g.mes_variants.get(k);
+					if (!g.credible_set.equals("Unset") && g.show_in_svg) {
+						for (int k=0; k<g.cs_locs_starts.size(); ++k) {
+							String n = g.cs_variants.get(k);
 							if (!vn.contains(n)) vn.add(n);
 						}
 					}
 				}
 				for (int j=0; j<giv.eqtl_results.size(); ++j) {
 					EQTLResult q = giv.eqtl_results.get(j);
-					if (!q.show_in_svg) continue;
-					for (int k=0; k<q.ld_locs_starts.size(); ++k) {
-						String n = q.ld_variants.get(k);
-						if (!vn.contains(n)) vn.add(n);
+					if (!q.credible_set.equals("Unset") && q.show_in_svg) {
+						for (int k=0; k<q.cs_locs_starts.size(); ++k) {
+							String n = q.cs_variants.get(k);
+							if (!vn.contains(n)) vn.add(n);
+						}
 					}
 				}
 				rses.addElement(vn);
@@ -439,8 +439,6 @@ class Layout {
 			}
 		}
 		
-		
-		
 		for (int i=0; i<sorted_index_variants.size(); ++i) {
 			
 			IndexVariant giv  = assoc_result_hash.get(sorted_index_variants.get(i));
@@ -449,6 +447,7 @@ class Layout {
 
 			// below line will cause problems for insertions, which could have a net width of <1 .. FIX!
 			int index_var_base_width = (giv.index_variant_location_end-giv.index_variant_location_start)+1;
+			if (index_var_base_width<1) index_var_base_width=1;
 			double index_var_svg_center = 0.5*(index_var_svg_low+index_var_svg_high);
 			double index_var_base_center = ((double)(giv.index_variant_location_end+giv.index_variant_location_start+1))*0.5;
 			double width_in_pixels = (double)index_var_base_width*svg_units_per_base; // this applies to unzoomed, therefore svg=pixel
@@ -464,58 +463,83 @@ class Layout {
 			}
 
 			// do gwas first
-
-			String varname = "gwas"+giv.index_variant_name;
 			
 			// collect the different gwas LD datasets found for the index variant
 			
 			Vector<String>found_ld_datasets = new Vector<>();
 			
-			
 			Vector<GWASResult> sorted_gwas_results = new Vector<>();
-			Vector<String> sorted_sdns = new Vector<>();
+			Vector<String> sorted_gwas_sdns = new Vector<>();
 			for (int ii=0; ii<giv.gwas_results.size(); ++ii) {
 				GWASResult g = giv.gwas_results.get(ii);
 				String sdn = g.svg_display_name;
 				int loc = -1;
-				for (int j=0; j<sorted_sdns.size(); ++j) {
-					String tst = sorted_sdns.get(j);
+				for (int j=0; j<sorted_gwas_sdns.size(); ++j) {
+					String tst = sorted_gwas_sdns.get(j);
 					if (tst.compareTo(sdn)>0) {
 						loc = j;
-						sorted_sdns.insertElementAt(sdn, j);
+						sorted_gwas_sdns.insertElementAt(sdn, j);
 						sorted_gwas_results.insertElementAt(g, j);
 						break;
 					}
 				}
 				if (loc==-1) {
-					sorted_sdns.add(sdn);
+					sorted_gwas_sdns.add(sdn);
 					sorted_gwas_results.add(g);
 				}
 			}
 			
+			Vector<EQTLResult> sorted_eqtl_results = new Vector<>();
+			Vector<String> sorted_eqtl_sdns = new Vector<>();
+			for (int ii=0; ii<giv.eqtl_results.size(); ++ii) {
+				EQTLResult q = giv.eqtl_results.get(ii);
+				String sdn = q.svg_display_name;
+				int loc = -1;
+				for (int j=0; j<sorted_eqtl_sdns.size(); ++j) {
+					String tst = sorted_eqtl_sdns.get(j);
+					if (tst.compareTo(sdn)>0) {
+						loc = j;
+						sorted_eqtl_sdns.insertElementAt(sdn, j);
+						sorted_eqtl_results.insertElementAt(q, j);
+						break;
+					}
+				}
+				if (loc==-1) {
+					sorted_eqtl_sdns.add(sdn);
+					sorted_eqtl_results.add(q);
+				}
+			}
 			
 			for (int j=0; j<giv.gwas_results.size(); ++j) {
 				GWASResult g = giv.gwas_results.get(j);
-				if (!g.marker_equivalence_set.equals("Unset") && !g.marker_equivalence_set.equals("Credible set") && g.show_in_svg) {
-					if (!found_ld_datasets.contains(g.marker_equivalence_set)) found_ld_datasets.add(g.marker_equivalence_set);
+				if (!g.credible_set.equals("Unset") && !g.credible_set.equals("Custom") && g.show_in_svg) {
+					if (!found_ld_datasets.contains(g.credible_set)) found_ld_datasets.add(g.credible_set);
+				}
+			}
+			
+			for (int j=0; j<giv.eqtl_results.size(); ++j) {
+				EQTLResult q = giv.eqtl_results.get(j);
+				if (!q.credible_set.equals("Unset") && !q.credible_set.equals("Custom") && q.show_in_svg) {
+					if (!found_ld_datasets.contains(q.credible_set)) found_ld_datasets.add(q.credible_set);
 				}
 			}
 			
 			Collections.sort(found_ld_datasets);
 			
-			// for each found LD dataset (other than Unset and Credible set)
+			// for each found LD dataset (other than Unset and Custom)
 			
 			for (int ii=0; ii<found_ld_datasets.size(); ++ii) {
 				String fld = found_ld_datasets.get(ii);
 				Element group_for_gwas_hit = SvgGraphics.makeNode(d,
-						group_for_mes,//parent
+						group_for_cs,//parent
 						"g",//type
 						null
 						);
 				boolean did_first_one = false;
+
 				for (int j=0; j<sorted_gwas_results.size(); ++j) {
 					GWASResult g = sorted_gwas_results.get(j);
-					if (g.marker_equivalence_set.equals(fld) && g.show_in_svg) {
+					if (g.credible_set.equals(fld) && g.show_in_svg) {
 						if (!did_first_one) {
 							
 							// draw the marker ticks for the LD dataset
@@ -533,8 +557,8 @@ class Layout {
 											"y",""+(current_top),
 											"width",""+iv_scaled_width_in_pixels,
 											"height","20",
-											"id", varname+" "+ii,
-											"class", "gwasvariant index_"+giv.index_variant_name,
+											"id", "gwas"+giv.index_variant_name+" "+ii,
+											"class", giv.index_variant_name,
 											"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(giv.index_variant_name)+"')",
 											"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
 											"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(giv.index_variant_name)+"', evt)",
@@ -544,16 +568,15 @@ class Layout {
 											"fill", fillcolor,
 											"data-normalfill", fillcolor
 							});
-							for (int k=0; k<g.mes_locs_starts.size(); ++k) {
-								Integer spot_start = g.mes_locs_starts.get(k);
-								Integer spot_end = g.mes_locs_ends.get(k);
-								String is_coding = g.mes_coding.get(k);
+							for (int k=0; k<g.cs_locs_starts.size(); ++k) {
+								Integer spot_start = g.cs_locs_starts.get(k);
+								Integer spot_end = g.cs_locs_ends.get(k);
+								String is_coding = g.cs_coding.get(k);
 								double var_svg_low = (double)((spot_start - chrom_low))*svg_units_per_base;
 								double var_svg_high = (double)(((spot_end+1) - chrom_low))*svg_units_per_base;
 								int var_base_width = (spot_end-spot_start)+1;
 								double var_svg_center = 0.5*(var_svg_low+var_svg_high);
 								double var_base_center = ((double)(spot_end+spot_start+1))*0.5;
-								varname = "gwasld_"+giv.index_variant_name+"_"+g.mes_variants.get(k)+"_"+ii;
 								width_in_pixels = (double)var_base_width*svg_units_per_base; // this applies to unzoomed, therefore svg=pixel
 								double var_scaled_width_in_pixels = width_in_pixels;
 								double var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
@@ -565,9 +588,10 @@ class Layout {
 									if (ssifr>.5) var_svg_startx = (double)ssi+1.0;
 									else var_svg_startx = (double)ssi;
 								}
-								ttt=g.mes_variants.get(k)+"#r2 = "+g.mes_r2.get(k);
+								ttt=g.cs_variants.get(k)+"#r2 = "+g.cs_r2.get(k);
+								
 								double min_r2 = .5;
-								double what_r2 = Double.parseDouble(g.mes_r2.get(k));
+								double what_r2 = Double.parseDouble(g.cs_r2.get(k));
 								double tlength = 3.0 + 9.0*(what_r2-min_r2)/(1.0-min_r2);
 								double ttop = 4.0 + (12.0 - tlength)/2.0;
 								ttop = 20.0-tlength;
@@ -582,11 +606,11 @@ class Layout {
 												"y",""+(current_top+ttop),
 												"width",""+var_scaled_width_in_pixels,
 												"height",""+tlength,
-												"id", varname,
-												"class", "gwasvariant "+g.mes_variants.get(k),
-												"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(g.mes_variants.get(k))+"')",
+												"id", "ld_"+giv.index_variant_name+"_"+g.cs_variants.get(k)+"_"+ii,
+												"class", g.cs_variants.get(k),
+												"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(g.cs_variants.get(k))+"')",
 												"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
-												"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(g.mes_variants.get(k))+"', evt)",
+												"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(g.cs_variants.get(k))+"', evt)",
 												"data-variationbasewidth", ""+var_base_width,
 												"data-variationbasecenter", ""+var_base_center,
 												"data-variationsvgcenter", ""+var_svg_center,
@@ -596,19 +620,18 @@ class Layout {
 							}
 							current_top+=20;
 						}
-						varname = "svggwas_"+g.gwas_table_row_id;
 						String ttt = "";
 						String ttt_type = "0";
-						if (!g.marker_equivalence_set.equals("None") && g.typed_in_accepted_dataset) {
+						if (!g.credible_set.equals("None") && g.typed_in_accepted_dataset) {
 							ttt_type = "1";
 							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
 							ttt+="<p>"+g.svg_display_name+"</p>";					
-							ttt+="<p>Credible Set: "+g.marker_equivalence_set+"</p>";
+							ttt+="<p>Credible Set: "+g.credible_set+"</p>";
 							ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
 							ttt+="<tbody>";
 							boolean index_placed = false;
-							for (int k=0; k<g.mes_locs_starts.size(); ++k) {
-								Integer spot_start = g.mes_locs_starts.get(k);
+							for (int k=0; k<g.cs_locs_starts.size(); ++k) {
+								Integer spot_start = g.cs_locs_starts.get(k);
 								if (!index_placed) {
 									if (k==0) {
 										if (giv.index_variant_location_start<spot_start) {
@@ -618,14 +641,14 @@ class Layout {
 										}
 									}
 								}
-								if (g.mes_coding.get(k).equals("1")) ttt+="<tr><td>"+g.mes_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.mes_r2.get(k)))+"</td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+g.mes_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.mes_r2.get(k)))+"</td><td></td></tr>";
+								if (g.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+g.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.cs_r2.get(k)))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+g.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.cs_r2.get(k)))+"</td><td></td></tr>";
 								if (!index_placed) {
-									if (k==g.mes_locs_starts.size()-1) {
+									if (k==g.cs_locs_starts.size()-1) {
 										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
 										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
 										index_placed = true;
-									} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<g.mes_locs_starts.get(k+1)) {
+									} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<g.cs_locs_starts.get(k+1)) {
 										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
 										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
 										index_placed = true;
@@ -639,11 +662,11 @@ class Layout {
 							ttt+="</tbody>";
 							ttt+="</table>";
 							ttt+="</div>";
-						} else if (g.marker_equivalence_set.equals("None")) {
+						} else if (g.credible_set.equals("None")) {
 							ttt_type = "1";
 							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
 							ttt+="<p>"+g.svg_display_name+"</p>";					
-							ttt+="<p>Credible Set: "+g.marker_equivalence_set+"</p>";
+							ttt+="<p>Credible Set: "+g.credible_set+"</p>";
 							ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
 							ttt+="<tbody>";
 							if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
@@ -654,7 +677,7 @@ class Layout {
 						} else if (!g.typed_in_accepted_dataset) {
 							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
 							ttt+="<p>"+g.svg_display_name+"</p>";					
-							ttt+="<p>Credible Set: "+g.marker_equivalence_set+"</p>";
+							ttt+="<p>Credible Set: "+g.credible_set+"</p>";
 							ttt+="<p>(not typed)</p>";
 							ttt+="</div>";
 						}
@@ -664,7 +687,7 @@ class Layout {
 								"text",//type
 								new String[]{"x",""+index_var_svg_center,
 										"y",""+(current_top+15),
-										"id", varname,
+										"id", "svggwas_"+g.gwas_table_row_id,
 										"font-weight",what_weight,
 										"font-size","14",
 										"class","akgwastext",
@@ -681,19 +704,190 @@ class Layout {
 						current_top+=20;
 					}
 				}
+				
+				// do eqtl stuff here
+				
+				for (int j=0; j<sorted_eqtl_results.size(); ++j) {
+					EQTLResult q = sorted_eqtl_results.get(j);
+					if (q.credible_set.equals(fld) && q.show_in_svg) {
+						if (!did_first_one) {
+							
+							// draw the marker ticks for the LD dataset
+							
+							did_first_one = true;
+							String ttt = giv.index_variant_name+"#Pvalue = "+q.pvalue+"#Beta = "+q.beta;
+							String fillcolor = "#333333";
+							if (giv.is_coding) {
+								fillcolor = "#FF0000";
+							}
+							Element ele = SvgGraphics.makeNode(d,
+									group_for_gwas_hit,//parent
+									"rect",//type
+									new String[]{"x",""+svg_startx,
+											"y",""+(current_top),
+											"width",""+iv_scaled_width_in_pixels,
+											"height","20",
+											"id", "eqtl"+giv.index_variant_name+" "+ii,
+											"class", giv.index_variant_name,
+											"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(giv.index_variant_name)+"')",
+											"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
+											"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(giv.index_variant_name)+"', evt)",
+											"data-variationbasewidth", ""+index_var_base_width,
+											"data-variationbasecenter", ""+index_var_base_center,
+											"data-variationsvgcenter", ""+index_var_svg_center,
+											"fill", fillcolor,
+											"data-normalfill", fillcolor
+							});
+							for (int k=0; k<q.cs_locs_starts.size(); ++k) {
+								Integer spot_start = q.cs_locs_starts.get(k);
+								Integer spot_end = q.cs_locs_ends.get(k);
+								String is_coding = q.cs_coding.get(k);
+								double var_svg_low = (double)((spot_start - chrom_low))*svg_units_per_base;
+								double var_svg_high = (double)(((spot_end+1) - chrom_low))*svg_units_per_base;
+								int var_base_width = (spot_end-spot_start)+1;
+								double var_svg_center = 0.5*(var_svg_low+var_svg_high);
+								double var_base_center = ((double)(spot_end+spot_start+1))*0.5;
+								width_in_pixels = (double)var_base_width*svg_units_per_base; // this applies to unzoomed, therefore svg=pixel
+								double var_scaled_width_in_pixels = width_in_pixels;
+								double var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
+								if (var_scaled_width_in_pixels<variant_tick_min_pixel_width) {
+									var_scaled_width_in_pixels = variant_tick_min_pixel_width;
+									var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
+									int ssi = (int)var_svg_startx;
+									double ssifr = var_svg_startx - (double)ssi;
+									if (ssifr>.5) var_svg_startx = (double)ssi+1.0;
+									else var_svg_startx = (double)ssi;
+								}
+								ttt=q.cs_variants.get(k)+"#r2 = "+q.cs_r2.get(k);
+								double min_r2 = .5;
+								double what_r2 = Double.parseDouble(q.cs_r2.get(k));
+								double tlength = 3.0 + 9.0*(what_r2-min_r2)/(1.0-min_r2);
+								double ttop = 4.0 + (12.0 - tlength)/2.0;
+								ttop = 20.0-tlength;
+								String gcol = "#333333";
+								if (is_coding.equals("1")) {
+									gcol = "#FF0000";
+								}
+								ele = SvgGraphics.makeNode(d,
+										group_for_gwas_hit,//parent
+										"rect",//type
+										new String[]{"x",""+var_svg_startx,
+												"y",""+(current_top+ttop),
+												"width",""+var_scaled_width_in_pixels,
+												"height",""+tlength,
+												"id", "ld_"+giv.index_variant_name+"_"+q.cs_variants.get(k)+"_"+ii,
+												"class", q.cs_variants.get(k),
+												"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(q.cs_variants.get(k))+"')",
+												"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
+												"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(q.cs_variants.get(k))+"', evt)",
+												"data-variationbasewidth", ""+var_base_width,
+												"data-variationbasecenter", ""+var_base_center,
+												"data-variationsvgcenter", ""+var_svg_center,
+												"fill",gcol,
+												"data-normalfill", gcol
+								});
+							}
+							current_top+=20;
+						}
+						String s_varname = "svgeqtl_"+q.eqtl_table_row_id;
+						String ttt = "";
+						String ttt_type = "0";
+						if (!q.credible_set.equals("None") && q.typed_in_accepted_dataset) {
+							ttt_type = "1";
+							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
+							ttt+="<p>"+q.svg_display_name+"</p>";					
+							ttt+="<p>Credible Set: "+q.credible_set+"</p>";
+							ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							ttt+="<tbody>";
+							boolean index_placed = false;
+							for (int k=0; k<q.cs_locs_starts.size(); ++k) {
+								Integer spot_start = q.cs_locs_starts.get(k);
+								if (!index_placed) {
+									if (k==0) {
+										if (giv.index_variant_location_start<spot_start) {
+											if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
+											else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+											index_placed = true;
+										}
+									}
+								}
+								if (q.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+q.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(q.cs_r2.get(k)))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+q.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(q.cs_r2.get(k)))+"</td><td></td></tr>";
+								if (!index_placed) {
+									if (k==q.cs_locs_starts.size()-1) {
+										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
+										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+										index_placed = true;
+									} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<q.cs_locs_starts.get(k+1)) {
+										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
+										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+										index_placed = true;
+									}
+								}	    
+							}
+							if (!index_placed) {
+								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+							}
+							ttt+="</tbody>";
+							ttt+="</table>";
+							ttt+="</div>";
+						} else if (q.credible_set.equals("None")) {
+							ttt_type = "1";
+							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
+							ttt+="<p>"+q.svg_display_name+"</p>";					
+							ttt+="<p>Credible Set: "+q.credible_set+"</p>";
+							ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							ttt+="<tbody>";
+							if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
+							else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+							ttt+="</tbody>";
+							ttt+="</table>";
+							ttt+="</div>";
+						} else if (!q.typed_in_accepted_dataset) {
+							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
+							ttt+="<p>"+q.svg_display_name+"</p>";					
+							ttt+="<p>Credible Set: "+q.credible_set+"</p>";
+							ttt+="<p>(not typed)</p>";
+							ttt+="</div>";
+						}
+						String what_weight = "400";
+						Element ele = SvgGraphics.makeNode(d,
+								group_for_gwas_hit,
+								"text",//type
+								new String[]{"x",""+index_var_svg_center,
+										"y",""+(current_top+15),
+										"id", s_varname,
+										"font-weight",what_weight,
+										"font-size","14",
+										"fill", "#00739c",										
+										"class","akeqtltext",
+										"data-origsvgx",""+index_var_svg_center,
+										"font-style","italic",
+										"cursor","default",
+										"text-anchor","middle",
+										"font-family","Lato, Sans-serif",
+										"data-supl", ttt,
+										"data-supltype", ttt_type,
+										"onclick", "populatesupldiv2(evt)"
+						});
+						ele.setTextContent(q.svg_display_name);						
+						current_top+=20;
+					}
+				}
 			}
 
 			// for any custom credible set gwas result for this index variant
 			
 			for (int j=0; j<sorted_gwas_results.size(); ++j) {
 				GWASResult g = sorted_gwas_results.get(j);
-				if (g.marker_equivalence_set.equals("Credible set") && g.show_in_svg) {
+				if (g.credible_set.equals("Custom") && g.show_in_svg) {
 					Element group_for_gwas_hit = SvgGraphics.makeNode(d,
-							group_for_mes,//parent
+							group_for_cs,//parent
 							"g",//type
 							null
 							);
-					String ttt = giv.index_variant_name+"#Posterior = "+g.credible_set_posterior;
+					String ttt = giv.index_variant_name+"#Posterior = "+g.custom_credible_set_posterior;
 					String fillcolor = "#333333";
 					if (giv.is_coding) {
 						fillcolor = "#FF0000";
@@ -705,8 +899,8 @@ class Layout {
 									"y",""+(current_top),
 									"width",""+iv_scaled_width_in_pixels,
 									"height","20",
-									"id", varname+" cs",
-									"class", "gwasvariant index_"+giv.index_variant_name,
+									"id", "gwas"+giv.index_variant_name+" cs "+j ,
+									"class", giv.index_variant_name,
 									"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(giv.index_variant_name)+"')",
 									"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
 									"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(giv.index_variant_name)+"', evt)",
@@ -716,16 +910,15 @@ class Layout {
 									"fill", fillcolor,
 									"data-normalfill", fillcolor
 					});
-					for (int k=0; k<g.mes_locs_starts.size(); ++k) {
-						Integer spot_start = g.mes_locs_starts.get(k);
-						Integer spot_end = g.mes_locs_ends.get(k);
-						String is_coding = g.mes_coding.get(k);
+					for (int k=0; k<g.cs_locs_starts.size(); ++k) {
+						Integer spot_start = g.cs_locs_starts.get(k);
+						Integer spot_end = g.cs_locs_ends.get(k);
+						String is_coding = g.cs_coding.get(k);
 						double var_svg_low = (double)((spot_start - chrom_low))*svg_units_per_base;
 						double var_svg_high = (double)(((spot_end+1) - chrom_low))*svg_units_per_base;
 						int var_base_width = (spot_end-spot_start)+1;
 						double var_svg_center = 0.5*(var_svg_low+var_svg_high);
 						double var_base_center = ((double)(spot_end+spot_start+1))*0.5;
-						varname = "gwasld_"+giv.index_variant_name+"_"+g.mes_variants.get(k)+"_cc";
 						width_in_pixels = (double)var_base_width*svg_units_per_base; // this applies to unzoomed, therefore svg=pixel
 						double var_scaled_width_in_pixels = width_in_pixels;
 						double var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
@@ -737,9 +930,9 @@ class Layout {
 							if (ssifr>.5) var_svg_startx = (double)ssi+1.0;
 							else var_svg_startx = (double)ssi;
 						}
-						ttt=g.mes_variants.get(k)+"#Posterior = "+g.mes_posterior.get(k);
+						ttt=g.cs_variants.get(k)+"#Posterior = "+g.cs_posterior.get(k);
 						double min_r2 = 0.0;
-						double what_r2 = Double.parseDouble(g.mes_posterior.get(k));
+						double what_r2 = Double.parseDouble(g.cs_posterior.get(k));
 						double tlength = 5.0 + 7.0*(what_r2-min_r2)/(1.0-min_r2);
 						double ttop = 4.0 + (12.0 - tlength)/2.0;
 						ttop = 20.0-tlength;
@@ -754,11 +947,11 @@ class Layout {
 										"y",""+(current_top+ttop),
 										"width",""+var_scaled_width_in_pixels,
 										"height",""+tlength,
-										"id", varname,
-										"class", "gwasvariant "+g.mes_variants.get(k),
-										"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(g.mes_variants.get(k))+"')",
+										"id", "gwasld_"+giv.index_variant_name+"_"+g.cs_variants.get(k)+" cs "+j,
+										"class", g.cs_variants.get(k),
+										"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(g.cs_variants.get(k))+"')",
 										"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
-										"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(g.mes_variants.get(k))+"', evt)",
+										"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(g.cs_variants.get(k))+"', evt)",
 										"data-variationbasewidth", ""+var_base_width,
 										"data-variationbasecenter", ""+var_base_center,
 										"data-variationsvgcenter", ""+var_svg_center,
@@ -768,44 +961,44 @@ class Layout {
 
 					}
 					current_top+=20;
-					varname = "svggwas_"+g.gwas_table_row_id;
+					String s_varname = "svggwas_"+g.gwas_table_row_id;
 					ttt = "";
 					String ttt_type = "1";
 					ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
 					ttt+="<p>"+g.svg_display_name+"</p>";					
-					ttt+="<p>Credible Set: "+g.credible_set_name+"</p>";
+					ttt+="<p>Credible Set: "+g.custom_credible_set_name+"</p>";
 					ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">Posterior</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
 					ttt+="<tbody>";
 					boolean index_placed = false;
-					for (int k=0; k<g.mes_locs_starts.size(); ++k) {
-						Integer spot_start = g.mes_locs_starts.get(k);
+					for (int k=0; k<g.cs_locs_starts.size(); ++k) {
+						Integer spot_start = g.cs_locs_starts.get(k);
 						if (!index_placed) {
 							if (k==0) {
 								if (giv.index_variant_location_start<spot_start) {
-									if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td>Y</td></tr>";
-									else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td></td></tr>";
+									if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+									else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td></td></tr>";
 									index_placed = true;
 								}
 							}
 						}
 
-						if (g.mes_coding.get(k).equals("1")) ttt+="<tr><td>"+g.mes_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.mes_posterior.get(k)))+"</td><td>Y</td></tr>";
-						else ttt+="<tr><td>"+g.mes_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.mes_posterior.get(k)))+"</td><td></td></tr>";
+						if (g.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+g.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.cs_posterior.get(k)))+"</td><td>Y</td></tr>";
+						else ttt+="<tr><td>"+g.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.cs_posterior.get(k)))+"</td><td></td></tr>";
 						if (!index_placed) {
-							if (k==g.mes_locs_starts.size()-1) {
-								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td></td></tr>";
+							if (k==g.cs_locs_starts.size()-1) {
+								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td></td></tr>";
 								index_placed = true;
-							} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<g.mes_locs_starts.get(k+1)) {
-								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td></td></tr>";
+							} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<g.cs_locs_starts.get(k+1)) {
+								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td></td></tr>";
 								index_placed = true;
 							}
 						}	    
 					}
 					if (!index_placed) {
-						if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td>Y</td></tr>";
-						else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.credible_set_posterior))+"</td><td></td></tr>";
+						if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+						else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(g.custom_credible_set_posterior))+"</td><td></td></tr>";
 					}
 					ttt+="</tbody>";
 					ttt+="</table>";
@@ -816,7 +1009,7 @@ class Layout {
 							"text",//type
 							new String[]{"x",""+index_var_svg_center,
 									"y",""+(current_top+15),
-									"id", varname,
+									"id", s_varname,
 									"font-weight",what_weight,
 									"font-size","14",
 									"class","akgwastext",
@@ -834,194 +1027,156 @@ class Layout {
 				}
 			}
 			
-			// do eqtls
-
-			varname = "eqtl"+giv.index_variant_name;
-
-			
-			Vector<EQTLResult> sorted_eqtl_results = new Vector<>();
-			sorted_sdns.clear();
-			for (int ii=0; ii<giv.eqtl_results.size(); ++ii) {
-				EQTLResult g = giv.eqtl_results.get(ii);
-				String sdn = g.svg_display_name;
-				int loc = -1;
-				for (int j=0; j<sorted_sdns.size(); ++j) {
-					String tst = sorted_sdns.get(j);
-					if (tst.compareTo(sdn)>0) {
-						loc = j;
-						sorted_sdns.insertElementAt(sdn, j);
-						sorted_eqtl_results.insertElementAt(g, j);
-						break;
-					}
-				}
-				if (loc==-1) {
-					sorted_sdns.add(sdn);
-					sorted_eqtl_results.add(g);
-				}
-			}
-			
+			// custom eQTL credible sets ...
 			
 			for (int j=0; j<sorted_eqtl_results.size(); ++j) {
 				EQTLResult q = sorted_eqtl_results.get(j);
-				if (!q.show_in_svg) continue;
-				Element group_for_gwas_hit = SvgGraphics.makeNode(d,
-						group_for_mes,//parent
-						"g",//type
-						null
-						);
-				String ttt = giv.index_variant_name+"#Pvalue = "+q.pvalue+"#Beta = "+q.beta;
-				String fillcolor = "#333333";
-				if (giv.is_coding) {
-					fillcolor = "#FF0000";
-				}
-				Element ele = SvgGraphics.makeNode(d,
-						group_for_gwas_hit,//parent
-						"rect",//type
-						new String[]{"x",""+svg_startx,
-								"y",""+(current_top),
-								"width",""+iv_scaled_width_in_pixels,
-								"height","20",
-								"id", varname+" e",
-								"class", "eqtlvariant index_"+giv.index_variant_name,
-								"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(giv.index_variant_name)+"')",
-								"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
-								"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(giv.index_variant_name)+"', evt)",
-								"data-variationbasewidth", ""+index_var_base_width,
-								"data-variationbasecenter", ""+index_var_base_center,
-								"data-variationsvgcenter", ""+index_var_svg_center,
-								"fill", fillcolor,
-								"data-normalfill", fillcolor
-				});
-
-				for (int k=0; k<q.ld_locs_starts.size(); ++k) {
-					Integer spot_start = q.ld_locs_starts.get(k);
-					Integer spot_end = q.ld_locs_ends.get(k);
-					String is_coding = q.ld_coding.get(k);
-					double var_svg_low = (double)((spot_start - chrom_low))*svg_units_per_base;
-					double var_svg_high = (double)(((spot_end+1) - chrom_low))*svg_units_per_base;
-					int var_base_width = (spot_end-spot_start)+1;
-					double var_svg_center = 0.5*(var_svg_low+var_svg_high);
-					double var_base_center = ((double)(spot_end+spot_start+1))*0.5;
-					varname = "eqtlld_"+giv.index_variant_name+"_"+q.ld_variants.get(k)+"_e";
-					width_in_pixels = (double)var_base_width*svg_units_per_base; // this applies to unzoomed, therefore svg=pixel
-					double var_scaled_width_in_pixels = width_in_pixels;
-					double var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
-					if (var_scaled_width_in_pixels<variant_tick_min_pixel_width) {
-						var_scaled_width_in_pixels = variant_tick_min_pixel_width;
-						var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
-						int ssi = (int)var_svg_startx;
-						double ssifr = var_svg_startx - (double)ssi;
-						if (ssifr>.5) var_svg_startx = (double)ssi+1.0;
-						else var_svg_startx = (double)ssi;
+				if (q.credible_set.equals("Custom") && q.show_in_svg) {
+					Element group_for_gwas_hit = SvgGraphics.makeNode(d,
+							group_for_cs,//parent
+							"g",//type
+							null
+							);
+					
+					String ttt = giv.index_variant_name+"#Posterior = "+q.custom_credible_set_posterior+"#Pvalue = "+q.pvalue+"#Beta = "+q.beta;
+					String fillcolor = "#333333";
+					if (giv.is_coding) {
+						fillcolor = "#FF0000";
 					}
-					ttt=q.ld_variants.get(k)+"#r2 = "+q.ld_r2.get(k)+"#pvalue = "+q.ld_pv.get(k)+"#beta = "+q.ld_beta.get(k);
-					double min_r2 = .5;
-					double what_r2 = Double.parseDouble(q.ld_r2.get(k));
-					double tlength = 3.0 + 9.0*(what_r2-min_r2)/(1.0-min_r2);
-					double ttop = 4.0 + (12.0 - tlength)/2.0;
-					ttop = 20.0-tlength;
-					String gcol = "#333333";
-					if (is_coding.equals("1")) {
-						gcol = "#FF0000";
-					}
-					ele = SvgGraphics.makeNode(d,
+					Element ele = SvgGraphics.makeNode(d,
 							group_for_gwas_hit,//parent
 							"rect",//type
-							new String[]{"x",""+var_svg_startx,
-									"y",""+(current_top+ttop),
-									"width",""+var_scaled_width_in_pixels,
-									"height",""+tlength,
-									"id", varname,
-									"class", "eqtlvariant "+q.ld_variants.get(k),
-									"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(q.ld_variants.get(k))+"')",
+							new String[]{"x",""+svg_startx,
+									"y",""+(current_top),
+									"width",""+iv_scaled_width_in_pixels,
+									"height","20",
+									"id", "eqtl"+giv.index_variant_name+" cs "+j ,
+									"class", giv.index_variant_name,
+									"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(giv.index_variant_name)+"')",
 									"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
-									"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(q.ld_variants.get(k))+"', evt)",
-									"data-variationbasewidth", ""+var_base_width,
-									"data-variationbasecenter", ""+var_base_center,
-									"data-variationsvgcenter", ""+var_svg_center,
-									"fill",gcol,
-									"data-normalfill", gcol
+									"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(giv.index_variant_name)+"', evt)",
+									"data-variationbasewidth", ""+index_var_base_width,
+									"data-variationbasecenter", ""+index_var_base_center,
+									"data-variationsvgcenter", ""+index_var_svg_center,
+									"fill", fillcolor,
+									"data-normalfill", fillcolor
 					});
-				}
-				current_top+=20;
-				varname = "svgeqtl_"+q.eqtl_table_row_id;
-				ttt = "";
-				String ttt_type = "0";
-				if (!q.marker_equivalence_set_label.equals("None")) {
-					ttt_type = "2";
+					for (int k=0; k<q.cs_locs_starts.size(); ++k) {
+						Integer spot_start = q.cs_locs_starts.get(k);
+						Integer spot_end = q.cs_locs_ends.get(k);
+						String is_coding = q.cs_coding.get(k);
+						double var_svg_low = (double)((spot_start - chrom_low))*svg_units_per_base;
+						double var_svg_high = (double)(((spot_end+1) - chrom_low))*svg_units_per_base;
+						int var_base_width = (spot_end-spot_start)+1;
+						double var_svg_center = 0.5*(var_svg_low+var_svg_high);
+						double var_base_center = ((double)(spot_end+spot_start+1))*0.5;
+						width_in_pixels = (double)var_base_width*svg_units_per_base; // this applies to unzoomed, therefore svg=pixel
+						double var_scaled_width_in_pixels = width_in_pixels;
+						double var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
+						if (var_scaled_width_in_pixels<variant_tick_min_pixel_width) {
+							var_scaled_width_in_pixels = variant_tick_min_pixel_width;
+							var_svg_startx = var_svg_center - 0.5*var_scaled_width_in_pixels;
+							int ssi = (int)var_svg_startx;
+							double ssifr = var_svg_startx - (double)ssi;
+							if (ssifr>.5) var_svg_startx = (double)ssi+1.0;
+							else var_svg_startx = (double)ssi;
+						}
+						ttt=q.cs_variants.get(k)+"#Posterior = "+q.cs_posterior.get(k);
+						double min_r2 = 0.0;
+						double what_r2 = Double.parseDouble(q.cs_posterior.get(k));
+						double tlength = 5.0 + 7.0*(what_r2-min_r2)/(1.0-min_r2);
+						double ttop = 4.0 + (12.0 - tlength)/2.0;
+						ttop = 20.0-tlength;
+						String gcol = "#333333";
+						if (is_coding.equals("1")) {
+							gcol = "#FF0000";
+						}
+						ele = SvgGraphics.makeNode(d,
+								group_for_gwas_hit,//parent
+								"rect",//type
+								new String[]{"x",""+var_svg_startx,
+										"y",""+(current_top+ttop),
+										"width",""+var_scaled_width_in_pixels,
+										"height",""+tlength,
+										"id", "eqtlld_"+giv.index_variant_name+"_"+q.cs_variants.get(k)+" cs "+j,
+										"class", q.cs_variants.get(k),
+										"onmouseover", "highlightvariants('"+QuoteEscape.quote_escape(q.cs_variants.get(k))+"')",
+										"onmousemove", "ShowTooltip(evt,'"+QuoteEscape.quote_escape(ttt)+"')",
+										"onmouseout", "hideanddehighlight('"+QuoteEscape.quote_escape(q.cs_variants.get(k))+"', evt)",
+										"data-variationbasewidth", ""+var_base_width,
+										"data-variationbasecenter", ""+var_base_center,
+										"data-variationsvgcenter", ""+var_svg_center,
+										"fill",gcol,
+										"data-normalfill", gcol
+						});
+
+					}
+					current_top+=20;
+					String s_varname = "svgeqtl_"+q.eqtl_table_row_id;
+					ttt = "";
+					String ttt_type = "1";
 					ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
 					ttt+="<p>"+q.svg_display_name+"</p>";					
-					ttt+="<p>Credible Set: "+q.marker_equivalence_set_label+"</p>";
-					ttt+="<table id=\"aktmptable\" style=\"width:472px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">Pvalue</th><th style=\"text-align: center;\" class=\"resizable-false\">Beta</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+					ttt+="<p>Credible Set: "+q.custom_credible_set_name+"</p>";
+					ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">Posterior</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
 					ttt+="<tbody>";
 					boolean index_placed = false;
-					for (int k=0; k<q.ld_locs_starts.size(); ++k) {
-						Integer spot_start = q.ld_locs_starts.get(k);
+					for (int k=0; k<q.cs_locs_starts.size(); ++k) {
+						Integer spot_start = q.cs_locs_starts.get(k);
 						if (!index_placed) {
 							if (k==0) {
 								if (giv.index_variant_location_start<spot_start) {
-									if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td>Y</td></tr>";
-									else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td></td></tr>";
+									if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+									else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td></td></tr>";
 									index_placed = true;
 								}
 							}
 						}
-						if (q.ld_coding.get(k).equals("1")) ttt+="<tr><td>"+q.ld_variants.get(k)+"</td><td>"+String.format("%.2e", Double.valueOf(q.ld_pv.get(k)))+"</td><td>"+String.format("%.2f", Double.valueOf(q.ld_beta.get(k)))+"</td><td>"+String.format("%.3f", Double.valueOf(q.ld_r2.get(k)))+"</td><td>Y</td></tr>";
-						else ttt+="<tr><td>"+q.ld_variants.get(k)+"</td><td>"+String.format("%.2e", Double.valueOf(q.ld_pv.get(k)))+"</td><td>"+String.format("%.2f", Double.valueOf(q.ld_beta.get(k)))+"</td><td>"+String.format("%.3f", Double.valueOf(q.ld_r2.get(k)))+"</td><td></td></tr>";
+
+						if (q.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+q.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(q.cs_posterior.get(k)))+"</td><td>Y</td></tr>";
+						else ttt+="<tr><td>"+q.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(q.cs_posterior.get(k)))+"</td><td></td></tr>";
 						if (!index_placed) {
-							if (k==q.ld_locs_starts.size()-1) {
-								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td></td></tr>";
+							if (k==q.cs_locs_starts.size()-1) {
+								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td></td></tr>";
 								index_placed = true;
-							} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<q.ld_locs_starts.get(k+1)) {
-								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td></td></tr>";
+							} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<q.cs_locs_starts.get(k+1)) {
+								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td></td></tr>";
 								index_placed = true;
 							}
 						}	    
 					}
 					if (!index_placed) {
-						if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.3f", Double.valueOf(q.beta))+"</td><td></td><td>Y</td></tr>";
-						else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td></td></tr>";
+						if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td>Y</td></tr>";
+						else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.3f", Double.valueOf(q.custom_credible_set_posterior))+"</td><td></td></tr>";
 					}
 					ttt+="</tbody>";
 					ttt+="</table>";
 					ttt+="</div>";
-				} else {
-					ttt_type = "2";
-					ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
-					ttt+="<p>"+q.svg_display_name+"</p>";					
-					ttt+="<p>Credible Set: "+q.marker_equivalence_set_label+"</p>";
-					ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">Pvalue</th><th style=\"text-align: center;\" class=\"resizable-false\">Beta</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
-					ttt+="<tbody>";
-					if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.3f", Double.valueOf(q.beta))+"</td><td></td><td>Y</td></tr>";
-					else ttt+="<tr><td>"+giv.index_variant_name+"</td><td>"+String.format("%.2e", Double.valueOf(q.pvalue))+"</td><td>"+String.format("%.2f", Double.valueOf(q.beta))+"</td><td></td><td></td></tr>";
-					ttt+="</tbody>";
-					ttt+="</table>";
-					ttt+="</div>";
+					String what_weight = "400";
+					ele = SvgGraphics.makeNode(d,
+							group_for_gwas_hit,
+							"text",//type
+							new String[]{"x",""+index_var_svg_center,
+									"y",""+(current_top+15),
+									"id", s_varname,
+									"font-weight",what_weight,
+									"font-size","14",
+									"fill","#00739c",
+									"class","akeqtltext",
+									"data-origsvgx",""+index_var_svg_center,
+									"font-style","italic",
+									"cursor","default",
+									"text-anchor","middle",
+									"font-family","Lato, Sans-serif",
+									"data-supl", ttt,
+									"data-supltype", ttt_type,
+									"onclick", "populatesupldiv2(evt)"
+					});
+					ele.setTextContent(q.svg_display_name);
+					current_top+=20;
 				}
-				String what_weight = "400";
-				ele = SvgGraphics.makeNode(d,
-						group_for_gwas_hit,
-						"text",//type
-						new String[]{"x",""+index_var_svg_center,
-								"y",""+(current_top+15),
-								"id", varname,
-								"font-weight",what_weight,
-								"font-size","14",
-								"fill", "#00739c",
-								"class","akeqtltext",
-								"data-origsvgx",""+index_var_svg_center,
-								"font-style","italic",
-								"cursor","default",
-								"text-anchor","middle",
-								"font-family","Lato, Sans-serif",
-								"data-supl", ttt,
-								"data-supltype", ttt_type,
-								"onclick", "populatesupldiv2(evt)"
-				});
-				ele.setTextContent(q.svg_display_name);
-				current_top+=20;
 			}
 		}
 	}
@@ -1033,7 +1188,7 @@ class Layout {
 		int cur_x_pos = start_x_pos;
 		int current_top = (minus_footprints.size()+plus_footprints.size())*gene_line_height+kb_track_height;
 
-		String vis = "visible";
+		String vis = "";//"visible"; /* don't use explicit visible, since it will override loading hidden of html parent */
 		if (svg_mode.equals("Credible Sets")) vis = "hidden";
 
 		Element group_for_ldg = SvgGraphics.makeNode(d,
@@ -1057,7 +1212,9 @@ class Layout {
 					GWASResult gwr = lm.gwas_results.get(k);
 					String ob = "";
 					if (!gwr.or_beta.equals("")) ob = String.format("%.2f", Double.valueOf(gwr.or_beta));
-					tt+="<tr><td>"+lm.name+"</td><td>Assoc.</td><td>"+gwr.allele+"</td><td></td><td></td><td>"+gwr.trait+"</td><td></td><td>"+gwr.sum_1kgp3eur_maf_str+" sum(MAF) 1KGp3:EUR</td><td>"+ob+"</td></tr>";
+					String finding = "pQTL";
+					if (!gwr.is_pqtl) finding = "Assoc.";
+					tt+="<tr><td>"+lm.name+"</td><td>"+finding+"</td><td>"+gwr.allele+"</td><td></td><td></td><td>"+gwr.trait+"</td><td></td><td>"+gwr.sum_1kgp3eur_maf_str+" sum(MAF) 1KGp3:EUR</td><td>"+ob+"</td></tr>";
 				}
 				for (int k=0; k<lm.eqtl_results.size(); ++k) {
 					EQTLResult er = lm.eqtl_results.get(k);
@@ -1324,16 +1481,20 @@ class Layout {
 		} else {
 			gene_top = first_minus_strand_gene_top + gene_line_height*(ga.which_gene_line-1);
 		}
+		
 		double tx_start_svg = (double)((tx_start - chrom_low))*svg_units_per_base;
 		if (tx_start_svg<0.0) tx_start_svg = 0.0;
 		double tx_end_svg = (double)(((tx_end+1) - chrom_low))*svg_units_per_base;
 		if (tx_end_svg>(double)svg_width) tx_end_svg = (double)svg_width;
 		if (tx_start_svg>(double)svg_width) {return;}
 		if (tx_end_svg<(double)0.0) {return;}
+		
 		double tx_start_mid_svg = (double)((tx_start_mid - chrom_low))*svg_units_per_base;
 		if (tx_start_mid_svg<0.0) tx_start_mid_svg = 0.0;
 		double tx_end_mid_svg = (double)(((tx_end_mid+1) - chrom_low))*svg_units_per_base;
 		if (tx_end_mid_svg>(double)svg_width) tx_end_mid_svg = (double)svg_width;
+		if (tx_end_mid_svg<(double)0.0) tx_end_mid_svg = (double)0.0;
+		
 		double tx_span_mid_svg = tx_end_mid_svg - tx_start_mid_svg;
 		int tx_start_svg_bounding_int = (int)tx_start_svg;
 		int tx_end_svg_bounding_int = (int)(tx_end_svg+1.0);
@@ -1349,6 +1510,7 @@ class Layout {
 			alt_viewbox_click_varname = ga.gene_id+"cfull";
 		}
 		String varname = ga.gene_id+"full";
+		
 		String col = "#111111";
 		if (ga.is_gene_target==1) col = "#c60071";
 		Element group_for_a_tx = SvgGraphics.makeNode(d,

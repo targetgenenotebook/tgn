@@ -1,3 +1,5 @@
+"use strict;"
+
 var all_set_tags = {};
 var all_tgns = [];
 var tag_ids_for_db_filtering = [];
@@ -9,18 +11,11 @@ var current_tag_text_color = '';
 
 function formatState(state) {
 	if (!state.id) {return state.text;}
-	//var isrc = $('#tagid'+state.id+' .contain_img').attr('src');
-	//var $state = $('<span><img src="'+isrc+'" class="contain_img" /></span>');
-	
 	var isrc = $('#tagid'+state.id+' svg');
-	//console.log(isrc.html());
 	var serializer = new XMLSerializer();
 	var str = serializer.serializeToString(isrc[0]);
 	var $state = $(str);
-	//var $state = $('<span>'+str+'</span>');
-	//var $state = $('<span>'+isrc.html()+'</span>');
-	
-return $state;
+	return $state;
 }
 
 function FilterTableRows() {
@@ -41,7 +36,6 @@ function FilterTableRows() {
 					break;
 				}
 			}
-			console.log("mv "+make_visible);
 			if (make_visible==1) {
 				table.rows[i].style.display = '';
 			} else {
@@ -52,10 +46,8 @@ function FilterTableRows() {
 }
 
 function AdjustDBFilter(button) {
-	
 	var c_val = button.getAttribute("data-is_selected");
 	var t_id = button.getAttribute("data-tag_id");
-	
 	if (c_val==0) {
 		button.style.filter = '';
 		button.setAttribute('data-is_selected', '1');
@@ -68,9 +60,7 @@ function AdjustDBFilter(button) {
 		}
 	}
 	FilterTableRows();
-	
 }
-
 
 var tagselectorresetting = 0;
 function ChangedTagSelector(selector) {
@@ -111,38 +101,22 @@ function ChangedTagSelector(selector) {
 	master_busy = false;
 }
 
-
-var dbselecting = 0;
 function SelectAllDBs(select_if_1) {
-	if (dbselecting==1) {return false;}
-	//var c_val = selector.getAttribute("data-ctid");
-	//var n_tag_id = selector.options[selector.selectedIndex].value;
 	if (master_busy) {
-		//tagselectorresetting=1;
-		//$(selector).val(c_val).trigger('change');
-		//tagselectorresetting=0;
 		alert("Please re-try after background actions have completed.");
 		return false;
 	}
 	master_busy = true;
-	//selector.setAttribute("data-ctid", n_tag_id);
-	//var myrow = document.getElementById("tagid"+n_tag_id);
-	//current_tag = myrow.getElementsByClassName("short_name")[0].innerHTML;
-	//current_tag_id = n_tag_id;
-	//current_tag_color = myrow.getAttribute('data-tag_color');
-	//current_tag_text_color = myrow.getAttribute('data-tag_text_color');
 	for (var i=0; i<all_tgns.length; ++i) {
-	
-			var but = document.getElementById("db_button_"+all_tgns[i]);
-			if (but!=null) {
+		var but = document.getElementById("pdb_button_"+all_tgns[i]);
+		if (but!=null) {
 			if (select_if_1==0) {
 				but.style.backgroundColor = 'White';
 			} else {
 				but.style.backgroundColor = 'DodgerBlue';
 			}
 			but.setAttribute('data-is_assigned_to_push', select_if_1);
-			}
-
+		}
 	}
 	master_busy = false;
 }
@@ -212,7 +186,8 @@ ToggleAssignToCurrentTGN = function(button) {
 			todo: "updatetagassign",
 			tag_id: tag_id,
 			db: current_tgn,
-			addif1: to_assign
+			addif1: to_assign,
+			backend_version: backend_version
 	};
 	$.ajax({
 		url: "http://"+window.location.host+"/updatetagassign",
@@ -221,8 +196,18 @@ ToggleAssignToCurrentTGN = function(button) {
 		data: JSON.stringify(whattodo),
 		dataType: "json",
 		contentType: "application/json",
-		success: function(data){
-			if (data.isok!="ok") {
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=='backend mismatch') {
+				console.log('updatetagassign not successful');
+				$('.ak_tag_overlay').attr('disabled', false);
+				master_busy = false;
+				alert("Server version was updated.  Please refresh the page before further actions.");
+			} else if (returnedbyserver.isok=='backend db mismatch') {
+				console.log('updatetagassign not successful');
+				$('.ak_tag_overlay').attr('disabled', false);
+				master_busy = false;
+				alert("Version of target notebook does not match the server db version.  Please resolve this before changing tag assignments to this notebook.");
+			} else if (returnedbyserver.isok!="ok") {
 				console.log('updatetagassign not successful');
 				master_busy = false;
 				alert("Problem updating tag assignment");
@@ -261,9 +246,9 @@ ToggleAssignToCurrentTag = function(button) {
 			todo: "updatetagassign",
 			tag_id: current_tag_id,
 			db: button.innerHTML.toLowerCase(),
-			addif1: to_assign
+			addif1: to_assign,
+			backend_version: backend_version
 	};
-	console.log(whattodo);
 	$.ajax({
 		url: "http://"+window.location.host+"/updatetagassign",
 		type: "post",
@@ -271,8 +256,18 @@ ToggleAssignToCurrentTag = function(button) {
 		data: JSON.stringify(whattodo),
 		dataType: "json",
 		contentType: "application/json",
-		success: function(data){
-			if (data.isok!="ok") {
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=='backend mismatch') {
+				console.log('updatetagassign not successful');
+				$('.ak_tag_overlay').attr('disabled', false);
+				master_busy = false;
+				alert("Server version was updated.  Please refresh the page before further actions.");
+			} else if (returnedbyserver.isok=='backend db mismatch') {
+				console.log('updatetagassign not successful');
+				$('.ak_tag_overlay').attr('disabled', false);
+				master_busy = false;
+				alert("Version of target notebook does not match the server db version.  Please resolve this before changing tag assignments to this notebook.");
+			} else if (returnedbyserver.isok!="ok") {
 				console.log('updatetagassign not successful');
 				master_busy = false;
 				alert("Problem updating tag assignment");
@@ -310,102 +305,102 @@ function AddAssignByTGNOverlay() {
 		return;
 	}
 	master_busy = true;
-	var url = "http://"+window.location.host+"/get_db_tag_assigns";
-	var jqxhr = $.getJSON(url, function() {
-	}).done(function(data) {
-		if (data.isok=="ok") {
-			all_tgns.length=0;
-			for (var prop in all_set_tags) {
-				if (all_set_tags.hasOwnProperty(prop)) {
-					delete all_set_tags[prop];
+	var whattodo = {
+			todo: "get_db_tag_assigns",
+			backend_version: backend_version
+	};
+	$.ajax({
+		url: "http://"+window.location.host+"/get_db_tag_assigns",
+		type: "post",
+		timeout: 30000,
+		data: JSON.stringify(whattodo),
+		dataType: "json",
+		contentType: "application/json",
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=="ok") {
+				all_tgns.length=0;
+				for (var prop in all_set_tags) {
+					if (all_set_tags.hasOwnProperty(prop)) {
+						delete all_set_tags[prop];
+					}
 				}
-			}
-			var taobj = JSON.parse(data.db_tag_assigns);
-			var num_dbs = taobj.length;
-			for (var i=0; i<num_dbs; ++i) {
-				var taobj2 = JSON.parse(taobj[i]);
-				var dbname = taobj2.db;
-				all_tgns.push(dbname);
-				all_set_tags[dbname] = [];
-				var taglist = JSON.parse(taobj2.tags);
-				for (var j=0; j<taglist.length; ++j) {
-					all_set_tags[dbname].push(taglist[j]);
+				var taobj = JSON.parse(returnedbyserver.db_tag_assigns);
+				var num_dbs = taobj.length;
+				for (var i=0; i<num_dbs; ++i) {
+					var taobj2 = JSON.parse(taobj[i]);
+					var dbname = taobj2.db;
+					all_tgns.push(dbname);
+					all_set_tags[dbname] = [];
+					var taglist = JSON.parse(taobj2.tags);
+					for (var j=0; j<taglist.length; ++j) {
+						all_set_tags[dbname].push(taglist[j]);
+					}
 				}
-			}
-			all_tgns.sort();
-			var mydiv = document.getElementById("assignbytgnoverlay");
-			mydiv.innerHTML = '';
-			var dcontent = '<div id="assignbytgnoverlay" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;">Edit Assignment By TGN</p>';
-			dcontent += '<p style="color:#000;">';
-			dcontent += '<select id="tgn_selector" style="width:200px" onchange="ChangedTGNSelector(this)">';
-			current_tgn = all_tgns[0];
-			for (var i=0; i<all_tgns.length; ++i) {
-				dcontent += '<option value="'+escapeHtml(all_tgns[i])+'">'+escapeHtml(all_tgns[i].toUpperCase())+'</option>';
-			}
-			dcontent += '</select></p>';
-			dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
-			var alltagrows = document.getElementsByClassName("a_tag_row");
-			for (var ij=0; ij<alltagrows.length; ++ij) {
-				var sname = alltagrows[ij].getElementsByClassName("short_name")[0].innerHTML;
-				var tid = alltagrows[ij].getAttribute('id');
-				tid = tid.replace("tagid", "");
-				
-				
-				var isrc = $('#tagid'+tid+' svg');
-				var serializer = new XMLSerializer();
-				var str = serializer.serializeToString(isrc[0]);
-				if (all_set_tags[current_tgn].indexOf(sname)>-1) {
-					dcontent += '<button style="padding:0px; border: 1px; height: 25px; display:block; margin:auto;" data-is_assigned_to_tgn="1" id="tag_button_'+tid+'" onclick="ToggleAssignToCurrentTGN(this)">'+str+'</button>';
+				all_tgns.sort();
+				var mydiv = document.getElementById("assignbytgnoverlay");
+				mydiv.innerHTML = '';
+				var dcontent = '<div id="assignbytgndiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;">Edit Assignment By TGN</p>';
+				dcontent += '<p style="color:#000;">';
+				dcontent += '<select id="tgn_selector" style="width:200px" onchange="ChangedTGNSelector(this)">';
+				current_tgn = all_tgns[0];
+				for (var i=0; i<all_tgns.length; ++i) {
+					dcontent += '<option value="'+escapeHtml(all_tgns[i])+'">'+escapeHtml(all_tgns[i].toUpperCase())+'</option>';
+				}
+				dcontent += '</select></p>';
+				dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
+				var alltagrows = document.getElementsByClassName("a_tag_row");
+				for (var ij=0; ij<alltagrows.length; ++ij) {
+					var sname = alltagrows[ij].getElementsByClassName("short_name")[0].innerHTML;
+					var tid = alltagrows[ij].getAttribute('id');
+					tid = tid.replace("tagid", "");
+					var isrc = $('#tagid'+tid+' svg');
+					var serializer = new XMLSerializer();
+					var str = serializer.serializeToString(isrc[0]);
+					if (all_set_tags[current_tgn].indexOf(sname)>-1) {
+						dcontent += '<button style="padding:0px; border: 1px; height: 25px; display:block; margin:auto;" data-is_assigned_to_tgn="1" id="tag_button_'+tid+'" onclick="ToggleAssignToCurrentTGN(this)">'+str+'</button>';
+					} else {
+						dcontent += '<button style="padding:0px; border:1px; height: 25px; display:block; margin:auto; filter:grayscale(100%);" data-is_assigned_to_tgn="0" id="tag_button_'+tid+'" onclick="ToggleAssignToCurrentTGN(this)">'+str+'</button>';
+					}
+					if (ij%6==0 && ij>0 && ij<alltagrows.length-1) {
+						dcontent+='</div></p>';
+						dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
+					}
+				}
+				dcontent+='</div></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += "</div>";
+				mydiv.innerHTML = dcontent;
+				$('#tgn_selector').attr('data-ctgn', current_tgn);
+				var tmpb = document.createElement('button');
+				tmpb.setAttribute('id', 'ak_assign_by_tgn_x_button');
+				tmpb.setAttribute('onclick', 'RemoveAssignByTGNOverlay()');
+				tmpb.setAttribute('class', 'btn btn-primary btn-sm');
+				tmpb.style.verticalAlign='top';
+				tmpb.style.display='inline-block';
+				tmpb.innerHTML = 'X';
+				mydiv.appendChild(tmpb);
+				$('#tag_selector').select2({minimumResultsForSearch: 20});
+				mydiv.style.display = 'block';
+				master_busy = false;		
+			} else {
+				console.log('problem recovering tag assignments');
+				master_busy = false;
+				if (returnedbyserver.isok=='backend mismatch') {
+					alert("Server version was updated.  Please refresh the page before further actions.");
 				} else {
-					dcontent += '<button style="padding:0px; border:1px; height: 25px; display:block; margin:auto; filter:grayscale(100%);" data-is_assigned_to_tgn="0" id="tag_button_'+tid+'" onclick="ToggleAssignToCurrentTGN(this)">'+str+'</button>';
-				}
-				
-				
-				/*
-				var isrc = $('#tagid'+tid+' .contain_img').attr('src');
-				if (all_set_tags[current_tgn].indexOf(sname)>-1) {
-					dcontent += '<button style="display:block; margin:auto; " class="ak_table_button" data-is_assigned_to_tgn="1" id="tag_button_'+tid+'" onclick="ToggleAssignToCurrentTGN(this)"><img src="'+isrc+'" class="contain_img" /></button>';
-				} else {
-					dcontent += '<button style="display:block; margin:auto; filter:grayscale(100%);" class="ak_table_button" data-is_assigned_to_tgn="0" id="tag_button_'+tid+'" onclick="ToggleAssignToCurrentTGN(this)"><img src="'+isrc+'" class="contain_img" /></button>';
-				}
-				*/
-				
-				
-				if (ij%6==0 && ij>0 && ij<alltagrows.length-1) {
-					dcontent+='</div></p>';
-					dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
+					alert("Problem recovering tag assignments");
 				}
 			}
-			dcontent+='</div></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += "</div>";
-			mydiv.innerHTML = dcontent;
-			$('#tgn_selector').attr('data-ctgn', current_tgn);
-			var tmpb = document.createElement('button');
-			tmpb.setAttribute('id', 'ak_assign_by_tgn_x_button');
-			tmpb.setAttribute('onclick', 'RemoveAssignByTGNOverlay()');
-			tmpb.setAttribute('class', 'btn btn-primary btn-sm');
-			tmpb.style.verticalAlign='top';
-			tmpb.style.display='inline-block';
-			tmpb.innerHTML = 'X';
-			mydiv.appendChild(tmpb);
-			$('#tag_selector').select2({minimumResultsForSearch: 20});
-			mydiv.style.display = 'block';
+		},
+		error: function(xhr, textStatus, errorThrown){
+			console.log('problem recovering tag assignments');
+			console.log(xhr, textStatus, errorThrown);
 			master_busy = false;
-		} else {
-			console.log('problem recovering tag classes');
-			master_busy = false;
-			alert("Problem recovering tag classes");
+			alert("Problem recovering tag assignments");
 		}
-		return;
-	})
-	.fail(function(xhr, desc, err) {
-		master_busy = false;
-		alert("Problem recovering tag classes");
-		return;
 	});
 };
 
@@ -415,92 +410,106 @@ function AddAssignByTagOverlay() {
 		return;
 	}
 	master_busy = true;
-	var url = "http://"+window.location.host+"/get_db_tag_assigns";
-	var jqxhr = $.getJSON(url, function() {
-	}).done(function(data) {
-		if (data.isok=="ok") {
-			all_tgns.length=0;
-			for (var prop in all_set_tags) {
-				if (all_set_tags.hasOwnProperty(prop)) {
-					delete all_set_tags[prop];
-				}
-			}
-			var taobj = JSON.parse(data.db_tag_assigns);
-			var num_dbs = taobj.length;
-			for (var i=0; i<num_dbs; ++i) {
-				var taobj2 = JSON.parse(taobj[i]);
-				var dbname = taobj2.db;
-				all_tgns.push(dbname);
-				all_set_tags[dbname] = [];
-				var taglist = JSON.parse(taobj2.tags);
-				for (var j=0; j<taglist.length; ++j) {
-					all_set_tags[dbname].push(taglist[j]);
-				}
-			}
-			all_tgns.sort();
-			var mydiv = document.getElementById("assignbytagoverlay");
-			mydiv.innerHTML = '';
-			var dcontent = '<div id="assignbytagoverlay" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;">Edit Assignment By Tag</p>';
-			dcontent += '<p style="color:#000;">';
-			dcontent += '<select id="tag_selector" style="width:130px" onchange="ChangedTagSelector(this)">';
-			var alltagrows = document.getElementsByClassName("a_tag_row");
-			for (var ij=0; ij<alltagrows.length; ++ij) {
-				var sname = alltagrows[ij].getElementsByClassName("short_name")[0].innerHTML;
-				var tid = alltagrows[ij].getAttribute('id');
-				tid = tid.replace("tagid", "");
-				if (ij==0) {
-					current_tag = sname;
-					current_tag_id = tid;
-					current_tag_color = alltagrows[ij].getAttribute('data-tag_color');
-					current_tag_text_color = alltagrows[ij].getAttribute('data-tag_text_color');
-				}
-				dcontent += '<option value="'+tid+'">'+sname+'</option>';
-			}
-			dcontent += '</select></p>';
-			for (var i=0; i<all_tgns.length; i+=6) {
-				dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
-				for (var ii=0; ii<6; ++ii) {
-					var iii = i + ii;
-					if (iii<all_tgns.length) {
-						var dbname = all_tgns[iii];
-						if (all_set_tags[dbname].indexOf(current_tag)>-1) {
-							dcontent += '<button style="display:block; width:100px; margin:auto; color:'+current_tag_text_color+' !important; background-color:'+current_tag_color+' !important;" class="ak_table_button" data-is_assigned_to_tag="1" id="db_button_'+dbname+'" onclick="ToggleAssignToCurrentTag(this)">'+escapeHtml(dbname.toUpperCase())+'</button>';
-						} else {
-							dcontent += '<button style="display:block; width:100px; margin:auto;" class="ak_table_button" data-is_assigned_to_tag="0" id="db_button_'+dbname+'" onclick="ToggleAssignToCurrentTag(this)">'+escapeHtml(dbname.toUpperCase())+'</button>';
-						}
+	var whattodo = {
+			todo: "get_db_tag_assigns",
+			backend_version: backend_version
+	};
+	$.ajax({
+		url: "http://"+window.location.host+"/get_db_tag_assigns",
+		type: "post",
+		timeout: 30000,
+		data: JSON.stringify(whattodo),
+		dataType: "json",
+		contentType: "application/json",
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=="ok") {
+				all_tgns.length=0;
+				for (var prop in all_set_tags) {
+					if (all_set_tags.hasOwnProperty(prop)) {
+						delete all_set_tags[prop];
 					}
 				}
-				dcontent+='</div></p>'
+				var taobj = JSON.parse(returnedbyserver.db_tag_assigns);
+				var num_dbs = taobj.length;
+				for (var i=0; i<num_dbs; ++i) {
+					var taobj2 = JSON.parse(taobj[i]);
+					var dbname = taobj2.db;
+					all_tgns.push(dbname);
+					all_set_tags[dbname] = [];
+					var taglist = JSON.parse(taobj2.tags);
+					for (var j=0; j<taglist.length; ++j) {
+						all_set_tags[dbname].push(taglist[j]);
+					}
+				}
+				all_tgns.sort();
+				var mydiv = document.getElementById("assignbytagoverlay");
+				mydiv.innerHTML = '';
+				var dcontent = '<div id="assignbytagdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;">Edit Assignment By Tag</p>';
+				dcontent += '<p style="color:#000;">';
+				dcontent += '<select id="tag_selector" style="width:130px" onchange="ChangedTagSelector(this)">';
+				var alltagrows = document.getElementsByClassName("a_tag_row");
+				for (var ij=0; ij<alltagrows.length; ++ij) {
+					var sname = alltagrows[ij].getElementsByClassName("short_name")[0].innerHTML;
+					var tid = alltagrows[ij].getAttribute('id');
+					tid = tid.replace("tagid", "");
+					if (ij==0) {
+						current_tag = sname;
+						current_tag_id = tid;
+						current_tag_color = alltagrows[ij].getAttribute('data-tag_color');
+						current_tag_text_color = alltagrows[ij].getAttribute('data-tag_text_color');
+					}
+					dcontent += '<option value="'+tid+'">'+sname+'</option>';
+				}
+				dcontent += '</select></p>';
+				for (var i=0; i<all_tgns.length; i+=6) {
+					dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
+					for (var ii=0; ii<6; ++ii) {
+						var iii = i + ii;
+						if (iii<all_tgns.length) {
+							var dbname = all_tgns[iii];
+							if (all_set_tags[dbname].indexOf(current_tag)>-1) {
+								dcontent += '<button style="display:block; width:100px; margin:auto; color:'+current_tag_text_color+' !important; background-color:'+current_tag_color+' !important;" class="ak_table_button" data-is_assigned_to_tag="1" id="db_button_'+escapeHtml(dbname)+'" onclick="ToggleAssignToCurrentTag(this)">'+escapeHtml(dbname.toUpperCase())+'</button>';
+							} else {
+								dcontent += '<button style="display:block; width:100px; margin:auto;" class="ak_table_button" data-is_assigned_to_tag="0" id="db_button_'+escapeHtml(dbname)+'" onclick="ToggleAssignToCurrentTag(this)">'+escapeHtml(dbname.toUpperCase())+'</button>';
+							}
+						}
+					}
+					dcontent+='</div></p>'
+				}
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += "</div>";
+				mydiv.innerHTML = dcontent;
+				$('#tag_selector').attr('data-ctid', current_tag_id);
+				var tmpb = document.createElement('button');
+				tmpb.setAttribute('id', 'ak_assign_by_tag_x_button');
+				tmpb.setAttribute('onclick', 'RemoveAssignByTagOverlay()');
+				tmpb.setAttribute('class', 'btn btn-primary btn-sm');
+				tmpb.style.verticalAlign='top';
+				tmpb.style.display='inline-block';
+				tmpb.innerHTML = 'X';
+				mydiv.appendChild(tmpb);
+				$('#tag_selector').select2({minimumResultsForSearch: 20, templateSelection: formatState, templateResult:formatState});
+				mydiv.style.display = 'block';
+				master_busy = false;
+			} else {
+				console.log('problem recovering tag assignments');
+				master_busy = false;
+				if (returnedbyserver.isok=='backend mismatch') {
+					alert("Server version was updated.  Please refresh the page before further actions.");
+				} else {
+					alert("Problem recovering tag assignments");
+				}
 			}
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += "</div>";
-			mydiv.innerHTML = dcontent;
-			$('#tag_selector').attr('data-ctid', current_tag_id);
-			var tmpb = document.createElement('button');
-			tmpb.setAttribute('id', 'ak_assign_by_tag_x_button');
-			tmpb.setAttribute('onclick', 'RemoveAssignByTagOverlay()');
-			tmpb.setAttribute('class', 'btn btn-primary btn-sm');
-			tmpb.style.verticalAlign='top';
-			tmpb.style.display='inline-block';
-			tmpb.innerHTML = 'X';
-			mydiv.appendChild(tmpb);
-			$('#tag_selector').select2({minimumResultsForSearch: 20, templateSelection: formatState, templateResult:formatState});
-			mydiv.style.display = 'block';
+		},
+		error: function(xhr, textStatus, errorThrown){
+			console.log('problem recovering tag assignments');
+			console.log(xhr, textStatus, errorThrown);
 			master_busy = false;
-		} else {
-			console.log('problem recovering tag classes');
-			master_busy = false;
-			alert("Problem recovering tag classes");
+			alert("Problem recovering tag assignments");
 		}
-		return;
-	})
-	.fail(function(xhr, desc, err) {
-		master_busy = false;
-		alert("Problem recovering tag classes");
-		return;
 	});
 };
 
@@ -510,122 +519,102 @@ function AddPushWebReferenceOverlay() {
 		return;
 	}
 	master_busy = true;
-	var url = "http://"+window.location.host+"/get_all_db_list";
-	var jqxhr = $.getJSON(url, function() {
-	}).done(function(data) {
-		if (data.isok=="ok") {
-			all_tgns.length=0;
-			//for (var prop in all_set_tags) {
-			//	if (all_set_tags.hasOwnProperty(prop)) {
-			//		delete all_set_tags[prop];
-			//	}
-			//}
-			var taobj = JSON.parse(data.db_name_list);
-			var num_dbs = taobj.length;
-			for (var i=0; i<num_dbs; ++i) {
-				all_tgns.push(taobj[i]);				
-			}
-			all_tgns.sort(); // probably not needed
-			var mydiv = document.getElementById("pushwebreferenceoverlay");
-			mydiv.innerHTML = '';
-			var dcontent = '<div id="pushwebreferenceoverlay" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;">Push Web Reference to DBs</p>';
-			
-			
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			//dcontent += '<p style="color:#000; font-size: 20px;">New Web</p>';
-			dcontent += '<p style="color:#000;">Year: <input class="ak_push_overlay" id="push_web_year" style="text-align:center;width:125px;color:#000;" placeholder="Eg. 2018" type="text" maxlength="4"></p>';
-			dcontent += '<p style="color:#000;"><input id="push_web_site" placeholder="https://www.google.com" class="ak_push_overlay" style="text-align:center;width:450px" type="list" list="siteList"></p>';
-			dcontent += '<datalist id="siteList">';
-			dcontent += '<option value></option>';
-			dcontent += '<option value="https://scholar.google.com">google scholar</option>';
-			dcontent += '<option value="http://biogps.org/#goto=welcome">biogps link</option>';
-			dcontent += '<option value="http://www.gtexportal.org">gtex link</option>';
-			dcontent += '<option value="https://www.immunobase.org">immunobase link</option>';
-			dcontent += '<option value="http://www.omim.org">omim link</option>';
-			dcontent += '<option value="http://www.proteinatlas.org">proteinatlas link</option>';
-			dcontent += '<option value="https://grasp.nhlbi.nih.gov/Search.aspx">grasp link</option>';
-			dcontent += '<option value="http://www.orpha.net">orphanet link</option>';
-			dcontent += '<option value="http://structure.bmc.lu.se/idbase/IDRefSeq/xml/idr/genes.shtml">idr link</option>';
-			dcontent += '<option value="http://www.ncbi.nlm.nih.gov/gap/phegeni">phegeni link</option>';
-			dcontent += '</datalist>';
-			dcontent += '</p>';
-			dcontent += '<p style="color:#000; vertical-align: middle;"><textarea id="push_web_description" rows="4" cols="48" style="color:#000; vertical-align: middle;" placeholder="Enter title" class="ak_push_overlay ak_tablecell" type="text"></textarea></p>';
-			dcontent += '<p></p>';
-			dcontent += '<button id="ak_push_button" type="button" class="ak_push_overlay btn btn-primary btn-sm" onclick="PushToDBs()">Push</button>';
-			
-			
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			
-			dcontent += '<div style="width:600px; margin: 0 auto; display: flex; justify-content: space-between;">';
-
-			dcontent += '<button style="display:block; margin:auto;" class="ak_table_button ak_push_overlay" id="select_all_button" onclick="SelectAllDBs(1)">Select All</button>';
-			dcontent += '<button style="display:block; margin:auto;" class="ak_table_button ak_push_overlay" id="deselect_all_button" onclick="SelectAllDBs(0)">De-Select All</button>';	
+	var whattodo = {
+			todo: "get_all_db_list",
+			backend_version: backend_version
+	};
+	$.ajax({
+		url: "http://"+window.location.host+"/get_all_db_list",
+		type: "post",
+		timeout: 30000,
+		data: JSON.stringify(whattodo),
+		dataType: "json",
+		contentType: "application/json",
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=="ok") {
+				all_tgns.length=0;
+				var taobj = JSON.parse(returnedbyserver.db_name_list);
+				var num_dbs = taobj.length;
+				for (var i=0; i<num_dbs; ++i) {
+					all_tgns.push(taobj[i]);				
+				}
+				all_tgns.sort(); // probably not needed
+				var mydiv = document.getElementById("pushwebreferenceoverlay");
+				mydiv.innerHTML = '';
+				var dcontent = '<div id="pushwebreferencediv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;">Push Web Reference to Notebooks</p>';
 				
-			dcontent += '</div>';			
-			
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000;">';
-			
-			
-			/*
-			dcontent += '<select id="tag_selector" style="width:130px" onchange="ChangedTagSelector(this)">';
-			var alltagrows = document.getElementsByClassName("a_tag_row");
-			for (var ij=0; ij<alltagrows.length; ++ij) {
-				var sname = alltagrows[ij].getElementsByClassName("short_name")[0].innerHTML;
-				var tid = alltagrows[ij].getAttribute('id');
-				tid = tid.replace("tagid", "");
-				if (ij==0) {
-					current_tag = sname;
-					current_tag_id = tid;
-					current_tag_color = alltagrows[ij].getAttribute('data-tag_color');
-					current_tag_text_color = alltagrows[ij].getAttribute('data-tag_text_color');
-				}
-				dcontent += '<option value="'+tid+'">'+sname+'</option>';
-			}
-			dcontent += '</select></p>';
-			*/
-			
-			
-			for (var i=0; i<all_tgns.length; i+=6) {
-				dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
-				for (var ii=0; ii<6; ++ii) {
-					var iii = i + ii;
-					if (iii<all_tgns.length) {
-						var dbname = all_tgns[iii];
-						dcontent += '<button style="display:block; width:100px; margin:auto; background-color:White;" class="ak_table_button ak_push_overlay" data-is_assigned_to_push="0" id="db_button_'+dbname+'" onclick="ToggleForWebPush(this)">'+escapeHtml(dbname.toUpperCase())+'</button>';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000;">Year: <input class="ak_push_overlay" id="push_web_year" style="text-align:center;width:125px;color:#000;" placeholder="Eg. 2018" type="text" maxlength="4"></p>';
+				dcontent += '<p style="color:#000;"><input id="push_web_site" placeholder="https://www.google.com" class="ak_push_overlay" style="text-align:center;width:450px" type="list" list="siteList"></p>';
+				dcontent += '<datalist id="siteList">';
+				dcontent += '<option value></option>';
+				dcontent += '<option value="https://scholar.google.com">google scholar</option>';
+				dcontent += '<option value="http://biogps.org/#goto=welcome">biogps link</option>';
+				dcontent += '<option value="http://www.gtexportal.org">gtex link</option>';
+				dcontent += '<option value="https://www.immunobase.org">immunobase link</option>';
+				dcontent += '<option value="http://www.omim.org">omim link</option>';
+				dcontent += '<option value="http://www.proteinatlas.org">proteinatlas link</option>';
+				dcontent += '<option value="https://grasp.nhlbi.nih.gov/Search.aspx">grasp link</option>';
+				dcontent += '<option value="http://www.orpha.net">orphanet link</option>';
+				dcontent += '<option value="http://structure.bmc.lu.se/idbase/IDRefSeq/xml/idr/genes.shtml">idr link</option>';
+				dcontent += '<option value="http://www.ncbi.nlm.nih.gov/gap/phegeni">phegeni link</option>';
+				dcontent += '</datalist>';
+				dcontent += '</p>';
+				dcontent += '<p style="color:#000; vertical-align: middle;"><textarea id="push_web_description" rows="4" cols="48" style="color:#000; vertical-align: middle;" placeholder="Enter title" class="ak_push_overlay ak_tablecell" type="text"></textarea></p>';
+				dcontent += '<p></p>';
+				dcontent += '<button id="ak_push_button" type="button" class="ak_push_overlay btn btn-primary btn-sm" onclick="PushToDBs()">Push</button>';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';	
+				dcontent += '<div style="width:600px; margin: 0 auto; display: flex; justify-content: space-between;">';
+				dcontent += '<button style="display:block; margin:auto;" class="ak_table_button ak_push_overlay" id="select_all_button" onclick="SelectAllDBs(1)">Select All</button>';
+				dcontent += '<button style="display:block; margin:auto;" class="ak_table_button ak_push_overlay" id="deselect_all_button" onclick="SelectAllDBs(0)">De-Select All</button>';	
+					
+				dcontent += '</div>';			
+				
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000;">';
+				for (var i=0; i<all_tgns.length; i+=6) {
+					dcontent+='<p><div style="width:750px; margin: 0 auto; display: flex; justify-content: space-between;">';
+					for (var ii=0; ii<6; ++ii) {
+						var iii = i + ii;
+						if (iii<all_tgns.length) {
+							var dbname = all_tgns[iii];
+							dcontent += '<button style="display:block; width:100px; margin:auto; background-color:White;" class="ak_table_button ak_push_overlay" data-is_assigned_to_push="0" id="pdb_button_'+escapeHtml(dbname)+'" onclick="ToggleForWebPush(this)">'+escapeHtml(dbname.toUpperCase())+'</button>';
+						}
 					}
+					dcontent+='</div></p>'
 				}
-				dcontent+='</div></p>'
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += "</div>";
+				mydiv.innerHTML = dcontent;
+				var tmpb = document.createElement('button');
+				tmpb.setAttribute('id', 'ak_push_to_db_x_button');
+				tmpb.setAttribute('onclick', 'RemovePushWebReferenceToDBOverlay()');
+				tmpb.setAttribute('class', 'btn btn-primary btn-sm ak_push_overlay');
+				tmpb.style.verticalAlign='top';
+				tmpb.style.display='inline-block';
+				tmpb.innerHTML = 'X';
+				mydiv.appendChild(tmpb);
+				mydiv.style.display = 'block';
+				master_busy = false;
+			} else {
+				console.log('problem recovering db list');
+				master_busy = false;
+				if (returnedbyserver.isok=='backend mismatch') {
+					alert("Server version was updated.  Please refresh the page before further actions.");
+				} else {
+					alert("Problem recovering db list");
+				}
 			}
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += "</div>";
-			mydiv.innerHTML = dcontent;
-			//$('#tag_selector').attr('data-ctid', current_tag_id);
-			var tmpb = document.createElement('button');
-			tmpb.setAttribute('id', 'ak_push_to_db_x_button');
-			tmpb.setAttribute('onclick', 'RemovePushWebReferenceToDBOverlay()');
-			tmpb.setAttribute('class', 'btn btn-primary btn-sm ak_push_overlay');
-			tmpb.style.verticalAlign='top';
-			tmpb.style.display='inline-block';
-			tmpb.innerHTML = 'X';
-			mydiv.appendChild(tmpb);
-			//$('#tag_selector').select2({minimumResultsForSearch: 20, templateSelection: formatState, templateResult:formatState});
-			mydiv.style.display = 'block';
-			master_busy = false;
-		} else {
+		},
+		error: function(xhr, textStatus, errorThrown){
 			console.log('problem recovering db list');
+			console.log(xhr, textStatus, errorThrown);
 			master_busy = false;
 			alert("Problem recovering db list");
 		}
-		return;
-	})
-	.fail(function(xhr, desc, err) {
-		master_busy = false;
-		alert("Problem recovering db list");
-		return;
 	});
 };
 
@@ -641,7 +630,7 @@ PushToDBs = function() {
 	var push_web_description = document.getElementById("push_web_description").value;
 	var push_to = [];
 	for (var i=0; i<all_tgns.length; ++i) {
-		var but = document.getElementById("db_button_"+all_tgns[i])
+		var but = document.getElementById("pdb_button_"+all_tgns[i])
 		if (but.getAttribute('data-is_assigned_to_push')==1) {
 			push_to.push(all_tgns[i]);
 		}
@@ -651,6 +640,7 @@ PushToDBs = function() {
 			push_year: push_web_year,
 			push_site: push_web_site,
 			push_description: push_web_description,
+			backend_version: backend_version,
 			push_dbs: push_to
 	};
 	$.ajax({
@@ -660,16 +650,20 @@ PushToDBs = function() {
 		data: JSON.stringify(whattodo),
 		dataType: "json",
 		contentType: "application/json",
-		success: function(data){
-			if (data.isok!="ok") {
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok!="ok") {
 				console.log('pushweb not successful');
 				$('.ak_push_overlay').attr('disabled', false);
 				master_busy = false;
-				alert("Problem pushing to dbs");
+				if (returnedbyserver.isok=='backend mismatch') {
+					alert("Server version was updated.  Please refresh the page before further actions.");
+				} else {
+					alert("Problem pushing to dbs");
+				}
 			} else {
 				$('.ak_push_overlay').attr('disabled', false);
 				master_busy = false;
-				alert(data.messages);
+				alert(returnedbyserver.messages);
 			}
 		},
 		error: function(xhr, textStatus, errorThrown){
@@ -681,7 +675,6 @@ PushToDBs = function() {
 		}
 	});
 };
-
 
 RemovePushWebReferenceToDBOverlay = function() {
 	if (master_busy) {
@@ -716,7 +709,6 @@ function AddEditTagOverlay(current_tag_id) {
 		return;
 	}
 	master_busy = true;
-	var url = "http://"+window.location.host+"/get_tag_class_list";
 	var current_tagclass_id = "-1";
 	var current_color = "rgb(170,85,170)";
 	var current_short = "";
@@ -729,75 +721,91 @@ function AddEditTagOverlay(current_tag_id) {
 		current_color = $('#tagid'+current_tag_id).attr("data-tag_color");
 		current_tagclass_id = $('#tagid'+current_tag_id+' .class_name').attr("data-tagclass_id");
 	}
-	var jqxhr = $.getJSON(url, function() {
-	}).done(function(data) {
-		if (data.isok=="ok") {
-			var pobj = JSON.parse(data.class_list);
-			var mydiv = document.getElementById("edittagoverlay");
-			mydiv.innerHTML = '';
-			var dcontent = '<div id="edittagoverlay" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += '<p style="color:#000; font-size: 20px;">Create/Edit Tag</p>';
-			dcontent += '<p style="color:#000;">Class:';
-			var s_html = '<select style="width:200px" class="ak_tag_overlay ak_tag_class_selector" >';
-			if (current_tagclass_id<0) {
-				s_html += '<option selected disabled hidden style="display: none" value="">Please select</option>';
-				for (var i=0; i<pobj.length; ++i) {
-					s_html += '<option value="'+pobj[i].id+'">'+escapeHtml(pobj[i].class_name)+'</option>';
-				}
-				s_html += '</select>';
-			} else {
-				for (var i=0; i<pobj.length; ++i) {
-					if (current_tagclass_id==pobj[i].id) {
-						s_html += '<option selected="selected" value="'+pobj[i].id+'">'+escapeHtml(pobj[i].class_name)+'</option>';
-					} else {
+	var whattodo = {
+			todo: "get_tag_class_list",
+			backend_version: backend_version
+	};
+	$.ajax({
+		url: "http://"+window.location.host+"/get_tag_class_list",
+		type: "post",
+		timeout: 30000,
+		data: JSON.stringify(whattodo),
+		dataType: "json",
+		contentType: "application/json",
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=="ok") {
+				
+				var pobj = JSON.parse(returnedbyserver.class_list);
+				var mydiv = document.getElementById("edittagoverlay");
+				mydiv.innerHTML = '';
+				var dcontent = '<div id="edittagdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px;">Create/Edit Tag</p>';
+				dcontent += '<p style="color:#000;">Class:';
+				var s_html = '<select style="width:200px" class="ak_tag_overlay ak_tag_class_selector" >';
+				if (current_tagclass_id<0) {
+					s_html += '<option selected disabled hidden style="display: none" value="">Please select</option>';
+					for (var i=0; i<pobj.length; ++i) {
 						s_html += '<option value="'+pobj[i].id+'">'+escapeHtml(pobj[i].class_name)+'</option>';
 					}
+					s_html += '</select>';
+				} else {
+					for (var i=0; i<pobj.length; ++i) {
+						if (current_tagclass_id==pobj[i].id) {
+							s_html += '<option selected="selected" value="'+pobj[i].id+'">'+escapeHtml(pobj[i].class_name)+'</option>';
+						} else {
+							s_html += '<option value="'+pobj[i].id+'">'+escapeHtml(pobj[i].class_name)+'</option>';
+						}
+					}
+					s_html += '</select>';
 				}
-				s_html += '</select>';
+				dcontent += s_html+'</p>';
+				dcontent += '<p style="color:#000;">Short name: <input class="ak_tag_overlay" id="short_tag_name" style="text-align:center;width:100px;color:#000;" placeholder="Eg. Tag Name" type="text" maxlength="15"></p>';
+				dcontent += '<p style="color:#000;">Long name: <input class="ak_tag_overlay" id="long_tag_name" style="text-align:center;width:250px;color:#000;" placeholder="Eg. Longer Tag Name" type="text" maxlength="150"></p>';
+				dcontent += '<p><button id="tag_color_button" class="tag-overlay-color-button ak_table_button ak_tag_overlay">Tag Color</button></p>'
+					dcontent += '<p style="color:#000; vertical-align: middle;">Description: <textarea id="tag_description" rows="4" cols="50" style="color:#000; vertical-align: middle;" placeholder="Enter description" class="ak_tag_overlay ak_tablecell" type="text"></textarea></p>';
+				dcontent += '<p></p>';
+				dcontent += '<button id="ak_save_tag_button" data-tag_id="'+current_tag_id+'" type="button" class="ak_tag_overlay btn btn-primary btn-sm" onclick="SaveTag()">Save</button>';
+				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += "</div>";
+				mydiv.innerHTML = dcontent;
+				var tmpb = document.createElement('button');
+				tmpb.setAttribute('id', 'ak_edit_tag_x_button');
+				tmpb.setAttribute('onclick', 'RemoveEditTagOverlay()');
+				tmpb.setAttribute('class', 'ak_tag_overlay btn btn-primary btn-sm');
+				tmpb.style.verticalAlign='top';
+				tmpb.style.display='inline-block';
+				tmpb.innerHTML = 'X';
+				mydiv.appendChild(tmpb);
+				$(".ak_tag_class_selector").select2({minimumResultsForSearch: 20});
+				var hueb = new Huebee( '.tag-overlay-color-button', {
+					setText: false,
+					className: 'light-picker'
+				});
+				hueb.setColor(current_color);
+				if (current_tag_id>=0) {
+					document.getElementById('short_tag_name').value=current_short;
+					document.getElementById('long_tag_name').value=current_long;
+					document.getElementById('tag_description').value=current_description;
+				}
+				mydiv.style.display = 'block';
+				master_busy = false;
+			} else {
+				console.log('problem recovering tag classes');
+				master_busy = false;
+				if (returnedbyserver.isok=='backend mismatch') {
+					alert("Server version was updated.  Please refresh the page before further actions.");
+				} else {
+					alert("Problem recovering tag classes");
+				}
 			}
-			dcontent += s_html+'</p>';
-			dcontent += '<p style="color:#000;">Short name: <input class="ak_tag_overlay" id="short_tag_name" style="text-align:center;width:100px;color:#000;" placeholder="Eg. Tag Name" type="text" maxlength="15"></p>';
-			dcontent += '<p style="color:#000;">Long name: <input class="ak_tag_overlay" id="long_tag_name" style="text-align:center;width:250px;color:#000;" placeholder="Eg. Longer Tag Name" type="text" maxlength="150"></p>';
-			dcontent += '<p><button id="tag_color_button" class="tag-overlay-color-button ak_table_button ak_tag_overlay">Tag Color</button></p>'
-				dcontent += '<p style="color:#000; vertical-align: middle;">Description: <textarea id="tag_description" rows="4" cols="50" style="color:#000; vertical-align: middle;" placeholder="Enter description" class="ak_tag_overlay ak_tablecell" type="text"></textarea></p>';
-			dcontent += '<p></p>';
-			dcontent += '<button id="ak_save_tag_button" data-tag_id="'+current_tag_id+'" type="button" class="ak_tag_overlay btn btn-primary btn-sm" onclick="SaveTag()">Save</button>';
-			dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-			dcontent += "</div>";
-			mydiv.innerHTML = dcontent;
-			var tmpb = document.createElement('button');
-			tmpb.setAttribute('id', 'ak_edit_tag_x_button');
-			tmpb.setAttribute('onclick', 'RemoveEditTagOverlay()');
-			tmpb.setAttribute('class', 'ak_tag_overlay btn btn-primary btn-sm');
-			tmpb.style.verticalAlign='top';
-			tmpb.style.display='inline-block';
-			tmpb.innerHTML = 'X';
-			mydiv.appendChild(tmpb);
-			$(".ak_tag_class_selector").select2({minimumResultsForSearch: 20});
-			var hueb = new Huebee( '.tag-overlay-color-button', {
-				setText: false,
-				className: 'light-picker'
-			});
-			hueb.setColor(current_color);
-			if (current_tag_id>=0) {
-				document.getElementById('short_tag_name').value=current_short;
-				document.getElementById('long_tag_name').value=current_long;
-				document.getElementById('tag_description').value=current_description;
-			}
-			mydiv.style.display = 'block';
-			master_busy = false;
-		} else {
+		},
+		error: function(xhr, textStatus, errorThrown){
 			console.log('problem recovering tag classes');
+			console.log(xhr, textStatus, errorThrown);
 			master_busy = false;
 			alert("Problem recovering tag classes");
 		}
-		return;
-	})
-	.fail(function(xhr, desc, err) {
-		master_busy = false;
-		alert("Problem recovering tag classes");
-		return;
 	});
 };
 
@@ -834,7 +842,8 @@ SaveTag = function() {
 			short_name: short_name,
 			long_name: long_name,
 			description: description,
-			color: tag_color
+			color: tag_color,
+			backend_version: backend_version
 	};
 	$.ajax({
 		url: "http://"+window.location.host+"/savetag",
@@ -843,24 +852,30 @@ SaveTag = function() {
 		data: JSON.stringify(whattodo),
 		dataType: "json",
 		contentType: "application/json",
-		success: function(data){
-			if (data.isok!="ok") {
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=='backend mismatch') {
+				console.log('savetag not successful');
+				$('.ak_tag_overlay').attr('disabled', false);
+				master_busy = false;
+				alert("Server version was updated.  Please refresh the page before further actions.");
+			} else if (returnedbyserver.isok!="ok") {
 				console.log('savetag not successful');
 				$('.ak_tag_overlay').attr('disabled', false);
 				master_busy = false;
 				alert("Problem saving tag to db");
 			} else {
-				if (data.errors!="") {
+				if (returnedbyserver.errors!="") {
 					console.log('savetag had user errors at');
 					$('.ak_tag_overlay').attr('disabled', false);
 					master_busy = false;
-					alert(data.errors);
+					alert(returnedbyserver.errors);
 				} else {
-					var myrow = document.getElementById("tagid"+data.tagid);
+					var myrow = document.getElementById("tagid"+returnedbyserver.tagid);
 					if (myrow==null) {
-						$("#available_tags").trigger('addRows', [data.trtext]);
+						var $row = $(returnedbyserver.trtext);
+						$("#available_tags").find('tbody').append($row).trigger('addRows', [$row]);	
 					} else {
-						$("#tagid"+data.tagid).replaceWith(data.trtext);
+						$("#tagid"+returnedbyserver.tagid).replaceWith(returnedbyserver.trtext);
 						$("#available_tags").trigger('update');
 					}
 					$('.ak_tag_overlay').attr('disabled', false);
@@ -891,7 +906,8 @@ DeleteTag = function(tagid) {
 	$('.aktagrowclass'+tagid).attr('disabled', true);
 	var whattodo = {
 			todo: "deletetag",
-			tag_id: tagid
+			tag_id: tagid,
+			backend_version: backend_version
 	};
 	$.ajax({
 		url: "http://"+window.location.host+"/deletetag",
@@ -900,9 +916,10 @@ DeleteTag = function(tagid) {
 		data: JSON.stringify(whattodo),
 		dataType: "json",
 		contentType: "application/json",
-		success: function(data){
-			if (data.isok=="ok") {
+		success: function(returnedbyserver){
+			if (returnedbyserver.isok=="ok") {
 				$("#tagid"+tagid).remove();
+				$("#available_tags").trigger('update');
 				var alltagrows = document.getElementsByClassName("a_tag_row");
 				var num_tags = alltagrows.length;
 				if (num_tags==0) {
@@ -910,10 +927,15 @@ DeleteTag = function(tagid) {
 					$('#assign_by_tgn_button').attr('disabled', true);
 				}
 				master_busy = false;
-			} else if (data.isok!="notok"){
+			} else if (returnedbyserver.isok=='backend mismatch') {
+				console.log('problem removing tag');
+				$('.ak_tag_overlay').attr('disabled', false);
+				master_busy = false;
+				alert("Server version was updated.  Please refresh the page before further actions.");
+			} else if (returnedbyserver.isok!="notok"){
 				$('.aktagrowclass'+tagid).attr('disabled', false);
 				master_busy = false;
-				alert(data.isok);
+				alert(returnedbyserver.isok);
 			} else {
 				console.log('problem removing tag');
 				$('.aktagrowclass'+tagid).attr('disabled', false);
@@ -930,4 +952,3 @@ DeleteTag = function(tagid) {
 		}
 	});
 };
-

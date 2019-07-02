@@ -1,19 +1,34 @@
-Target Gene Notebook was developed to enable more efficient linking of genetic associations to functional biological information. This process is essential to translating genetic insights into therapeutic hypotheses and, eventually, drug discovery.  While many browsers and databases provide access to unfiltered genome annotations and genetic results, there is currently no way to maintain group curation of all the relevant information and to integrate it with proprietary experimental data. Target Gene Notebook is an e-notebook to facilitate the organization of results and we encourage the further development of this resource in the community.
-The data loaded in the example databases provided has been downloaded from Ensembl (1).  We provide this data “as is” so you can experiment with the notebook tool.  Data entered manually can be deleted (see the “X S” feature for delete and save at the end of each row of data).
-Target Gene Notebook was supported and implemented at Eisai’s Andover Innovative Medicine Institute in Andover, MA.   We encourage the further development of this resource in the community and will provide source code upon request.
-
-Target Gene Notebook team:
-Eisai (design, implementation and testing):		
+<p></p>
+<p>Target Gene Notebook allows the curation of persistent, editable, and distributable databases of genomic, biological, chemical, and other data that pertain to the local neighborhood around a gene of interest.</p>
+<p>The current version draws heavily on the many harmonized data sources available through Ensembl (1).
+<br>
+Target Gene Notebook was originally supported and created at Eisai Inc.’s Andover Innovative Medicine Institute in Andover, MA.
+<br>
+We encourage further development of this resource.</p>
+<p></p>
+<p>Target Gene Notebook team
+<br>
+Eisai (design, implementation and testing):
+<br>
 Andrew Kirby
+<br>
 Janna Hutz
-Jamey Wierzbowski	
+<br>
+Jamey Wierzbowski
+<br>
 Mary Pat Reeve
-
+<br>
 Massachusetts General Hospital (design input):
+<br>
 Mark Daly
+<br>
 Hailiang Huang
-
-
-1. Andrew Yates, Wasiu Akanni, M. Ridwan Amode, Daniel Barrell, Konstantinos Billis, Denise Carvalho-Silva, Carla Cummins, Peter Clapham, Stephen Fitzgerald, Laurent Gil1 Carlos Garcín Girón, Leo Gordon, Thibaut Hourlier, Sarah E. Hunt, Sophie H. Janacek, Nathan Johnson, Thomas Juettemann, Stephen Keenan, Ilias Lavidas, Fergal J. Martin, Thomas Maurel, William McLaren, Daniel N. Murphy, Rishi Nag, Michael Nuhn, Anne Parker, Mateus Patricio, Miguel Pignatelli, Matthew Rahtz, Harpreet Singh Riat, Daniel Sheppard, Kieron Taylor, Anja Thormann, Alessandro Vullo, Steven P. Wilder, Amonida Zadissa, Ewan Birney, Jennifer Harrow, Matthieu Muffato, Emily Perry, Magali Ruffier, Giulietta Spudich, Stephen J. Trevanion, Fiona Cunningham, Bronwen L. Aken, Daniel R. Zerbino, Paul Flicek
-Ensembl 2016.
-Nucleic Acids Res. 2016 44 Database issue:D710-6.
+</p>
+<p></p>
+<p></p>
+<p>1.  Daniel R. Zerbino, Premanand Achuthan, Wasiu Akanni, M. Ridwan Amode, Daniel Barrell, Jyothish Bhai, Konstantinos Billis, Carla Cummins, Astrid Gall, Carlos García Giro´n, Laurent Gil, Leo Gordon, Leanne Haggerty, Erin Haskell, Thibaut Hourlier, Osagie G. Izuogu, Sophie H. Janacek, Thomas Juettemann, Jimmy Kiang To, Matthew R. Laird, Ilias Lavidas, Zhicheng Liu, Jane E. Loveland, Thomas Maurel, William McLaren, Benjamin Moore, Jonathan Mudge, Daniel N. Murphy, Victoria Newman, Michael Nuhn, Denye Ogeh, Chuang Kee Ong, Anne Parker, Mateus Patricio, Harpreet Singh Riat, Helen Schuilenburg, Dan Sheppard, Helen Sparrow, Kieron Taylor, Anja Thormann, Alessandro Vullo, Brandon Walts, Amonida Zadissa, Adam Frankish, Sarah E. Hunt, Myrto Kostadima, Nicholas Langridge, Fergal J. Martin, Matthieu Muffato, Emily Perry, Magali Ruffier, Dan M. Staines, Stephen J. Trevanion, Bronwen L. Aken, Fiona Cunningham, Andrew Yates, Paul Flicek
+<br>
+Ensembl 2018.
+<br>
+PubMed PMID: 29155950.</p>
+<p></p>

@@ -179,28 +179,28 @@ class GWASResult {
 	String trait = "";
 	int gwas_table_row_id = -1;
 	String curator_comment = "";
-	String marker_equivalence_set = "";
+	String credible_set = "";
 	boolean show_in_svg = false;
 	String index_variant_name = "";
 	int index_variant_start = -1;
 	int index_variant_end = -1;
 	boolean typed_in_accepted_dataset = false;
 	boolean automatic = false;
-	Vector<Integer> mes_locs_starts = new Vector<>();
-	Vector<Integer> mes_locs_ends = new Vector<>();
-	Vector<String> mes_variants = new Vector<>();
-	Vector<String> mes_coding = new Vector<>();
-	Vector<String> mes_r2 = new Vector<>();
-	Vector<String> mes_posterior = new Vector<>();
+	Vector<Integer> cs_locs_starts = new Vector<>();
+	Vector<Integer> cs_locs_ends = new Vector<>();
+	Vector<String> cs_variants = new Vector<>();
+	Vector<String> cs_coding = new Vector<>();
+	Vector<String> cs_r2 = new Vector<>();
+	Vector<String> cs_posterior = new Vector<>();
 	Vector<String> LDdatasets = new Vector<>();
 	Vector<String> LDdatasetsHighR2Count = new Vector<>();
 	String svg_display_name = "";
 	String allele="";
 	String allele_sup="";
 	String sum_1kgp3eur_maf_str = "n/a";
-	String credible_set_name = "";
-	double credible_set_posterior = -1.0;
-	int credible_set_member_count = 0;
+	String custom_credible_set_name = "";
+	double custom_credible_set_posterior = -1.0;
+	int custom_credible_set_member_count = 0;
 	boolean is_pqtl = false;
 	
 	GWASResult() {}
@@ -217,23 +217,27 @@ class EQTLResult {
 	String gene_symbol = "";
 	String tissue = "";
 	String effect_allele="";
+	String effect_allele_sup="";
 	int eqtl_table_row_id = -1;
 	String curator_comment = "";	
 	boolean show_in_svg = false;
-	String eqtl_marker_equivalence_set_id = "";
-	String marker_equivalence_set_label = "";
-	String marker_equivalence_set_count_label = "";
 	String index_variant_name = "";
 	int index_variant_start = -1;
 	int index_variant_end = -1;
-	boolean automatic = false;
-	Vector<Integer> ld_locs_starts = new Vector<>();
-	Vector<Integer> ld_locs_ends = new Vector<>();
-	Vector<String> ld_variants = new Vector<>();
-	Vector<String> ld_coding = new Vector<>();
-	Vector<String> ld_r2 = new Vector<>();
-	Vector<String> ld_pv = new Vector<>();
-	Vector<String> ld_beta = new Vector<>();
+	boolean typed_in_accepted_dataset = false;
+	boolean automatic = false;	
+	Vector<Integer> cs_locs_starts = new Vector<>();
+	Vector<Integer> cs_locs_ends = new Vector<>();
+	Vector<String> cs_variants = new Vector<>();
+	Vector<String> cs_coding = new Vector<>();
+	Vector<String> cs_r2 = new Vector<>();
+	Vector<String> cs_posterior = new Vector<>();
+	Vector<String> LDdatasets = new Vector<>();
+	Vector<String> LDdatasetsHighR2Count = new Vector<>();
+	String custom_credible_set_name = "";
+	double custom_credible_set_posterior = -1.0;
+	int custom_credible_set_member_count = 0;
+	String credible_set = "";
 	String svg_display_name = "";
 	String sum_1kgp3eur_maf_str = "n/a";
 	int association_overlap_count = 0;
@@ -307,64 +311,39 @@ class LDGMarker {
 
 }
 
-class UpdateGWASCommentPostMsg {
+class UpdateCommentPostMsg {
 
 	String todo="";
-	String gwas_comment="";
-	int gwas_db_id = -1;
+	String origin="";
+	String comment="";
+	int db_id = -1;
+	String backend_version="";
 
-	UpdateGWASCommentPostMsg() {}
+	UpdateCommentPostMsg() {}
 
 }
 
-class UpdateGenePhenCommentPostMsg {
-
-	String todo="";
-	String genephen_comment="";
-	int genephen_db_id = -1;
-
-	UpdateGenePhenCommentPostMsg() {}
-
-}
-
-class DeleteCredibleSetPostMsg {
+class DeleteGWASCustomCredibleSetPostMsg {
 
 	String todo="";
 	int gwas_db_id = -1;
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
-	DeleteCredibleSetPostMsg() {}
-
-}
-
-class UpdateDetailCommentPostMsg {
-
-	String todo="";
-	String comment="";
-	int detail_db_id = -1;
-
-	UpdateDetailCommentPostMsg() {}
+	DeleteGWASCustomCredibleSetPostMsg() {}
 
 }
 
-class UpdateEQTLCommentPostMsg {
+class DeleteEQTLCustomCredibleSetPostMsg {
 
 	String todo="";
-	String eqtl_comment="";
 	int eqtl_db_id = -1;
+	String svg_display_mode="";
+	int hidenoncoding=-1;
+	String backend_version="";
 
-	UpdateEQTLCommentPostMsg() {}
-
-}
-
-class UpdateSourceCommentPostMsg {
-
-	String todo="";
-	String source_comment="";
-	int source_db_id = -1;
-
-	UpdateSourceCommentPostMsg() {}
+	DeleteEQTLCustomCredibleSetPostMsg() {}
 
 }
 
@@ -372,8 +351,62 @@ class DownloadFilePostMsg {
 
 	String todo="";
 	int sd_db_id = -1;
+	String backend_version="";
 
 	DownloadFilePostMsg() {}
+
+}
+
+class GetAllDBListPostMsg {
+
+	String todo="";
+	String backend_version="";
+
+	GetAllDBListPostMsg() {}
+
+}
+
+class UnreviewedCheckinPostMsg {
+
+	String todo="";
+	String backend_version="";
+
+	UnreviewedCheckinPostMsg() {}
+
+}
+
+class GetPubListPostMsg {
+
+	String todo="";
+	String backend_version="";
+
+	GetPubListPostMsg() {}
+
+}
+
+class GetTagClassListPostMsg {
+
+	String todo="";
+	String backend_version="";
+
+	GetTagClassListPostMsg() {}
+
+}
+
+class GetDBTagAssignsPostMsg {
+	
+	String todo="";
+	String backend_version="";
+	
+}
+
+
+class GetPubAndGeneListPostMsg {
+
+	String todo="";
+	String backend_version="";
+
+	GetPubAndGeneListPostMsg() {}
 
 }
 
@@ -381,12 +414,13 @@ class OkToRemoveRefPostMsg {
 
 	String todo="";
 	int sd_db_id = -1;
+	String backend_version="";
 
 	OkToRemoveRefPostMsg() {}
 
 }
 
-class SubmitNewGWASRowPostMsg {
+class SaveNewGWASPostMsg {
 
 	String todo="";
 	String phenotype="";
@@ -397,12 +431,13 @@ class SubmitNewGWASRowPostMsg {
 	String or_beta="";
 	String comment="";
 	String is_pqtl="";
+	String backend_version="";
 
-	SubmitNewGWASRowPostMsg() {}
+	SaveNewGWASPostMsg() {}
 
 }
 
-class SubmitNewEQTLRowPostMsg {
+class SaveNewEQTLPostMsg {
 
 	String todo="";
 	String db_source_id="";
@@ -413,8 +448,9 @@ class SubmitNewEQTLRowPostMsg {
 	String beta="";
 	String allele="";
 	String comment="";
+	String backend_version="";
 
-	SubmitNewEQTLRowPostMsg() {}
+	SaveNewEQTLPostMsg() {}
 
 }
 
@@ -424,21 +460,37 @@ class SubmitNewDetailPostMsg {
 	String source_db_id="";
 	String desc="";
 	String img_b64="";
+	String backend_version="";
 
 	SubmitNewDetailPostMsg() {}
 
 }
 
-class CreateNewCredibleSetPostMsg {
+class CreateCustomCredibleSetPostMsg {
 	
 	String todo="";
-	String gwas_db_id="";
+	String gwas_or_eqtl="";
+	String db_id="";
+	String credible_set_name="";
+	String index_variant_posterior="";
+	ArrayList<String> member_rs_numbers;
+	ArrayList<String> member_posteriors;
+	String backend_version="";
+	
+	CreateCustomCredibleSetPostMsg() {}
+	
+}
+
+class CreateNewEQTLCredibleSetPostMsg {
+	
+	String todo="";
+	String eqtl_db_id="";
 	String credible_set_name="";
 	String index_variant_posterior="";
 	ArrayList<String> member_rs_numbers;
 	ArrayList<String> member_posteriors;
 	
-	CreateNewCredibleSetPostMsg() {}
+	CreateNewEQTLCredibleSetPostMsg() {}
 	
 }
 
@@ -446,6 +498,7 @@ class SubmitNewPubmedPostMsg {
 
 	String todo="";
 	String pubmed_id="";
+	String backend_version="";
 
 	SubmitNewPubmedPostMsg() {}
 
@@ -455,6 +508,7 @@ class SubmitNewBiorxivPostMsg {
 
 	String todo="";
 	String doi="";
+	String backend_version="";
 
 	SubmitNewBiorxivPostMsg() {}
 
@@ -464,6 +518,7 @@ class SubmitDeleteTagPostMsg {
 
 	String todo="";
 	String tag_id="";
+	String backend_version="";
 
 	SubmitDeleteTagPostMsg() {}
 
@@ -478,6 +533,7 @@ class SubmitSaveTagPostMsg {
 	String long_name="";
 	String description="";
 	String color="";
+	String backend_version="";
 	
 	SubmitSaveTagPostMsg() {}
 	
@@ -490,6 +546,7 @@ class SubmitNewFilePostMsg {
 	String file_name = "";
 	String file_description = "";
 	String file_contents = "";
+	String backend_version = "";
 
 	SubmitNewFilePostMsg() {}
 
@@ -501,6 +558,7 @@ class SubmitNewWebPostMsg {
 	String web_year = "";
 	String web_site = "";
 	String web_description = "";
+	String backend_version = "";
 
 	SubmitNewWebPostMsg() {}
 
@@ -512,6 +570,7 @@ class SubmitPushNewWebPostMsg {
 	String push_year = "";
 	String push_site = "";
 	String push_description = "";
+	String backend_version = "";
 	ArrayList<String> push_dbs = new ArrayList<>();;
 	
 	SubmitPushNewWebPostMsg() {}
@@ -524,6 +583,7 @@ class SubmitTagAssignPostMsg {
 	String tag_id="";
 	String db="";
 	String addif1="";
+	String backend_version="";
 	
 	SubmitTagAssignPostMsg() {}
 	
@@ -534,32 +594,23 @@ class SubmitSectionAssignmentPostMsg {
 	String todo="";
 	String detail_id="";
 	String new_section="";
+	String backend_version="";
 
 	SubmitSectionAssignmentPostMsg() {}
 
 }
 
-class UpdateGWASSVGDisplayNamePostMsg {
+class UpdateSVGDisplayNamePostMsg {
 
 	String todo="";
+	String origin="";
 	String svgdisplayname="";
-	int gwas_db_id = -1;
+	int db_id = -1;
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
-	UpdateGWASSVGDisplayNamePostMsg() {}
-
-}
-
-class UpdateEQTLSVGDisplayNamePostMsg {
-
-	String todo="";
-	String svgdisplayname="";
-	int eqtl_db_id = -1;
-	String svg_display_mode="";
-	int hidenoncoding=-1;
-
-	UpdateEQTLSVGDisplayNamePostMsg() {}
+	UpdateSVGDisplayNamePostMsg() {}
 
 }
 
@@ -567,20 +618,35 @@ class RemoveDetailPostMsg {
 
 	String todo="";
 	String detail_id="";
+	String backend_version="";
 
 	RemoveDetailPostMsg() {}
 
 }
 
-class UpdateGWASMarkerEquivalenceSetPostMsg {
+class UpdateGWASCredibleSetPostMsg {
 
 	String todo="";
-	String marker_equivalence_set="";
+	String credible_set="";
 	int gwas_db_id = -1;
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
-	UpdateGWASMarkerEquivalenceSetPostMsg() {}
+	UpdateGWASCredibleSetPostMsg() {}
+
+}
+
+class UpdateEQTLCredibleSetPostMsg {
+
+	String todo="";
+	String credible_set="";
+	int eqtl_db_id = -1;
+	String svg_display_mode="";
+	int hidenoncoding=-1;
+	String backend_version="";
+
+	UpdateEQTLCredibleSetPostMsg() {}
 
 }
 
@@ -590,6 +656,7 @@ class RemoveGWASRowPostMsg {
 	String gwas_db_id = "";
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
 	RemoveGWASRowPostMsg() {}
 
@@ -601,6 +668,7 @@ class RemoveEQTLRowPostMsg {
 	String eqtl_db_id = "";
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
 	RemoveEQTLRowPostMsg() {}
 
@@ -613,6 +681,7 @@ class UpdateGWASShowHidePostMsg {
 	int gwas_db_id = -1;
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
 	UpdateGWASShowHidePostMsg() {}
 
@@ -621,8 +690,9 @@ class UpdateGWASShowHidePostMsg {
 class UpdateSourceReviewPostMsg {
 
 	String todo="";
-	String reviewed_or_not = "";
+	String reviewed_or_not="";
 	int source_db_id = -1;
+	String backend_version="";
 
 	UpdateSourceReviewPostMsg() {}
 
@@ -633,6 +703,7 @@ class UpdateShowHideNonCodingPostMsg {
 	String todo="";
 	int hidenoncoding=-1;
 	String svg_display_mode="";
+	String backend_version="";
 
 	UpdateShowHideNonCodingPostMsg() {}
 
@@ -645,6 +716,7 @@ class UpdateMarkerForLDPostMsg {
 	int vm_db_id = -1;
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
 	UpdateMarkerForLDPostMsg() {}
 
@@ -657,6 +729,7 @@ class UpdateEQTLShowHidePostMsg {
 	int eqtl_db_id = -1;
 	String svg_display_mode="";
 	int hidenoncoding=-1;
+	String backend_version="";
 
 	UpdateEQTLShowHidePostMsg() {}
 
@@ -666,6 +739,7 @@ class UpdateSummaryPostMsg {
 
 	String todo="";
 	String summary="";
+	String backend_version="";
 
 	UpdateSummaryPostMsg() {}
 
@@ -749,7 +823,6 @@ class OutgoingDBNameListMsg {
 
 }
 
-
 class OutgoingPubListMsg {
 	
 	String isok = "";
@@ -770,25 +843,25 @@ class OutgoingSaveTagPostMsg {
 	
 }
 
-class OutgoingNewGWASRowPostMsg {
+class OutgoingNewGWASPostMsg {
 
 	String isok="";
 	String errors="";
 	String trtext="";
 	String gwasdbid="";
 
-	OutgoingNewGWASRowPostMsg() {}
+	OutgoingNewGWASPostMsg() {}
 
 }
 
-class OutgoingNewEQTLRowPostMsg {
+class OutgoingNewEQTLPostMsg {
 
 	String isok="";
 	String errors="";
 	String newrow="";
 	String eqtldbid="";
 
-	OutgoingNewEQTLRowPostMsg() {}
+	OutgoingNewEQTLPostMsg() {}
 
 }
 
@@ -854,16 +927,25 @@ class OutgoingNewPubmedPostMsg {
 
 }
 
-class OutgoingNewCredibleSetPostMsg {
+class OutgoingCustomCredibleSetPostMsg {
 
 	String isok="";
 	String errors="";
 	String csname="";
 
-	OutgoingNewCredibleSetPostMsg() {}
+	OutgoingCustomCredibleSetPostMsg() {}
 
 }
 
+class OutgoingNewEQTLCredibleSetPostMsg {
+
+	String isok="";
+	String errors="";
+	String csname="";
+
+	OutgoingNewEQTLCredibleSetPostMsg() {}
+
+}
 
 class OutgoingPushNewWebPostMsg {
 
@@ -930,6 +1012,8 @@ public class TGN {
 	static String publicFileFolder;
 	static String databaseFolder;
 	static Hashtable<String, Boolean> gene_synchronize_objects = new Hashtable<>();
+	static String backend_version = "1.2.6";
+	static String backend_db_version = "1.1";
 	
 	public static void main(String[] args) {
 		int port = 4567;
@@ -963,7 +1047,7 @@ public class TGN {
 		 * to as /index.html
 		 */
 
-		final boolean dump_log = true;
+		final boolean dump_log = false;
 		
 		get(new Route("/favicon.ico") {
 			@Override
@@ -987,43 +1071,6 @@ public class TGN {
 			}
 		});
 		
-		get(new Route("/_tagdb_") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				try {
-					String s = TagCreatePage(sd);
-					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;					
-				} catch (Exception ee) {
-					ee.printStackTrace();
-					return "Unable to load page";
-				}
-			}
-		});
-		
-		get(new Route("/unreviewedcheckin") {
-			@Override
-			public Object handle(Request request, Response response) {		
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				String isok = "notok";
-				String ret = "";
-				Gson gson = new Gson();
-				try {
-					ret = UnreviewedCheckin(sd);
-					isok = "ok";
-				} catch (Exception ee) {}
-				OutgoingUnreviewedCheckinPostMsg oucpm = new OutgoingUnreviewedCheckinPostMsg();
-				oucpm.isok = isok;
-				if (isok.equals("ok")) {
-					oucpm.gene_list = ret;
-				}
-				String s = gson.toJson(oucpm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;	
-			}
-		});
-		
 		get(new Route("/") {
 			@Override
 			public Object handle(Request request, Response response) {
@@ -1038,15 +1085,15 @@ public class TGN {
 				}
 			}
 		});
-		/*
-		get(new Route("/contact.html") {
+		
+		get(new Route("/_tagdb_") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
 				try {
-					String s = GetContact();
+					String s = ExistingTagPage(sd);
 					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;
+					return s;					
 				} catch (Exception ee) {
 					ee.printStackTrace();
 					return "Unable to load page";
@@ -1054,125 +1101,36 @@ public class TGN {
 			}
 		});
 		
-		get(new Route("/faq.html") {
+		post(new Route("/unreviewedcheckin") {
 			@Override
-			public Object handle(Request request, Response response) {
+			public Object handle(Request request, Response response) {	
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				try {
-					String s = GetFAQ();
-					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;
-				} catch (Exception ee) {
-					ee.printStackTrace();
-					return "Unable to load page";
-				}
-			}
-		});
-		
-		get(new Route("/terms.html") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				try {
-					String s = GetTerms();
-					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;
-				} catch (Exception ee) {
-					ee.printStackTrace();
-					return "Unable to load page";
-				}
-			}
-		});
-		
-		get(new Route("/about.html") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				try {
-					String s = GetAbout();
-					if (dump_log) System.out.println("RESPONSE: "+s);
-					return s;
-				} catch (Exception ee) {
-					ee.printStackTrace();
-					return "Unable to load page";
-				}
-			}
-		});
-		*/
-		get(new Route("/get_tag_class_list"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
+				UnreviewedCheckinPostMsg ucpm = null;
 				Gson gson = new Gson();
-				if (!gene_synchronize_objects.containsKey("__tags__")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("__tags__", gs_sync);
+				try {
+					ucpm = gson.fromJson(request.body(), UnreviewedCheckinPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
 				}
-				Boolean sy = gene_synchronize_objects.get("__tags__");
-				OutgoingTagClassListMsg opm = new OutgoingTagClassListMsg();
-				opm.isok = "notok";
-				synchronized(sy) {
-					try {
-						opm.class_list = GetTagClassList(sd);
-						opm.isok = "ok";
-					} catch (Exception ee) {
-					}
+				
+				if (!ucpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
 				}
-				String s = gson.toJson(opm);
+				OutgoingUnreviewedCheckinPostMsg oucpm = new OutgoingUnreviewedCheckinPostMsg();
+				oucpm.isok = "notok";
+				try {
+					oucpm.gene_list = UnreviewedCheckin(sd);
+					oucpm.isok = "ok";
+				} catch (Exception ee) {}
+				String s = gson.toJson(oucpm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
+				return s;	
 			}
-		});	
-		
-		get(new Route("/get_db_tag_assigns"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				Gson gson = new Gson();
-				if (!gene_synchronize_objects.containsKey("__tags__")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("__tags__", gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get("__tags__");
-				OutgoingTagAssignsMsg otam = new OutgoingTagAssignsMsg();
-				otam.isok = "notok";
-				synchronized(sy) {
-					try {
-						otam.db_tag_assigns = GetDBTagList(sd);
-						otam.isok = "ok";
-					} catch (Exception ee) {
-					}
-				}
-				String s = gson.toJson(otam);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});	
-		
-		get(new Route("/get_all_db_list"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				Gson gson = new Gson();
-				if (!gene_synchronize_objects.containsKey("__tags__")) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put("__tags__", gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get("__tags__");
-				OutgoingDBNameListMsg otam = new OutgoingDBNameListMsg();
-				otam.isok = "notok";
-				synchronized(sy) {
-					try {
-						otam.db_name_list = GetDBNameList(sd);
-						otam.isok = "ok";
-					} catch (Exception ee) {
-					}
-				}
-				String s = gson.toJson(otam);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});	
+		});
 		
 		post(new Route("/pushweb"){
 			@Override
@@ -1187,13 +1145,19 @@ public class TGN {
 					opnwpm.isok = "notok";
 					return gson.toJson(opnwpm);
 				}
+				
+				if (!spnwpm.backend_version.equals(backend_version)) {
+					OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
+					ostpm.isok = "backend mismatch";
+					return gson.toJson(ostpm);	
+				}
+				
 				OutgoingPushNewWebPostMsg opnwpm = new OutgoingPushNewWebPostMsg();
 				opnwpm.isok = "notok";
 				try {
 					opnwpm.messages = PushNewWebToDBs(sd, spnwpm);
 					opnwpm.isok = "ok";
-				} catch (Exception ee) {
-				}
+				} catch (Exception ee) {}
 				String s = gson.toJson(opnwpm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
@@ -1213,7 +1177,23 @@ public class TGN {
 					ostpm.isok = "notok";
 					return gson.toJson(ostpm);
 				}
-				String isok = "notok";
+				
+				if (!sstpm.backend_version.equals(backend_version)) {
+					OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
+					ostpm.isok = "backend mismatch";
+					return gson.toJson(ostpm);	
+				}
+				
+				/*
+				 * backend_db_version doesn't really apply here since we aren't
+				 * modifying any actual TGN databases, just the tags db
+				 * 
+				 * we should consider versioning of the tags db at some point
+				 * 
+				*/
+				
+				OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
+				ostpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey("_tags_")) {
 					final Boolean gs_sync = true;
@@ -1223,12 +1203,10 @@ public class TGN {
 				synchronized(sy) {
 					try {
 						resp = SaveTag(sd, sstpm);
-						isok = "ok";
+						ostpm.isok = "ok";
 					} catch (Exception ee) {}
 				}
-				OutgoingSaveTagPostMsg ostpm = new OutgoingSaveTagPostMsg();
-				ostpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (ostpm.isok.equals("ok")) {
 					ostpm.errors = resp.get(0);
 					ostpm.trtext = resp.get(1);
 					ostpm.tagid = resp.get(2);
@@ -1252,7 +1230,25 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
+				
+				if (!sdtpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+				
+				/*
+				 * backend_db_version doesn't really apply here since we aren't
+				 * modifying any actual TGN databases, just the tags db
+				 * 
+				 * we should consider versioning of the tags db at some point
+				 * 
+				 * we ARE checking all TGN dbs to make sure tag isn't assigned anywhere,
+				 * but for now we'll assume that part of the schema is stable
+				*/
+				
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey("_tags_")) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put("_tags_", gs_sync);
@@ -1262,12 +1258,10 @@ public class TGN {
 				synchronized(sy) {
 					try {
 						res = DeleteTag(sd, sdtpm);
-						if (res.equals("")) isok = "ok";
-						else isok = res;
+						if (res.equals("")) opm.isok = "ok";
+						else opm.isok = res;
 					} catch (Exception ee) {}
 				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
 				String s = gson.toJson(opm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
@@ -1287,8 +1281,15 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
-				Vector<String> resp = new Vector<>();
+				
+				if (!stapm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+				
+				OutgoingPostMsg opm = new OutgoingPostMsg();				
+				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey("_tags_")) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put("_tags_", gs_sync);
@@ -1296,24 +1297,256 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get("_tags_");
 				synchronized(sy) {
 					try {
-						UpdateTagAssign(sd, stapm);
-						isok = "ok";
-					} catch (Exception ee) {}
+						if (DBVersionOK(sd, stapm.db)) {
+							UpdateTagAssign(sd, stapm);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
+					} catch (Exception ee) {
+						opm.isok = "notok";
+					}
 				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
 				String s = gson.toJson(opm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			}
 		});		
-		
-		get(new Route("/:symbol") {
+
+		post(new Route("/get_all_db_list"){
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
+				GetAllDBListPostMsg gadlpm = null;
+				Gson gson = new Gson();
+				try {
+					gadlpm = gson.fromJson(request.body(), GetAllDBListPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
+
+				if (!gadlpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+
+				OutgoingDBNameListMsg otam = new OutgoingDBNameListMsg();
+				otam.isok = "notok";
+				try {
+					otam.db_name_list = GetDBNameList(sd);
+					otam.isok = "ok";
+				} catch (Exception ee) {}
+				String s = gson.toJson(otam);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			}
+		});	
+
+		post(new Route("/get_db_tag_assigns"){
+			@Override
+			public Object handle(Request request, Response response) {
+				if (dump_log) System.out.println("REQUEST: "+request.body());
+				GetDBTagAssignsPostMsg gdtapm = null;
+				Gson gson = new Gson();
+				try {
+					gdtapm = gson.fromJson(request.body(), GetDBTagAssignsPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
+
+				if (!gdtapm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+				
+				if (!gene_synchronize_objects.containsKey("__tags__")) {
+					final Boolean gs_sync = true;
+					gene_synchronize_objects.put("__tags__", gs_sync);
+				}
+				Boolean sy = gene_synchronize_objects.get("__tags__");
+				OutgoingTagAssignsMsg otam = new OutgoingTagAssignsMsg();
+				otam.isok = "notok";
+				synchronized(sy) {
+					try {
+						otam.db_tag_assigns = GetDBTagList(sd);
+						otam.isok = "ok";
+					} catch (Exception ee) {}
+				}
+				String s = gson.toJson(otam);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			}
+		});	
+		
+		post(new Route("/get_tag_class_list"){
+			@Override
+			public Object handle(Request request, Response response) {
+				if (dump_log) System.out.println("REQUEST: "+request.body());
+				GetTagClassListPostMsg gtclpm = null;
+				Gson gson = new Gson();
+				try {
+					gtclpm = gson.fromJson(request.body(), GetTagClassListPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
+
+				if (!gtclpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+				
+				/*
+				 * backend_db_version doesn't really apply here since we aren't
+				 * reading any actual TGN databases, just the tags db
+				 * 
+				 * we should consider versioning of the tags db at some point
+				 * 
+				*/
+				
+				if (!gene_synchronize_objects.containsKey("__tags__")) {
+					final Boolean gs_sync = true;
+					gene_synchronize_objects.put("__tags__", gs_sync);
+				}
+				Boolean sy = gene_synchronize_objects.get("__tags__");
+				OutgoingTagClassListMsg otclm = new OutgoingTagClassListMsg();
+				otclm.isok = "notok";
+				synchronized(sy) {
+					try {
+						otclm.class_list = GetTagClassList(sd);
+						otclm.isok = "ok";
+					} catch (Exception ee) {}
+				}
+				String s = gson.toJson(otclm);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			}
+		});	
+		
+		post(new Route("/get_pub_list/:symbol"){
+			@Override
+			public Object handle(Request request, Response response) {
+				if (dump_log) System.out.println("REQUEST: "+request.body());
+				GetPubListPostMsg gplpm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
+				Gson gson = new Gson();
+				try {
+					gplpm = gson.fromJson(request.body(), GetPubListPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
+			
+				if (!gplpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+
+				if (!gene_synchronize_objects.containsKey(gs)) {
+					final Boolean gs_sync = true;
+					gene_synchronize_objects.put(gs, gs_sync);
+				}
+				Boolean sy = gene_synchronize_objects.get(gs);
+				OutgoingPubListMsg oplm = new OutgoingPubListMsg();
+				oplm.isok = "notok";
+				synchronized(sy) {
+					try {
+						if (DBVersionOK(sd, gs)) {
+							oplm.pub_list = GetPubList(gs, sd);
+							oplm.isok = "ok";
+						} else {
+							oplm.isok = "backend db mismatch";
+						}
+					} catch (Exception ee) {}
+				}
+				String s = gson.toJson(oplm);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			}
+		});	
+		
+		post(new Route("/get_pub_and_gene_list/:symbol"){
+			@Override
+			public Object handle(Request request, Response response) {
+				if (dump_log) System.out.println("REQUEST: "+request.body());
+				GetPubAndGeneListPostMsg gpaglpm = null;
+				String gs = request.params(":symbol");
+				gs = EncodeLikeJavascript.decodeURIComponent(gs);
+				Gson gson = new Gson();
+				try {
+					gpaglpm = gson.fromJson(request.body(), GetPubAndGeneListPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
+			
+				if (!gpaglpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+
+				if (!gene_synchronize_objects.containsKey(gs)) {
+					final Boolean gs_sync = true;
+					gene_synchronize_objects.put(gs, gs_sync);
+				}
+				Boolean sy = gene_synchronize_objects.get(gs);
+				OutgoingPubAndGeneListMsg opaglm = new OutgoingPubAndGeneListMsg();
+				opaglm.isok = "notok";
+				synchronized(sy) {
+					try {
+						if (DBVersionOK(sd, gs)) {
+							Vector<String> ret = GetPubAndGeneList(gs, sd);
+							opaglm.pub_list = ret.get(0);
+							opaglm.gene_list = ret.get(1);
+							opaglm.isok = "ok";
+						} else {
+							opaglm.isok = "backend db mismatch";
+						}
+					} catch (Exception ee) {}
+				}
+				String s = gson.toJson(opaglm);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			}
+		});		
+		
+		post(new Route("/updatecomment/:symbol") {
+			@Override
+			public Object handle(Request request, Response response) {
+				if (dump_log) System.out.println("REQUEST: "+request.body());
+				UpdateCommentPostMsg ucpm = null;
+				String gs = request.params(":symbol");
+				gs = EncodeLikeJavascript.decodeURIComponent(gs);
+				Gson gson = new Gson();
+				try {
+					ucpm = gson.fromJson(request.body(), UpdateCommentPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
+				
+				if (!ucpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}
+				
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -1321,139 +1554,46 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {	
 					try {
-						String s = GetDBInfo2(gs,sd,-1, "Credible Sets", 0);
-						if (dump_log) System.out.println("RESPONSE: "+s);
-						return s;
+						if (DBVersionOK(sd, gs)) {
+							UpdateComment(gs, sd, ucpm);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {
-						ee.printStackTrace();
-						response.status(400);
-						return "Unable to load gene "+gs;
+						opm.isok = "notok";
 					}
 				}
-			}
+				String s = gson.toJson(opm);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			} 
 		});
+		
+		post(new Route("/createcustomcredibleset/:symbol") {
+			@Override
+			public Object handle(Request request, Response response) {
+				if (dump_log) System.out.println("REQUEST: "+request.body());
+				CreateCustomCredibleSetPostMsg cccspm = null;
+				String gs = request.params(":symbol");
+				gs = EncodeLikeJavascript.decodeURIComponent(gs);
+				Gson gson = new Gson();
+				try {
+					cccspm = gson.fromJson(request.body(), CreateCustomCredibleSetPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
 
-		post(new Route("/updategwascomment/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateGWASCommentPostMsg ugcpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					ugcpm = gson.fromJson(request.body(), UpdateGWASCommentPostMsg.class);
-				} catch (JsonSyntaxException e) {
+				if (!cccspm.backend_version.equals(backend_version)) {
 					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				String isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						UpdateGWASComment(gs, sd, ugcpm);
-						isok = "ok";
-					} catch (Exception ee) {}
-				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/updategenephencomment/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateGenePhenCommentPostMsg ugpcpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					ugpcpm = gson.fromJson(request.body(), UpdateGenePhenCommentPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				String isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						UpdateGenePhenComment(gs, sd, ugpcpm);
-						isok = "ok";
-					} catch (Exception ee) {}
-				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/updatedetailcomment/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateDetailCommentPostMsg udcpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					udcpm = gson.fromJson(request.body(), UpdateDetailCommentPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				String isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						UpdateDetailComment(gs, sd, udcpm);
-						isok = "ok";
-					} catch (Exception ee) {}
-				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/createnewcredibleset/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				CreateNewCredibleSetPostMsg cncspm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					cncspm = gson.fromJson(request.body(), CreateNewCredibleSetPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				String isok = "notok";
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}				
+
+				OutgoingCustomCredibleSetPostMsg ongcspm = new OutgoingCustomCredibleSetPostMsg();
+				ongcspm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1462,37 +1602,46 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {	
 					try {
-						resp = CreateNewCredibleSet(gs, sd, cncspm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = CreateCustomCredibleSet(gs, sd, cccspm);
+							ongcspm.isok = "ok";
+						} else {
+							ongcspm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewCredibleSetPostMsg oncspm = new OutgoingNewCredibleSetPostMsg();
-				oncspm.isok = isok;
-				if (isok.equals("ok")) {
-					oncspm.errors = resp.get(0);
-					oncspm.csname = resp.get(1);
+				if (ongcspm.isok.equals("ok")) {
+					ongcspm.errors = resp.get(0);
+					ongcspm.csname = resp.get(1);
 				}
-				String s = gson.toJson(oncspm);
+				String s = gson.toJson(ongcspm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			}
 		});
 		
-		post(new Route("/deletecredibleset/:symbol") {
+		post(new Route("/deletegwascustomcredibleset/:symbol") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				DeleteCredibleSetPostMsg dcspm = null;
+				DeleteGWASCustomCredibleSetPostMsg dgcspm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
 				Gson gson = new Gson();
 				try {
-					dcspm = gson.fromJson(request.body(), DeleteCredibleSetPostMsg.class);
+					dgcspm = gson.fromJson(request.body(), DeleteGWASCustomCredibleSetPostMsg.class);
 				} catch (JsonSyntaxException e) {
 					OutgoingPostMsg opm = new OutgoingPostMsg();
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
+				
+				if (!dgcspm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
 				OutgoingOverlapPostMsg opm = new OutgoingOverlapPostMsg();
 				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
@@ -1502,14 +1651,18 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {	
 					try {
-						Vector<ArrayList<Integer>> v = DeleteCredibleSet(gs, sd, dcspm);
-						ArrayList<Integer> eqtl_ids = v.elementAt(0);
-						ArrayList<Integer> overlap_counts = v.elementAt(1);
-						ArrayList<Integer> do_redo = v.elementAt(2);
-						opm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-						opm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-						if (do_redo.get(0)==1) opm.sentcontents = GetDBInfo2(gs,sd,2,dcspm.svg_display_mode,dcspm.hidenoncoding);
-						opm.isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							Vector<ArrayList<Integer>> v = DeleteGWASCustomCredibleSet(gs, sd, dgcspm);
+							ArrayList<Integer> eqtl_ids = v.elementAt(0);
+							ArrayList<Integer> overlap_counts = v.elementAt(1);
+							ArrayList<Integer> do_redo = v.elementAt(2);
+							opm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+							opm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+							if (do_redo.get(0)==1) opm.sentcontents = GetDBInfo2(gs,sd,2,dgcspm.svg_display_mode,dgcspm.hidenoncoding);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
 				String s = gson.toJson(opm);
@@ -1518,22 +1671,30 @@ public class TGN {
 			} 
 		});
 		
-		post(new Route("/updateeqtlcomment/:symbol") {
+		post(new Route("/deleteeqtlcustomcredibleset/:symbol") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateEQTLCommentPostMsg uecpm = null;
+				DeleteEQTLCustomCredibleSetPostMsg decspm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
 				Gson gson = new Gson();
 				try {
-					uecpm = gson.fromJson(request.body(), UpdateEQTLCommentPostMsg.class);
+					decspm = gson.fromJson(request.body(), DeleteEQTLCustomCredibleSetPostMsg.class);
 				} catch (JsonSyntaxException e) {
 					OutgoingPostMsg opm = new OutgoingPostMsg();
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
+				
+				if (!decspm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -1541,47 +1702,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {	
 					try {
-						UpdateEQTLComment(gs, sd, uecpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							boolean redraw = DeleteEQTLCustomCredibleSet(gs, sd, decspm);
+							if (redraw) opm.sentcontents = GetDBInfo2(gs,sd,2,decspm.svg_display_mode,decspm.hidenoncoding);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			} 
-		});
-		
-		post(new Route("/updatesourcecomment/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateSourceCommentPostMsg uscpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					uscpm = gson.fromJson(request.body(), UpdateSourceCommentPostMsg.class);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				String isok = "notok";
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {	
-					try {
-						UpdateSourceComment(gs, sd, uscpm);
-						isok = "ok";
-					} catch (Exception ee) {}
-				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
 				String s = gson.toJson(opm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
@@ -1603,7 +1732,15 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
+				
+				if (!usrpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
+				OutgoingSourceReviewPostMsg osrpm = new OutgoingSourceReviewPostMsg();
+				osrpm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -1612,13 +1749,15 @@ public class TGN {
 				Vector<String> ret = new Vector<>();
 				synchronized(sy) {	
 					try {
-						ret = UpdateSourceReview(gs, sd, usrpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							ret = UpdateSourceReview(gs, sd, usrpm);
+							osrpm.isok = "ok";
+						} else {
+							osrpm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingSourceReviewPostMsg osrpm = new OutgoingSourceReviewPostMsg();
-				osrpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (osrpm.isok.equals("ok")) {
 					osrpm.unreviewed_count = ret.get(0);
 					osrpm.total_count = ret.get(1);
 				}
@@ -1628,22 +1767,30 @@ public class TGN {
 			} 
 		});
 		
-		post(new Route("/submitnewgwasrow/:symbol") {
+		post(new Route("/savenewgwas/:symbol") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitNewGWASRowPostMsg sngrpm = null;
+				SaveNewGWASPostMsg sngpm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
 				Gson gson = new Gson();
 				try {
-					sngrpm = gson.fromJson(request.body(), SubmitNewGWASRowPostMsg.class);
+					sngpm = gson.fromJson(request.body(), SaveNewGWASPostMsg.class);
 				} catch (JsonSyntaxException e) {
-					OutgoingNewGWASRowPostMsg ongrpm = new OutgoingNewGWASRowPostMsg();
-					ongrpm.isok = "notok";
-					return gson.toJson(ongrpm);
+					OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
+					ongpm.isok = "notok";
+					return gson.toJson(ongpm);
 				}
-				String isok = "notok";
+				
+				if (!sngpm.backend_version.equals(backend_version)) {
+					OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
+					ongpm.isok = "backend mismatch";
+					return gson.toJson(ongpm);	
+				}	
+				
+				OutgoingNewGWASPostMsg ongpm = new OutgoingNewGWASPostMsg();
+				ongpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1652,39 +1799,49 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitNewGWASRow(gs, sd, sngrpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SaveNewGWAS(gs, sd, sngpm);
+							ongpm.isok = "ok";
+						} else {
+							ongpm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewGWASRowPostMsg ongrpm = new OutgoingNewGWASRowPostMsg();
-				ongrpm.isok = isok;
-				if (isok.equals("ok")) {
-					ongrpm.errors = resp.get(0);
-					ongrpm.trtext = resp.get(1);
-					ongrpm.gwasdbid = resp.get(2);
+				if (ongpm.isok.equals("ok")) {
+					ongpm.errors = resp.get(0);
+					ongpm.trtext = resp.get(1);
+					ongpm.gwasdbid = resp.get(2);
 				}
-				String s = gson.toJson(ongrpm);
+				String s = gson.toJson(ongpm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			} 
 		});
 		
-		post(new Route("/createneweqtl/:symbol") {
+		post(new Route("/saveneweqtl/:symbol") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				SubmitNewEQTLRowPostMsg snerpm = null;
+				SaveNewEQTLPostMsg snepm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
 				Gson gson = new Gson();
 				try {
-					snerpm = gson.fromJson(request.body(), SubmitNewEQTLRowPostMsg.class);
+					snepm = gson.fromJson(request.body(), SaveNewEQTLPostMsg.class);
 				} catch (JsonSyntaxException e) {
-					OutgoingNewEQTLRowPostMsg onerpm = new OutgoingNewEQTLRowPostMsg();
-					onerpm.isok = "notok";
-					return gson.toJson(onerpm);
+					OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
+					onepm.isok = "notok";
+					return gson.toJson(onepm);
 				}
-				String isok = "notok";
+				
+				if (!snepm.backend_version.equals(backend_version)) {
+					OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
+					onepm.isok = "backend mismatch";
+					return gson.toJson(onepm);	
+				}	
+				
+				OutgoingNewEQTLPostMsg onepm = new OutgoingNewEQTLPostMsg();
+				onepm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1693,18 +1850,20 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitNewEQTLRow(gs, sd, snerpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SaveNewEQTL(gs, sd, snepm);
+							onepm.isok = "ok";
+						} else {
+							onepm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewEQTLRowPostMsg onerpm = new OutgoingNewEQTLRowPostMsg();
-				onerpm.isok = isok;
-				if (isok.equals("ok")) {
-					onerpm.errors = resp.get(0);
-					onerpm.newrow = resp.get(1);
-					onerpm.eqtldbid = resp.get(2);
+				if (onepm.isok.equals("ok")) {
+					onepm.errors = resp.get(0);
+					onepm.newrow = resp.get(1);
+					onepm.eqtldbid = resp.get(2);
 				}
-				String s = gson.toJson(onerpm);
+				String s = gson.toJson(onepm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			} 
@@ -1725,7 +1884,15 @@ public class TGN {
 					ondpm.isok = "notok";
 					return gson.toJson(ondpm);
 				}
-				String isok = "notok";
+				
+				if (!sndpm.backend_version.equals(backend_version)) {
+					OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
+					ondpm.isok = "backend mismatch";
+					return gson.toJson(ondpm);	
+				}	
+				
+				OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
+				ondpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1734,13 +1901,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitNewDetail(gs, sd, sndpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SubmitNewDetail(gs, sd, sndpm);
+							ondpm.isok = "ok";
+						} else {
+							ondpm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewDetailPostMsg ondpm = new OutgoingNewDetailPostMsg();
-				ondpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (ondpm.isok.equals("ok")) {
 					ondpm.errors = resp.get(0);
 					ondpm.trtext = resp.get(1);
 					ondpm.detaildbid = resp.get(2);
@@ -1766,7 +1935,15 @@ public class TGN {
 					odfpm.isok = "notok";
 					return gson.toJson(odfpm);
 				}
-				String isok = "notok";
+				
+				if (!dfpm.backend_version.equals(backend_version)) {
+					OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
+					odfpm.isok = "backend mismatch";
+					return gson.toJson(odfpm);	
+				}	
+				
+				OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
+				odfpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1775,13 +1952,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = DownloadFile(gs, sd, dfpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = DownloadFile(gs, sd, dfpm);
+							odfpm.isok = "ok";
+						} else {
+							odfpm.isok = "backend db mismatch";	
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingDownloadFilePostMsg odfpm = new OutgoingDownloadFilePostMsg();
-				odfpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (odfpm.isok.equals("ok")) {
 					odfpm.name = resp.get(0);
 					odfpm.b64 = resp.get(1);
 				}
@@ -1806,7 +1985,15 @@ public class TGN {
 					ootrrpm.isok = "notok";
 					return gson.toJson(ootrrpm);
 				}
-				String isok = "notok";
+				
+				if (!otrrpm.backend_version.equals(backend_version)) {
+					OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
+					ootrrpm.isok = "backend mismatch";
+					return gson.toJson(ootrrpm);	
+				}	
+				
+				OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
+				ootrrpm.isok = "notok";
 				Vector<String> ret = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1815,13 +2002,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						ret = OkToRemoveRef(gs, sd, otrrpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							ret = OkToRemoveRef(gs, sd, otrrpm);
+							ootrrpm.isok = "ok";
+						} else {
+							ootrrpm.isok = "backend db mismatch";	
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingOkToRemoveRefPostMsg ootrrpm = new OutgoingOkToRemoveRefPostMsg();
-				ootrrpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (ootrrpm.isok.equals("ok")) {
 					ootrrpm.problems = ret.get(0);
 					ootrrpm.unreviewed_count = ret.get(1);
 					ootrrpm.total_count = ret.get(2);
@@ -1847,7 +2036,15 @@ public class TGN {
 					onppm.isok = "notok";
 					return gson.toJson(onppm);
 				}
-				String isok = "notok";
+				
+				if (!snppm.backend_version.equals(backend_version)) {
+					OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();
+					onppm.isok = "backend mismatch";
+					return gson.toJson(onppm);	
+				}	
+				
+				OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();				
+				onppm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1856,13 +2053,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitNewPubmed(gs, sd, snppm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SubmitNewPubmed(gs, sd, snppm);
+							onppm.isok = "ok";
+						} else {
+							onppm.isok = "backend_db_mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewPubmedPostMsg onppm = new OutgoingNewPubmedPostMsg();
-				onppm.isok = isok;
-				if (isok.equals("ok")) {
+				if (onppm.isok.equals("ok")) {
 					onppm.errors = resp.get(0);
 					onppm.trtext = resp.get(1);
 					onppm.sourcedocumentsid = resp.get(2);
@@ -1891,7 +2090,15 @@ public class TGN {
 					onbpm.isok = "notok";
 					return gson.toJson(onbpm);
 				}
-				String isok = "notok";
+				
+				if (!snbpm.backend_version.equals(backend_version)) {
+					OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
+					onbpm.isok = "backend mismatch";
+					return gson.toJson(onbpm);	
+				}	
+				
+				OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
+				onbpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1900,13 +2107,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitNewBiorxiv(gs, sd, snbpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SubmitNewBiorxiv(gs, sd, snbpm);
+							onbpm.isok = "ok";
+						} else {
+							onbpm.isok = "backend_db_mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewBiorxivPostMsg onbpm = new OutgoingNewBiorxivPostMsg();
-				onbpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (onbpm.isok.equals("ok")) {
 					onbpm.errors = resp.get(0);
 					onbpm.trtext = resp.get(1);
 					onbpm.sourcedocumentsid = resp.get(2);
@@ -1935,7 +2144,15 @@ public class TGN {
 					onwpm.isok = "notok";
 					return gson.toJson(onwpm);
 				}
-				String isok = "notok";
+				
+				if (!snwpm.backend_version.equals(backend_version)) {
+					OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
+					onwpm.isok = "backend mismatch";
+					return gson.toJson(onwpm);	
+				}	
+				
+				OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
+				onwpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1944,13 +2161,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitNewWeb(gs, sd, snwpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SubmitNewWeb(gs, sd, snwpm);
+							onwpm.isok = "ok";
+						} else {
+							onwpm.isok = "backend_db_mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewWebPostMsg onwpm = new OutgoingNewWebPostMsg();
-				onwpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (onwpm.isok.equals("ok")) {
 					onwpm.errors = resp.get(0);
 					onwpm.trtext = resp.get(1);
 					onwpm.sourcedocumentsid = resp.get(2);
@@ -1975,11 +2194,19 @@ public class TGN {
 				try {
 					snfpm = gson.fromJson(request.body(), SubmitNewFilePostMsg.class);
 				} catch (JsonSyntaxException e) {
-					OutgoingNewFilePostMsg onwpm = new OutgoingNewFilePostMsg();
-					onwpm.isok = "notok";
-					return gson.toJson(onwpm);
+					OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
+					onfpm.isok = "notok";
+					return gson.toJson(onfpm);
 				}
-				String isok = "notok";
+				
+				if (!snfpm.backend_version.equals(backend_version)) {
+					OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
+					onfpm.isok = "backend mismatch";
+					return gson.toJson(onfpm);	
+				}	
+				
+				OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
+				onfpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -1988,13 +2215,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitNewFile(gs, sd, snfpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SubmitNewFile(gs, sd, snfpm);
+							onfpm.isok = "ok";
+						} else {
+							onfpm.isok = "backend_db_mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingNewFilePostMsg onfpm = new OutgoingNewFilePostMsg();
-				onfpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (onfpm.isok.equals("ok")) {
 					onfpm.errors = resp.get(0);
 					onfpm.trtext = resp.get(1);
 					onfpm.sourcedocumentsid = resp.get(2);
@@ -2023,7 +2252,15 @@ public class TGN {
 					osapm.isok = "notok";
 					return gson.toJson(osapm);
 				}
-				String isok = "notok";
+				
+				if (!ssapm.backend_version.equals(backend_version)) {
+					OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
+					osapm.isok = "backend mismatch";
+					return gson.toJson(osapm);	
+				}	
+				
+				OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
+				osapm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -2032,13 +2269,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = SubmitDetailSectionAssignment(gs, sd, ssapm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = SubmitDetailSectionAssignment(gs, sd, ssapm);
+							osapm.isok = "ok";
+						} else {
+							osapm.isok = "backend_db_mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingSectionAssignmentPostMsg osapm = new OutgoingSectionAssignmentPostMsg();
-				osapm.isok = isok;
-				if (isok.equals("ok")) {
+				if (osapm.isok.equals("ok")) {
 					osapm.old_section_lc = resp.get(0).toLowerCase();
 					osapm.old_section_source_documents_id = resp.get(1);
 					osapm.old_section_revised_rows = resp.get(2);
@@ -2067,7 +2306,15 @@ public class TGN {
 					ordpm.isok = "notok";
 					return gson.toJson(ordpm);
 				}
-				String isok = "notok";
+				
+				if (!rdpm.backend_version.equals(backend_version)) {
+					OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
+					ordpm.isok = "backend mismatch";
+					return gson.toJson(ordpm);	
+				}	
+				
+				OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
+				ordpm.isok = "notok";
 				Vector<String> resp = new Vector<>();
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -2076,13 +2323,15 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						resp = RemoveDetail(gs, sd, rdpm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							resp = RemoveDetail(gs, sd, rdpm);
+							ordpm.isok = "ok";
+						} else {
+							ordpm.isok = "backend_db_mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingRemoveDetailPostMsg ordpm = new OutgoingRemoveDetailPostMsg();
-				ordpm.isok = isok;
-				if (isok.equals("ok")) {
+				if (ordpm.isok.equals("ok")) {
 					ordpm.old_section_lc = resp.get(0).toLowerCase();
 					ordpm.old_section_source_documents_id = resp.get(1);
 					ordpm.old_section_revised_rows = resp.get(2);
@@ -2109,8 +2358,15 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
-				OutgoingOverlapPostMsg opm = new OutgoingOverlapPostMsg();
+				
+				if (!rgrpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
+				OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
+				oopm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -2118,18 +2374,21 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						Vector<ArrayList<Integer>> v = RemoveGWASRow(gs, sd, rgrpm);
-						ArrayList<Integer> eqtl_ids = v.elementAt(0);
-						ArrayList<Integer> overlap_counts = v.elementAt(1);
-						ArrayList<Integer> do_redo = v.elementAt(2);
-						opm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-						opm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-						if (do_redo.get(0)==1) opm.sentcontents = GetDBInfo2(gs,sd,2,rgrpm.svg_display_mode,rgrpm.hidenoncoding);
-						isok = "ok";
-					} catch (Exception ee) {ee.printStackTrace(); isok = "notok";}
+						if (DBVersionOK(sd, gs)) {
+							Vector<ArrayList<Integer>> v = RemoveGWASRow(gs, sd, rgrpm);
+							ArrayList<Integer> eqtl_ids = v.elementAt(0);
+							ArrayList<Integer> overlap_counts = v.elementAt(1);
+							ArrayList<Integer> do_redo = v.elementAt(2);
+							oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+							oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+							if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,rgrpm.svg_display_mode,rgrpm.hidenoncoding);
+							oopm.isok = "ok";
+						} else {
+							oopm.isok = "backend db mismatch";
+						}
+					} catch (Exception ee) {ee.printStackTrace();}
 				}
-				opm.isok = isok;
-				String s = gson.toJson(opm);
+				String s = gson.toJson(oopm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			} 
@@ -2150,9 +2409,15 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
-				boolean remake_svg = true;
+				
+				if (!rerpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
 				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -2160,37 +2425,48 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						remake_svg = RemoveEQTLRow(gs, sd, rerpm);
-						if (remake_svg) opm.sentcontents = GetDBInfo2(gs,sd,2,rerpm.svg_display_mode,rerpm.hidenoncoding);
-						isok = "ok";
-					} catch (Exception ee) {ee.printStackTrace(); isok = "notok";}
+						if (DBVersionOK(sd, gs)) {
+							if (RemoveEQTLRow(gs, sd, rerpm)) {
+								opm.sentcontents = GetDBInfo2(gs,sd,2,rerpm.svg_display_mode,rerpm.hidenoncoding);
+							}
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+							
+						}
+					} catch (Exception ee) {ee.printStackTrace();}
 				}
-				opm.isok = isok;
 				String s = gson.toJson(opm);	
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			} 
 		});
 
-		post(new Route("/updategwassvgdisplayname/:symbol") {
+		post(new Route("/updatesvgdisplayname/:symbol") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateGWASSVGDisplayNamePostMsg usdnpm = null;
+				UpdateSVGDisplayNamePostMsg usdnpm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
 				Gson gson = new Gson();
 				try {
-					usdnpm = gson.fromJson(request.body(), UpdateGWASSVGDisplayNamePostMsg.class);
+					usdnpm = gson.fromJson(request.body(), UpdateSVGDisplayNamePostMsg.class);
 					//usdnpm.svgdisplayname = EncodeLikeJavascript.decodeURIComponent(usdnpm.svgdisplayname);
 				} catch (JsonSyntaxException e) {
 					OutgoingPostMsg opm = new OutgoingPostMsg();
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
-				boolean remake_svg = true;
+				
+				if (!usdnpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
 				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -2198,54 +2474,21 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						remake_svg = UpdateGWASSVGDisplayName(gs, sd, usdnpm);
-						if (remake_svg) opm.sentcontents = GetDBInfo2(gs,sd,2,usdnpm.svg_display_mode,usdnpm.hidenoncoding);
-						isok = "ok";
-					} catch (Exception ee) {ee.printStackTrace(); isok = "notok";}
+						if (DBVersionOK(sd, gs)) {
+							if (UpdateSVGDisplayName(gs, sd, usdnpm)) {
+								opm.sentcontents = GetDBInfo2(gs,sd,2,usdnpm.svg_display_mode,usdnpm.hidenoncoding);
+							}
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
+
+					} catch (Exception ee) {ee.printStackTrace();}
 				}
-				opm.isok = isok;
 				String s = gson.toJson(opm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			} 
-		});		
-
-		post(new Route("/updateeqtlsvgdisplayname/:symbol") {
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateEQTLSVGDisplayNamePostMsg usdnpm = null;
-				String gs = request.params(":symbol");
-				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();
-				try {
-					usdnpm = gson.fromJson(request.body(), UpdateEQTLSVGDisplayNamePostMsg.class);
-					//usdnpm.svgdisplayname = EncodeLikeJavascript.decodeURIComponent(usdnpm.svgdisplayname);
-				} catch (JsonSyntaxException e) {
-					OutgoingPostMsg opm = new OutgoingPostMsg();
-					opm.isok = "notok";
-					return gson.toJson(opm);
-				}
-				String isok = "notok";
-				boolean remake_svg = true;
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				synchronized(sy) {
-					try {
-						remake_svg = UpdateEQTLSVGDisplayName(gs, sd, usdnpm);
-						if (remake_svg) opm.sentcontents = GetDBInfo2(gs,sd,2,usdnpm.svg_display_mode,usdnpm.hidenoncoding);
-						isok = "ok";
-					} catch (Exception ee) {ee.printStackTrace(); isok = "notok";}
-				}
-				opm.isok = isok;
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
 		});		
 
 		post(new Route("/updatesummary/:symbol") {
@@ -2263,7 +2506,15 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				String isok = "notok";
+				
+				if (!uspm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
+				OutgoingPostMsg opm = new OutgoingPostMsg();
+				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -2271,12 +2522,14 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						UpdateSummary(gs, sd, uspm);
-						isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							UpdateSummary(gs, sd, uspm);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				OutgoingPostMsg opm = new OutgoingPostMsg();
-				opm.isok = isok;
 				String s = gson.toJson(opm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
@@ -2287,19 +2540,26 @@ public class TGN {
 			@Override
 			public Object handle(Request request, Response response) {	
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateGWASShowHidePostMsg uspm = null;
+				UpdateGWASShowHidePostMsg ugshpm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
 				Gson gson = new Gson();
 				try {
-					uspm = gson.fromJson(request.body(), UpdateGWASShowHidePostMsg.class);
+					ugshpm = gson.fromJson(request.body(), UpdateGWASShowHidePostMsg.class);
 				} catch (JsonSyntaxException e) {
 					OutgoingPostMsg opm = new OutgoingPostMsg();
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				OutgoingOverlapPostMsg opm = new OutgoingOverlapPostMsg();
-				opm.isok = "notok";
+				
+				if (!ugshpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
+				OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
+				oopm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
@@ -2307,17 +2567,21 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						Vector<ArrayList<Integer>> v = UpdateGWASShowHide(gs, sd, uspm);
-						ArrayList<Integer> eqtl_ids = v.elementAt(0);
-						ArrayList<Integer> overlap_counts = v.elementAt(1);
-						ArrayList<Integer> do_redo = v.elementAt(2);
-						opm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-						opm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-						if (do_redo.get(0)==1) opm.sentcontents = GetDBInfo2(gs,sd,2,uspm.svg_display_mode,uspm.hidenoncoding);
-						opm.isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							Vector<ArrayList<Integer>> v = UpdateGWASShowHide(gs, sd, ugshpm);
+							ArrayList<Integer> eqtl_ids = v.elementAt(0);
+							ArrayList<Integer> overlap_counts = v.elementAt(1);
+							ArrayList<Integer> do_redo = v.elementAt(2);
+							oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+							oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+							if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,ugshpm.svg_display_mode,ugshpm.hidenoncoding);
+							oopm.isok = "ok";
+						} else {
+							oopm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
-				String s = gson.toJson(opm);
+				String s = gson.toJson(oopm);
 				if (dump_log) System.out.println("RESPONSE: "+s);
 				return s;
 			}
@@ -2338,6 +2602,13 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
+				
+				if (!ushncpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
@@ -2347,8 +2618,12 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						opm.sentcontents = GetDBInfo2(gs,sd,2,ushncpm.svg_display_mode,ushncpm.hidenoncoding);
-						opm.isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							opm.sentcontents = GetDBInfo2(gs,sd,2,ushncpm.svg_display_mode,ushncpm.hidenoncoding);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {}
 				}
 				String s = gson.toJson(opm);
@@ -2372,6 +2647,13 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
+				
+				if (!umflpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
@@ -2381,9 +2663,13 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						UpdateMarkerForLD(gs, sd, umflpm);
-						opm.sentcontents = GetDBInfo2(gs,sd,2,umflpm.svg_display_mode,umflpm.hidenoncoding);
-						opm.isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							UpdateMarkerForLD(gs, sd, umflpm);
+							opm.sentcontents = GetDBInfo2(gs,sd,2,umflpm.svg_display_mode,umflpm.hidenoncoding);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";		
+						}	
 					} catch (Exception ee) {}
 				}
 				String s = gson.toJson(opm);
@@ -2407,6 +2693,13 @@ public class TGN {
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
+				
+				if (!ueshpm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
 				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
@@ -2416,9 +2709,13 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						UpdateEQTLShowHide(gs, sd, ueshpm);
-						opm.sentcontents = GetDBInfo2(gs,sd,2,ueshpm.svg_display_mode,ueshpm.hidenoncoding);
-						opm.isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							UpdateEQTLShowHide(gs, sd, ueshpm);
+							opm.sentcontents = GetDBInfo2(gs,sd,2,ueshpm.svg_display_mode,ueshpm.hidenoncoding);
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";		
+						}
 					} catch (Exception ee) {}
 				}
 				String s = gson.toJson(opm);
@@ -2427,22 +2724,82 @@ public class TGN {
 			} 
 		});
 
-		post(new Route("/updategwasmarkerequivalenceset/:symbol") {
+		post(new Route("/updategwascredibleset/:symbol") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
-				UpdateGWASMarkerEquivalenceSetPostMsg umespm = null;
+				UpdateGWASCredibleSetPostMsg ugcspm = null;
 				String gs = request.params(":symbol");
 				gs = EncodeLikeJavascript.decodeURIComponent(gs);
-				Gson gson = new Gson();//GsonBuilder().create();
+				Gson gson = new Gson();
 				try {
-					umespm = gson.fromJson(request.body(), UpdateGWASMarkerEquivalenceSetPostMsg.class);
+					ugcspm = gson.fromJson(request.body(), UpdateGWASCredibleSetPostMsg.class);
 				} catch (JsonSyntaxException e) {
 					OutgoingPostMsg opm = new OutgoingPostMsg();
 					opm.isok = "notok";
 					return gson.toJson(opm);
 				}
-				OutgoingOverlapPostMsg opm = new OutgoingOverlapPostMsg();
+				
+				if (!ugcspm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
+				OutgoingOverlapPostMsg oopm = new OutgoingOverlapPostMsg();
+				oopm.isok = "notok";
+				if (!gene_synchronize_objects.containsKey(gs)) {
+					final Boolean gs_sync = true;
+					gene_synchronize_objects.put(gs, gs_sync);
+				}
+				Boolean sy = gene_synchronize_objects.get(gs);
+				synchronized(sy) {
+					try {
+						if (DBVersionOK(sd, gs)) {
+							Vector<ArrayList<Integer>> v = UpdateGWASCredibleSet(gs, sd, ugcspm);
+							ArrayList<Integer> eqtl_ids = v.elementAt(0);
+							ArrayList<Integer> overlap_counts = v.elementAt(1);
+							ArrayList<Integer> do_redo = v.elementAt(2);
+							oopm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
+							oopm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
+							if (do_redo.get(0)==1) oopm.sentcontents = GetDBInfo2(gs,sd,2,ugcspm.svg_display_mode,ugcspm.hidenoncoding);
+							oopm.isok = "ok";
+						} else {
+							oopm.isok = "backend db mismatch";							
+						}
+					} catch (Exception ee) {
+						ee.printStackTrace();
+					}
+				}
+				String s = gson.toJson(oopm);
+				if (dump_log) System.out.println("RESPONSE: "+s);
+				return s;
+			} 
+		});
+		
+		post(new Route("/updateeqtlcredibleset/:symbol") {
+			@Override
+			public Object handle(Request request, Response response) {
+				if (dump_log) System.out.println("REQUEST: "+request.body());
+				UpdateEQTLCredibleSetPostMsg uecspm = null;
+				String gs = request.params(":symbol");
+				gs = EncodeLikeJavascript.decodeURIComponent(gs);
+				Gson gson = new Gson();
+				try {
+					uecspm = gson.fromJson(request.body(), UpdateEQTLCredibleSetPostMsg.class);
+				} catch (JsonSyntaxException e) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "notok";
+					return gson.toJson(opm);
+				}
+				
+				if (!uecspm.backend_version.equals(backend_version)) {
+					OutgoingPostMsg opm = new OutgoingPostMsg();
+					opm.isok = "backend mismatch";
+					return gson.toJson(opm);	
+				}	
+				
+				OutgoingPostMsg opm = new OutgoingPostMsg();
 				opm.isok = "notok";
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
@@ -2451,14 +2808,14 @@ public class TGN {
 				Boolean sy = gene_synchronize_objects.get(gs);
 				synchronized(sy) {
 					try {
-						Vector<ArrayList<Integer>> v = UpdateGWASMarkerEquivalenceSet(gs, sd, umespm);
-						ArrayList<Integer> eqtl_ids = v.elementAt(0);
-						ArrayList<Integer> overlap_counts = v.elementAt(1);
-						ArrayList<Integer> do_redo = v.elementAt(2);
-						opm.eqtl_ids = gson.toJson(eqtl_ids, ArrayList.class);
-						opm.overlap_counts = gson.toJson(overlap_counts, ArrayList.class);
-						if (do_redo.get(0)==1) opm.sentcontents = GetDBInfo2(gs,sd,2,umespm.svg_display_mode,umespm.hidenoncoding);
-						opm.isok = "ok";
+						if (DBVersionOK(sd, gs)) {
+							if (UpdateEQTLCredibleSet(gs, sd, uecspm)) {						
+								opm.sentcontents = GetDBInfo2(gs,sd,2,uecspm.svg_display_mode,uecspm.hidenoncoding);
+							}
+							opm.isok = "ok";
+						} else {
+							opm.isok = "backend db mismatch";
+						}
 					} catch (Exception ee) {
 						ee.printStackTrace();
 					}
@@ -2468,65 +2825,40 @@ public class TGN {
 				return s;
 			} 
 		});
-
-		get(new Route("/get_pub_list/:symbol"){
-			@Override
-			public Object handle(Request request, Response response) {
-				if (dump_log) System.out.println("REQUEST: "+request.body());
-				String gs = request.params(":symbol");
-				Gson gson = new Gson();
-				gs= EncodeLikeJavascript.decodeURIComponent(gs);
-				if (!gene_synchronize_objects.containsKey(gs)) {
-					final Boolean gs_sync = true;
-					gene_synchronize_objects.put(gs, gs_sync);
-				}
-				Boolean sy = gene_synchronize_objects.get(gs);
-				OutgoingPubListMsg opm = new OutgoingPubListMsg();
-				opm.isok = "notok";
-				synchronized(sy) {
-					try {
-						opm.pub_list = GetPubList(gs, sd);
-						opm.isok = "ok";
-					} catch (Exception ee) {
-					}
-				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
-			}
-		});	
 		
-		get(new Route("/get_pub_and_gene_list/:symbol"){
+		get(new Route("/:symbol") {
 			@Override
 			public Object handle(Request request, Response response) {
 				if (dump_log) System.out.println("REQUEST: "+request.body());
 				String gs = request.params(":symbol");
-				Gson gson = new Gson();
-				gs= EncodeLikeJavascript.decodeURIComponent(gs);
+				gs = EncodeLikeJavascript.decodeURIComponent(gs);
 				if (!gene_synchronize_objects.containsKey(gs)) {
 					final Boolean gs_sync = true;
 					gene_synchronize_objects.put(gs, gs_sync);
 				}
 				Boolean sy = gene_synchronize_objects.get(gs);
-				OutgoingPubAndGeneListMsg opm = new OutgoingPubAndGeneListMsg();
-				opm.isok = "notok";
-				synchronized(sy) {
+				synchronized(sy) {	
 					try {
-						Vector<String> ret = GetPubAndGeneList(gs, sd);
-						opm.pub_list = ret.get(0);
-						opm.gene_list = ret.get(1);
-						opm.isok = "ok";
+						String s = "";
+						if (DBVersionOK(sd, gs)) {						
+							s = GetDBInfo2(gs,sd,-1, "Credible Sets", 0);
+						} else {
+							s = "Database version is incompatible with backend server.";
+						}
+						if (dump_log) System.out.println("RESPONSE: "+s);
+						return s;
 					} catch (Exception ee) {
+						ee.printStackTrace();
+						response.status(400);
+						return "Unable to load gene "+gs;
 					}
 				}
-				String s = gson.toJson(opm);
-				if (dump_log) System.out.println("RESPONSE: "+s);
-				return s;
 			}
-		});		
+		});
+		
 	}
 	
-	public static String GetHTMLStart(String tab_name, String backend_version, String db_version) throws Exception {
+	public static String GetHTMLStart(String tab_name, String db_version) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<!doctype html>\n");
 		sb.append("<html>\n");
@@ -2542,8 +2874,12 @@ public class TGN {
 		sb.append("  textarea { resize: none; outline: none; padding: 0px 0px 0px 0px !important; margin: 0px 0px 0px 0px !important; border: 0px solid #DDDDDD !important; }\n");
 		sb.append("  textarea:focus { resize: none; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px; border: 0px solid rgba(81, 203, 238, 1); }\n");	
 		sb.append("</style>\n");
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js\"></script>\n");
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js\"></script>\n");
+		sb.append("<script type=\"text/javascript\">\n");
+		sb.append("  var backend_version = '"+backend_version+"';\n");
+		sb.append("  var master_busy = true;\n");
+		sb.append("</script>\n");	
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=06222019\"></script>\n");
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js?v=06222019\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"jquery/jquery-2.2.4.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"FileSaver.js-master/FileSaver.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"lightbox2-master/dist/js/lightbox.js\"></script>\n");
@@ -2569,16 +2905,15 @@ public class TGN {
 		sb.append("  .select2-selection__rendered{ word-wrap: break-word !important; text-overflow: inherit !important; white-space: normal !important; line-height: 18px !important; padding-left: 4px !important; padding-right: 8px !important}\n");
 		sb.append("  .select2-results__option { padding: 0px 0px 0px 0px; }\n");
 		sb.append("  .ak_table_button { padding: 1px; border: 1px;}\n");
+		sb.append("  .ak_table_button { background-color: rgb(221,221,221);}\n");
 		sb.append("  .ak_table_button:disabled { background: #c60071 !important;}\n");
 		sb.append("  td { padding: 1px !important; background: transparent !important; word-wrap: break-word; white-space: normal; word-break: normal;}\n");
-		//sb.append("  td { padding: 1px !important; background: transparent !important; word-wrap: break-word; white-space: normal; word-break:break-all;}\n");
 		sb.append("  .akwrapper { overlow-x:auto; overflow-y:hidden; width:1300px;}\n");
 		sb.append("  .akwrapper table { width:auto; table-layout:fixed;}\n");
 		sb.append("  .ui-accordion-header {color:#ffffff !important; background-color:#00739c !important; border-bottom-color:#00739c !important; border-left-color:#00739c !important; border-right-color:#00739c !important; border-top-color:#00739c !important; padding-top:2px !important; padding-bottom:2px !important;}\n");
 		sb.append("  #aktmptable td {text-align: center;}\n");
 		sb.append("  .contain_img {object-fit: contain;}\n");
 		sb.append("  * { font-family: Lato, Sans-serif; }\n");
-		//sb.append("  :not(.aktest) { font-family: Lato, Sans-serif; }\n");
 		sb.append("  .ak_tablecell { font: 12px/18px Lato, Sans-serif !important; }\n");
 		sb.append("  .ak_table_button { font: 12px/18px Lato, Sans-serif !important; }\n");
 		sb.append("  select { font: 12px/18px Lato, Sans-serif !important; }\n");
@@ -2588,51 +2923,43 @@ public class TGN {
 		sb.append("  input { font: 12px/18px Lato, Sans-serif !important; }\n");	
 		sb.append("  .select2 { font: 12px/18px Lato, Sans-serif !important; }\n");
 		sb.append("  .select2-results__option { font: 12px/18px Lato, Sans-serif !important; }\n");
-		//sb.append("  .tgn_agree { display:none; width:100%; height:100%; position:fixed; left:0; top:0; z-index:101; background: rgba(0,0,0,0.5); }\n");
-		//sb.append("  .agree_ta { margin-left:15%; margin-right:15%; margin-top:15%; margin-bottom:15%; display:inline-block; }\n");
 		sb.append("  body,html{ background-color: #eeeeee; }\n");
 		sb.append("  .akmodal {display: none; position: fixed; z-index: 1000; padding-top: 100px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgb(0,0,0); background-color: rgba(0,0,0,0.85);}\n");
 		sb.append("</style>\n");		
 		sb.append("</head>\n");
 		
-		sb.append("<body>\n");
+		sb.append("<body style=\"visibility: hidden;\">\n");
 		
 		// nav bar
 		
 		sb.append("<nav class=\"navbar navbar-default\" style=\"background:#222; margin-bottom:0px !important;\">\n");
 		sb.append("  <div class=\"container-fluid\">\n");
 		sb.append("    <div class=\"navbar-header\">\n");
-		sb.append("      <a href=\"http://www.eisai.com\" class=\"navbar-left\" target=\"_blank\"><img src=\"./logo/Eisai Logo.png\" height=\"39px\" style=\"margin-top:6px; margin-bottom:6px;\" align=\"middle\"></a>"); // height was 50 w/o any border
 		if (backend_version.equals("")) {
 			sb.append("      <p class=\"navbar-text\" style=\"font-size:15px; color:white; font-weight:bold;\">Target Gene Notebook</p>\n");	
-		} else { 
-			sb.append("      <p class=\"navbar-text\" style=\"font-size:15px; color:white; font-weight:bold;\">Target Gene Notebook "+backend_version+":"+db_version+"</p>\n");
+		} else {
+			if (db_version.equals("")) {
+				sb.append("      <p class=\"navbar-text\" style=\"font-size:15px; color:white; font-weight:bold;\">Target Gene Notebook "+backend_version+"</p>\n");	
+			} else {
+				sb.append("      <p class=\"navbar-text\" style=\"font-size:15px; color:white; font-weight:bold;\">Target Gene Notebook "+backend_version+":"+db_version+"</p>\n");
+			}
 		}
 		sb.append("    </div>\n");
-		/*
-		sb.append("    <ul class=\"nav navbar-nav navbar-right\">\n");
-		sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"./about.html\" target=\"_tgn_other\">About</a></li>\n");
-		sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"./terms.html\" target=\"_tgn_other\">Terms</a></li>\n");
-		sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"./contact.html\" target=\"_tgn_other\">Contact</a></li>\n");
-		sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"./faq.html\" target=\"_tgn_other\">FAQ</a></li>\n");
-		sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"content/TGN_UserGuide.pdf\" target=\"_tgn_userguide\">User Guide</a></li>\n");
-		sb.append("    </ul>\n");
-		*/
+		if (db_version.equals("") && !tab_name.equals("TGN - Tags")) {
+			sb.append("    <ul class=\"nav navbar-nav navbar-right\">\n");
+			sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"content/TGNUserGuide.pdf\" target=\"_tgn_userguide\">User Guide</a></li>\n");
+			sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"./_tagdb_\" target=\"_tgn_tags\">Manage Tags</a></li>\n");
+			sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"#\" onclick=\"ShowAboutOverlay();return false;\">About</a></li>\n");
+			sb.append("    </ul>\n");
+		} else {
+			sb.append("    <ul class=\"nav navbar-nav navbar-right\">\n");
+			sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"content/TGNUserGuide.pdf\" target=\"_tgn_userguide\">User Guide</a></li>\n");
+			sb.append("      <li><a style=\"font-size:15px; color:white; font-weight:bold;\" href=\"#\" onclick=\"ShowAboutOverlay(); return false;\">About</a></li>\n");
+			sb.append("    </ul>\n");
+			
+		}
 		sb.append("  </div>\n");
 		sb.append("</nav>\n");
-
-		// license
-		/*
-		sb.append("<div class=\"tgn_agree\" style=\"text-align:center;\">\n");
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("public/content/agreement.txt");
-		String agree_text = IOUtils.toString(is);
-		is.close();		
-		sb.append(" <section style=\"margin-top:0px !important; display:inline-block; width:70%; height:85%;\">\n");
-		sb.append(" <textarea readonly style=\"display:block; width:100%; height:90%;\">"+StringEscapeUtils.escapeHtml4(agree_text)+"</textarea>\n");
-		sb.append(" <button type=\"button\" style=\"display:block; margin:auto;\" onclick=\"AcceptAgreement()\" class=\"ak_table_button\">Agree</button>\n");
-		sb.append("  </section>");				
-		sb.append("</div>\n");
-		*/
 		return sb.toString();
 	}
 	
@@ -2650,25 +2977,53 @@ public class TGN {
 					just_gene = just_gene.substring(0, just_gene.indexOf(".sqlite"));
 					String just_gene_uc = just_gene.toUpperCase();
 					if (just_gene_uc.equals("_TAGS")) continue;
-					String dbFilePath = storageDir+"/"+just_gene+".sqlite";
-					connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);  
-					statement = connection.createStatement();
-					int unreviewed_reference_count = 0;
-					int total_reference_count = 0;
-					rs = statement.executeQuery("select has_been_reviewed from source_documents");
-					while (rs.next()) {
-						int hbr = rs.getInt("has_been_reviewed");
-						total_reference_count++;
-						if (hbr==0) unreviewed_reference_count++;		
+
+					if (!gene_synchronize_objects.containsKey(just_gene)) {
+						final Boolean gs_sync = true;
+						gene_synchronize_objects.put(just_gene, gs_sync);
 					}
-					rs.close();
-					statement.close();
-					connection.close();
-					LinkedHashMap<String, String> map = new LinkedHashMap<>();
-					map.put("gene", just_gene_uc); 
-					map.put("unreviewed", unreviewed_reference_count+" out of "+total_reference_count+" not reviewed");
-					String jsonObs = gson.toJson(map, LinkedHashMap.class);
-					gene_list.add(jsonObs);
+					Boolean sy = gene_synchronize_objects.get(just_gene);
+					synchronized(sy) {	
+						String dbFilePath = storageDir+"/"+just_gene+".sqlite";
+						connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);
+						DatabaseMetaData md = connection.getMetaData();
+						boolean table_found = false;
+						rs = md.getTables(null, null, "other_info", null);
+						while (rs.next()) {
+							table_found = true;
+						}
+						rs.close();
+						String db_version = "";
+						statement = connection.createStatement();
+						if (table_found) {
+							rs = statement.executeQuery("select value from other_info where parameter = 'db_version'");
+							while(rs.next()) {
+								db_version = rs.getString(1);
+							}
+							rs.close();
+						}
+						if (!db_version.equals(backend_db_version)) {
+							statement.close();
+							connection.close();
+						} else {
+							int unreviewed_reference_count = 0;
+							int total_reference_count = 0;
+							rs = statement.executeQuery("select has_been_reviewed from source_documents");
+							while (rs.next()) {
+								int hbr = rs.getInt("has_been_reviewed");
+								total_reference_count++;
+								if (hbr==0) unreviewed_reference_count++;		
+							}
+							rs.close();
+							statement.close();
+							connection.close();
+							LinkedHashMap<String, String> map = new LinkedHashMap<>();
+							map.put("gene", just_gene_uc); 
+							map.put("unreviewed", unreviewed_reference_count+" out of "+total_reference_count+" not reviewed");
+							String jsonObs = gson.toJson(map, LinkedHashMap.class);
+							gene_list.add(jsonObs);
+						}
+					}
 				}
 			} catch (DirectoryIteratorException e) {
 				throw e.getCause();
@@ -2693,12 +3048,10 @@ public class TGN {
 			String errors = "";
 			connection = GetTagDBConnection("jdbc:sqlite:"+storage_dir+"_tags.sqlite");
 			statement = connection.createStatement();	
-
 			sstpm.short_name = sstpm.short_name.trim();
 			sstpm.long_name = sstpm.long_name.trim();
 			sstpm.description = sstpm.description.trim();
 			sstpm.color = sstpm.color.replaceAll(" ", "");
-			
 			if (sstpm.short_name.equals("")) errors = "No short name was provided.";
 			if (sstpm.long_name.equals("")) {
 				if (!errors.equals("")) errors += "\n";
@@ -2708,7 +3061,6 @@ public class TGN {
 				if (!errors.equals("")) errors += "\n";
 				errors += "No tag class was provided.";
 			}
-			
 			rs = statement.executeQuery("select short_name, long_name from tags where id != "+sstpm.tag_id);
 			while(rs.next()) {
 				String sn = rs.getString("short_name");
@@ -2723,7 +3075,6 @@ public class TGN {
 				}
 			}
 			rs.close();
-		
 			if (!errors.equals("")) {
 				Vector<String> toret = new Vector<>();
 				toret.add(errors);
@@ -2731,9 +3082,7 @@ public class TGN {
 				toret.add("");
 				return toret;
 			}
-
 			if (sstpm.tag_id.equals("-1")) {
-
 				String isql = "insert into tags (" +
 						"short_name,"+
 						"long_name,"+
@@ -2741,7 +3090,6 @@ public class TGN {
 						"color,"+
 						"tag_class_id"+
 						" ) values (?,?,?,?,?)";
-
 				pstatement = connection.prepareStatement(isql);
 				pstatement.setString(1, sstpm.short_name);
 				pstatement.setString(2, sstpm.long_name);
@@ -2762,7 +3110,6 @@ public class TGN {
 						"color = ?,"+
 						"tag_class_id = ?"+
 						" where id = ?";
-
 				pstatement = connection.prepareStatement(usql);
 				pstatement.setString(1, sstpm.short_name);
 				pstatement.setString(2, sstpm.long_name);
@@ -2771,12 +3118,8 @@ public class TGN {
 				pstatement.setString(5, sstpm.tag_class_id);
 				pstatement.setString(6, sstpm.tag_id);
 				pstatement.executeUpdate();
-				
 			}
 			
-			//InputStream isf = Thread.currentThread().getContextClassLoader().getResourceAsStream("public/content/latoboldwoff.b64");
-			//String lato_b64 = IOUtils.toString(isf);
-			//isf.close();	
 			StringBuffer sb = new StringBuffer();
 			rs = statement.executeQuery("select t.id as id, short_name, long_name, description, color, c.id as class_id, c.name as class_name from tag_classes c, tags t where t.tag_class_id=c.id and t.id = "+sstpm.tag_id);
 			while(rs.next()){
@@ -2797,7 +3140,7 @@ public class TGN {
 				tagsvg+="  function tag_init(evt) {\n";
 				tagsvg+="    var svgDocument = evt.target;\n";
 				tagsvg+="    var tt = svgDocument.getElementsByTagName('text')[0];\n";
-				tagsvg+="    while (tt.getBBox().width>75) {\n";
+				tagsvg+="    while (tt.getBBox().width>65) {\n";
 				tagsvg+="      var sz = tt.getAttribute('font-size');\n";
 				tagsvg+="      if (sz<=1) {break;}\n";
 				tagsvg+="      sz--;\n";
@@ -2814,7 +3157,7 @@ public class TGN {
 					tagsvg+="<path  d=\"M 0 0 L 90 0 L 90 8 L 100 8 L 100 17 L 90 17 L 90 25 L 0 25 L 0 17 L 10 17 L 10 8 L 0 8 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
 				} else if (class_name.equals("Publication")) {
 					tagsvg+="<path  d=\"M 10 0 L 90 0 L 100 25 L 0 25 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
-				} else  if (class_name.equals("Eisai site")) {
+				} else  if (class_name.equals("Site")) {
 					tagsvg+="<path  d=\"M 0 0 L 100 0 L 100 25 L 0 25 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
 				} else if (class_name.equals("Project name")) {
 					tagsvg+="<path  d=\"M 0 0 L 100 0 L 90 25 L 10 25 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
@@ -2832,7 +3175,7 @@ public class TGN {
 				String rowclass = "aktagrowclass"+tid;
 				sb.append("  <tr id=\"tagid"+tid+"\" class=\"a_tag_row\" data-tag_color=\""+color+"\" data-tag_text_color=\""+tcolor+"\">\n");
 				sb.append("  <td style=\"text-align: center; vertical-align:middle;\">"+tagsvg+"</td>");
-				sb.append("    <td style=\"text-align: center; vertical-align:middle;\" data-class_id=\""+class_id+"\" class=\"ak_tablecell class_name\">"+StringEscapeUtils.escapeHtml4(class_name)+"</td>\n");
+				sb.append("    <td style=\"text-align: center; vertical-align:middle;\" data-tagclass_id=\""+class_id+"\" class=\"ak_tablecell class_name\">"+StringEscapeUtils.escapeHtml4(class_name)+"</td>\n");
 				sb.append("    <td style=\"text-align: center; vertical-align:middle;\" class=\"ak_tablecell short_name\">"+StringEscapeUtils.escapeHtml4(short_name)+"</td>\n");
 				sb.append("    <td><textarea readonly class=\"ak_tablecell long_name\" style=\"background-color:#f5f5f5; width:100%; height:100%\" >"+StringEscapeUtils.escapeHtml4(long_name)+"</textarea></td>\n");
 				sb.append("    <td><textarea readonly class=\"ak_tablecell description\" style=\"background-color:#f5f5f5; width:100%; height:100%\" >"+StringEscapeUtils.escapeHtml4(description)+"</textarea></td>\n");
@@ -2869,18 +3212,27 @@ public class TGN {
 					just_gene = just_gene.substring(0, just_gene.indexOf(".sqlite"));
 					String just_gene_uc = just_gene.toUpperCase();
 					if (just_gene_uc.equals("_TAGS")) continue;
-					boolean has_tag = true;
 					String dbFilePath = storage_dir+"/"+just_gene+".sqlite";
-					connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);  
-					statement = connection.createStatement();
-					result = statement.executeQuery("select count(*) from applied_tags where tag_id = "+sdtpm.tag_id);
-					int count = 1;
-					while(result.next()){
-						count = result.getInt(1);
+					connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath); 
+					DatabaseMetaData md = connection.getMetaData();
+					boolean table_found = false;
+					result = md.getTables(null, null, "applied_tags", null);
+					while (result.next()) {
+						table_found = true;
 					}
-					if (count==0) has_tag = false;
 					result.close();
-					statement.close();
+					boolean has_tag = false;
+					if (table_found) {
+						statement = connection.createStatement();
+						result = statement.executeQuery("select count(*) from applied_tags where tag_id = "+sdtpm.tag_id);
+						int count = 1;
+						while(result.next()){
+							count = result.getInt(1);
+						}
+						if (count>0) has_tag = true;
+						result.close();
+						statement.close();
+					}
 					connection.close();
 					if (has_tag) {
 						return "Remove all tag assignments before deleting tag.";
@@ -2930,7 +3282,7 @@ public class TGN {
 				statement.executeUpdate("insert into tag_classes (name) values ('Publication')");
 				statement.executeUpdate("insert into tag_classes (name) values ('Collaboration')");
 				statement.executeUpdate("insert into tag_classes (name) values ('Project name')");
-				statement.executeUpdate("insert into tag_classes (name) values ('Eisai site')");
+				statement.executeUpdate("insert into tag_classes (name) values ('Site')");
 				statement.executeUpdate("insert into tag_classes (name) values ('Statistic')");
 			}
 			all_ok = true;
@@ -2966,7 +3318,7 @@ public class TGN {
 				tagsvg+="  function tag_init(evt) {\n";
 				tagsvg+="    var svgDocument = evt.target;\n";
 				tagsvg+="    var tt = svgDocument.getElementsByTagName('text')[0];\n";
-				tagsvg+="    while (tt.getBBox().width>75) {\n";
+				tagsvg+="    while (tt.getBBox().width>65) {\n";
 				tagsvg+="      var sz = tt.getAttribute('font-size');\n";
 				tagsvg+="      if (sz<=1) {break;}\n";
 				tagsvg+="      sz--;\n";
@@ -2982,7 +3334,7 @@ public class TGN {
 					tagsvg+="<path  d=\"M 0 0 L 90 0 L 90 8 L 100 8 L 100 17 L 90 17 L 90 25 L 0 25 L 0 17 L 10 17 L 10 8 L 0 8 Z\" fill=\""+color+"\" stroke=\"none\">\n";
 				} else if (class_name.equals("Publication")) {
 					tagsvg+="<path  d=\"M 10 0 L 90 0 L 100 25 L 0 25 Z\" fill=\""+color+"\" stroke=\"none\">\n";
-				} else  if (class_name.equals("Eisai site")) {
+				} else  if (class_name.equals("Site")) {
 					tagsvg+="<path  d=\"M 0 0 L 100 0 L 100 25 L 0 25 Z\" fill=\""+color+"\" stroke=\"none\">\n";
 				} else if (class_name.equals("Project name")) {
 					tagsvg+="<path  d=\"M 0 0 L 100 0 L 90 25 L 10 25 Z\" fill=\""+color+"\" stroke=\"none\">\n";
@@ -3021,7 +3373,7 @@ public class TGN {
 		}
 	}
 	
-	public static String TagCreatePage(String storageDir) throws Exception {
+	public static String ExistingTagPage(String storageDir) throws Exception {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet result = null;
@@ -3042,8 +3394,8 @@ public class TGN {
 			}
 
 			StringBuffer sb = new StringBuffer();
-			sb.append(GetHTMLStart("TGN - Tags","",""));
-
+			sb.append(GetHTMLStart("TGN - Tags",""));
+			sb.append("<div id=\"aboutoverlay\" align=\"center\" class=\"akmodal\"></div>\n");
 			sb.append("<div id=\"edittagoverlay\" align=\"center\" class=\"akmodal\"></div>\n");
 			sb.append("<div id=\"assignbytagoverlay\" align=\"center\" class=\"akmodal\"></div>\n");
 			sb.append("<div id=\"assignbytgnoverlay\" align=\"center\" class=\"akmodal\"></div>\n");
@@ -3053,16 +3405,15 @@ public class TGN {
 			sb.append("<table id='available_tags' data-db_count=\""+db_count+"\" class=\"display\" cellspacing=\"0\">\n");		
 			sb.append("  <thead>\n");
 			sb.append("  <tr>\n");
-			sb.append("    <th class=\"resizable-false sorter-false\">Tag</th>\n");
+			sb.append("    <th class=\"resizable-false sorter-false filter-false\">Tag</th>\n");
 			sb.append("    <th class=\"resizable-false\">Tag Class</th>\n");
 			sb.append("    <th class=\"resizable-false\">Short Name</th>\n");
 			sb.append("    <th class=\"resizable-false\">Long Name</th>\n");
 			sb.append("    <th class=\"resizable-false\">Description</th>\n");
-			sb.append("    <th class=\"resizable-false sorter-false\"></th>\n");
+			sb.append("    <th class=\"resizable-false sorter-false filter-false\"></th>\n");
 			sb.append("  </tr>\n");
 			sb.append("  </thead>\n");
 			sb.append("<tbody>\n");
-
 			Vector<String> sns = new Vector<>();
 			Vector<String> ids = new Vector<>();
 			int tag_count=0;
@@ -3092,7 +3443,7 @@ public class TGN {
 				tagsvg+="  function tag_init(evt) {\n";
 				tagsvg+="  var svgDocument = evt.target;\n";
 				tagsvg+="  var tt = svgDocument.getElementsByTagName('text')[0];\n";
-				tagsvg+="  while (tt.getBBox().width>75) {\n";
+				tagsvg+="  while (tt.getBBox().width>65) {\n";
 				tagsvg+="    var sz = tt.getAttribute('font-size');\n";
 				tagsvg+="    if (sz<=1) {break;}\n";
 				tagsvg+="    sz--;\n";
@@ -3109,7 +3460,7 @@ public class TGN {
 					tagsvg+="<path  d=\"M 0 0 L 90 0 L 90 8 L 100 8 L 100 17 L 90 17 L 90 25 L 0 25 L 0 17 L 10 17 L 10 8 L 0 8 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
 				} else if (class_name.equals("Publication")) {
 					tagsvg+="<path  d=\"M 10 0 L 90 0 L 100 25 L 0 25 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
-				} else  if (class_name.equals("Eisai site")) {
+				} else  if (class_name.equals("Site")) {
 					tagsvg+="<path  d=\"M 0 0 L 100 0 L 100 25 L 0 25 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
 				} else if (class_name.equals("Project name")) {
 					tagsvg+="<path  d=\"M 0 0 L 100 0 L 90 25 L 10 25 Z\" fill=\""+color+"\" stroke=\"none\" />\n";
@@ -3147,19 +3498,15 @@ public class TGN {
 			sb.append("</div></p>\n");	
 
 			sb.append("<div style=\"width:1300px; margin: 0 auto;\">\n");
-			sb.append("<p><button style=\"display:block; margin:auto; font: 18px/27px Lato, Sans-serif !important;\" class=\"ak_table_button\" id=\"push_ref_button\" onclick=\"AddPushWebReferenceOverlay()\">Push Web Reference to DBs</button></p>\n");
+			sb.append("<p><button style=\"display:block; margin:auto; font: 18px/27px Lato, Sans-serif !important;\" class=\"ak_table_button\" id=\"push_ref_button\" onclick=\"AddPushWebReferenceOverlay()\">Push Web Reference to Notebooks</button></p>\n");
 			sb.append("</div>\n");	
-
 			sb.append("<script type=\"text/javascript\">\n");
-
 			sb.append("$( document ).ready(function() {\n");
-			//sb.append("  var tgn_agree = getCookie(\"tgn_agree1\");\n");
-			//sb.append("  if (tgn_agree==\"\") {\n");
-			//sb.append("    $('.tgn_agree').show();");
-			//sb.append("  }\n");			
-			sb.append("  $('#available_tags').tablesorter({theme:'blue', sortList: [[0,0],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['120px','198px','148px','258px', '464px', '102px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
+			sb.append("  $('#available_tags').tablesorter({theme:'blue', sortList: [[2,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['120px','198px','148px','258px', '464px', '102px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
 			sb.append("  $('#available_tags th').css('text-align','center');\n");
 			sb.append("  $('#available_tags th').css('padding','0px');\n");	
+			sb.append("  master_busy = false;\n");	
+			sb.append("  document.body.style.visibility=\"visible\";\n");	
 			sb.append("});\n\n");
 			sb.append("</script>\n");
 			sb.append("</body>\n");
@@ -3176,6 +3523,17 @@ public class TGN {
 	}
 	
 	public static String GetDBTagList(String storageDir) throws Exception {
+		
+		/*
+		 * backend_db_version doesn't get used here for now
+		 * 
+		 * even though we are reading the tags db
+		 * we should consider versioning of the tags db at some point
+		 * 
+		 * we are checking all TGN dbs for tag assignments,
+		 * but for now we'll assume that part of the schema is stable
+		*/
+		
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet result = null;
@@ -3203,37 +3561,52 @@ public class TGN {
 					just_gene = just_gene.substring(0, just_gene.indexOf(".sqlite"));
 					String just_gene_uc = just_gene.toUpperCase();
 					if (just_gene_uc.equals("_TAGS")) continue;
-					LinkedHashMap<String, String> singledb = new LinkedHashMap<>();
-					singledb.put("db", just_gene);
-					ArrayList<String> which_tags = new ArrayList<>();
 
-					dbFilePath = storageDir+"/"+just_gene+".sqlite";
-					connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);
-					statement = connection.createStatement();
-					statement.executeUpdate("CREATE TABLE if not exists applied_tags (tag_id TEXT NOT NULL)");
-					result = statement.executeQuery("select tag_id from applied_tags");
-					while(result.next()){
-						which_tags.add(tag_lookup.get(result.getString("tag_id")));
+					if (!gene_synchronize_objects.containsKey(just_gene)) {
+						final Boolean gs_sync = true;
+						gene_synchronize_objects.put(just_gene, gs_sync);
 					}
-					result.close();
-					statement.close();
-					connection.close();
-
-					singledb.put("tags", gson.toJson(which_tags, ArrayList.class));
-					int insertion_index = -1;
-					for (int jk=0; jk<sorted_dbs.size(); ++jk) {
-						if (just_gene.compareTo(sorted_dbs.get(jk))>1) {
-							insertion_index = jk;
-							break;
+					Boolean sy = gene_synchronize_objects.get(just_gene);
+					synchronized(sy) {	
+						LinkedHashMap<String, String> singledb = new LinkedHashMap<>();
+						singledb.put("db", just_gene);
+						ArrayList<String> which_tags = new ArrayList<>();
+						dbFilePath = storageDir+"/"+just_gene+".sqlite";
+						connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);
+						DatabaseMetaData md = connection.getMetaData();
+						boolean table_found = false;
+						result = md.getTables(null, null, "applied_tags", null);
+						while (result.next()) {
+							table_found = true;
 						}
-					}
-					if (insertion_index==-1) {
-						applied_tags.add(gson.toJson(singledb, LinkedHashMap.class));
-						sorted_dbs.add(just_gene);
-					}
-					else {
-						applied_tags.add(insertion_index, gson.toJson(singledb, LinkedHashMap.class));
-						sorted_dbs.add(insertion_index, just_gene);
+						result.close();
+						if (table_found) {
+							statement = connection.createStatement();
+							result = statement.executeQuery("select tag_id from applied_tags");
+							while(result.next()){
+								which_tags.add(tag_lookup.get(result.getString("tag_id")));
+							}
+							result.close();
+							statement.close();
+							connection.close();
+							singledb.put("tags", gson.toJson(which_tags, ArrayList.class));
+							int insertion_index = -1;
+							for (int jk=0; jk<sorted_dbs.size(); ++jk) {
+								if (just_gene.compareTo(sorted_dbs.get(jk))>1) {
+									insertion_index = jk;
+									break;
+								}
+							}
+							if (insertion_index==-1) {
+								applied_tags.add(gson.toJson(singledb, LinkedHashMap.class));
+								sorted_dbs.add(just_gene);
+							} else {
+								applied_tags.add(insertion_index, gson.toJson(singledb, LinkedHashMap.class));
+								sorted_dbs.add(insertion_index, just_gene);
+							}
+						} else {
+							connection.close();
+						}
 					}
 				}
 			} catch (DirectoryIteratorException e) {
@@ -3251,10 +3624,12 @@ public class TGN {
 	}
 	
 	public static String GetDBNameList(String storageDir) throws Exception {
+		/*
+		 * N.B. we aren't filtering for valid db versions here
+		 */
 		Path p = Paths.get(storageDir);
 		Gson gson = new Gson();
 		ArrayList<String> sorted_dbs = new ArrayList<>();
-		//DirectoryStream<Path> stream = Files.newDirectoryStream(p, "*.{sqlite}");
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(p, "*.{sqlite}")) {
 			for (Path entry: stream) {
 				String just_gene = entry.getFileName().toString();
@@ -3278,7 +3653,6 @@ public class TGN {
 		} catch (DirectoryIteratorException e) {
 			throw e.getCause();
 		}
-		//stream.close();
 		return gson.toJson(sorted_dbs, ArrayList.class);
 	}
 	
@@ -3294,9 +3668,10 @@ public class TGN {
 			connection_tags = GetTagDBConnection("jdbc:sqlite:"+storageDir+"/_tags.sqlite");  
 			statement_tags = connection_tags.createStatement();
 			StringBuffer sb = new StringBuffer();
-			sb.append(GetHTMLStart("Target Gene Notebook","",""));
+			sb.append(GetHTMLStart("Target Gene Notebook",""));
+			sb.append("<div id=\"aboutoverlay\" align=\"center\" class=\"akmodal\"></div>\n");
 			sb.append("<div style=\"width:1300px; margin: 0 auto;\">\n");
-			
+
 			Vector<String> all_tag_ids = new Vector<>();
 			statement = connection_tags.createStatement();
 			result = statement.executeQuery("select id from tags order by id");
@@ -3307,7 +3682,7 @@ public class TGN {
 			}
 			result.close();
 			statement.close();
-			
+
 			sb.append("<p><div style=\"width:1300px; margin: 0 auto; display: flex; justify-content: space-between;\">\n");
 			for (int i=0; i<all_tag_ids.size(); ++i) {
 				String tag_id = all_tag_ids.get(i);
@@ -3343,93 +3718,122 @@ public class TGN {
 					just_gene = just_gene.substring(0, just_gene.indexOf(".sqlite"));
 					String just_gene_uc = just_gene.toUpperCase();
 					if (just_gene_uc.equals("_TAGS")) continue;
+					String db_version = "";
 					String chrom = "";
 					String mb_loc = "";
 					String neighborhood = "";
 					String ur_string = "";
 					Vector<String> tags = new Vector<>();
-
 					String dbFilePath = storageDir+"/"+just_gene+".sqlite";
 					connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);  
-					statement = connection.createStatement();
-					result = statement.executeQuery("select chromosome from reference_genomes");
-					while(result.next()){
-						chrom = result.getString("chromosome");
-					}
-					result.close();
-					result = statement.executeQuery("select symbol, exon_starts_1based, exon_ends_1based, is_gene_target, coding_start_1based from transcript_annotations order by symbol");
-					while(result.next()) {
-						int igt = result.getInt("is_gene_target");
-						String symbol = result.getString("symbol");
-						if (igt==1) {
-							String es = result.getString("exon_starts_1based");
-							String ee = result.getString("exon_ends_1based");
-							String[] esa = es.split(" ");
-							String[] eea = ee.split(" ");
-							int num_exons = esa.length;
-							Vector<Integer> exon_starts = new Vector<>();
-							Vector<Integer> exon_ends = new Vector<>();
-							for (int i=0; i<num_exons; ++i) {
-								exon_starts.add(Integer.valueOf(esa[i]));
-								exon_ends.add(Integer.valueOf(eea[i]));
-							}
-							int lowest = exon_starts.get(0);
-							int highest = exon_ends.get(exon_ends.size()-1);
-							if (lowest>highest) {
-								lowest = exon_starts.get(exon_starts.size()-1);
-								highest = exon_ends.get(0);
-							}
-							double avg = (lowest+highest)/2.0;
-							mb_loc = String.format("%.1f", avg/1000000.0);
-						} else {
-							int coding_start = result.getInt("coding_start_1based");
-							if (result.wasNull()) coding_start = -1;	
-							if (coding_start!=-1) {
-								if (!neighborhood.equals("")) {
-									neighborhood+=" ";
-								}
-								neighborhood+=symbol;
-							}
-						}
-					}
-					result.close();
-					statement.executeUpdate("CREATE TABLE if not exists applied_tags (tag_id TEXT NOT NULL)");
-					result = statement.executeQuery("select tag_id from applied_tags order by tag_id");
-					while(result.next()) {
-						String tid = result.getString("tag_id");
-						if (!tag_svgs.containsKey(tid)) {
-							tag_svgs.put(tid, GetTagSVG(tid, statement_tags));
-						}
-						tags.add(tag_svgs.get(tid));
-					}
-					result.close();
-					int unreviewed_reference_count = 0;
-					int total_reference_count = 0;
-					result = statement.executeQuery("select has_been_reviewed from source_documents");
+					DatabaseMetaData md = connection.getMetaData();
+					boolean table_found = false;
+					result = md.getTables(null, null, "other_info", null);
 					while (result.next()) {
-						int hbr = result.getInt("has_been_reviewed");
-						total_reference_count++;
-						if (hbr==0) unreviewed_reference_count++;		
+						table_found = true;
 					}
 					result.close();
-					ur_string = unreviewed_reference_count+" out of "+total_reference_count+" not reviewed";
-					statement.close();
-					connection.close();
-
-					sb.append("  <tr>\n");
-					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"./"+just_gene+"\" target=\"_tgn_"+just_gene+"\">"+just_gene_uc+"</a></td>\n");	   
-					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(chrom))+"</td>\n");
-					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(mb_loc))+"</td>\n");
-					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(neighborhood))+"</td>\n");
-					sb.append("    <td id=\"unrev_"+just_gene_uc+"\" style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(ur_string))+"</td>\n");
-					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(attr.lastModifiedTime().toString())+"</td>\n");
-
-					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">\n");
-					for (int k=0; k<tags.size(); ++k) {
-						sb.append(tags.get(k));
+					if (!table_found) {
+						connection.close();
+						continue;
 					}
-					sb.append("    </td>\n");
-					sb.append("  </tr>\n");
+					statement = connection.createStatement();
+					result = statement.executeQuery("select value from other_info where parameter = 'db_version'");
+					while(result.next()) {
+						db_version = result.getString(1);
+					}
+					result.close();
+					if (!db_version.equals(backend_db_version)) {
+						statement.close();
+						connection.close();
+						sb.append("  <tr>\n");   
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(just_gene_uc))+"</td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(attr.lastModifiedTime().toString())+"</td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");
+						sb.append("  </tr>\n");
+					} else {
+						result = statement.executeQuery("select chromosome from reference_genomes");
+						while(result.next()){
+							chrom = result.getString("chromosome");
+						}
+						result.close();
+						result = statement.executeQuery("select symbol, exon_starts_1based, exon_ends_1based, is_gene_target, coding_start_1based from transcript_annotations order by symbol");
+						while(result.next()) {
+							int igt = result.getInt("is_gene_target");
+							String symbol = result.getString("symbol");
+							if (igt==1) {
+								String es = result.getString("exon_starts_1based");
+								String ee = result.getString("exon_ends_1based");
+								String[] esa = es.split(" ");
+								String[] eea = ee.split(" ");
+								int num_exons = esa.length;
+								Vector<Integer> exon_starts = new Vector<>();
+								Vector<Integer> exon_ends = new Vector<>();
+								for (int i=0; i<num_exons; ++i) {
+									exon_starts.add(Integer.valueOf(esa[i]));
+									exon_ends.add(Integer.valueOf(eea[i]));
+								}
+								int lowest = exon_starts.get(0);
+								int highest = exon_ends.get(exon_ends.size()-1);
+								if (lowest>highest) {
+									lowest = exon_starts.get(exon_starts.size()-1);
+									highest = exon_ends.get(0);
+								}
+								double avg = (lowest+highest)/2.0;
+								mb_loc = String.format("%.1f", avg/1000000.0);
+							} else {
+								int coding_start = result.getInt("coding_start_1based");
+								if (result.wasNull()) coding_start = -1;	
+								if (coding_start!=-1) {
+									if (!neighborhood.equals("")) {
+										neighborhood+=" ";
+									}
+									neighborhood+=symbol;
+								}
+							}
+						}
+						result.close();
+						result = statement.executeQuery("select tag_id from applied_tags order by tag_id");
+						while(result.next()) {
+							String tid = result.getString("tag_id");
+							if (all_tag_ids.contains(tid)) tags.add(tag_svgs.get(tid));
+							/*
+							 * Should better handle if a tag id is not found in the tag database (eg. if distributed a db separate from the tag db)
+							 */
+						}
+						result.close();
+						int unreviewed_reference_count = 0;
+						int total_reference_count = 0;
+						result = statement.executeQuery("select has_been_reviewed from source_documents");
+						while (result.next()) {
+							int hbr = result.getInt("has_been_reviewed");
+							total_reference_count++;
+							if (hbr==0) unreviewed_reference_count++;		
+						}
+						result.close();
+						ur_string = unreviewed_reference_count+" out of "+total_reference_count+" not reviewed";
+						statement.close();
+						connection.close();
+
+						sb.append("  <tr>\n");
+						sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"./"+just_gene+"\" target=\"_tgn_"+just_gene+"\">"+just_gene_uc+"</a></td>\n");	   
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(chrom))+"</td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(mb_loc))+"</td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(neighborhood))+"</td>\n");
+						sb.append("    <td id=\"unrev_"+just_gene_uc+"\" style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(ur_string))+"</td>\n");
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(attr.lastModifiedTime().toString())+"</td>\n");
+
+						sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">\n");
+						for (int k=0; k<tags.size(); ++k) {
+							sb.append(tags.get(k));
+						}
+						sb.append("    </td>\n");
+						sb.append("  </tr>\n");
+					}
 				}
 			} catch (DirectoryIteratorException e) {
 				throw e.getCause();
@@ -3439,21 +3843,14 @@ public class TGN {
 			sb.append("</div>\n");	
 
 			sb.append("<script type=\"text/javascript\">\n");
-
 			sb.append("$( document ).ready(function() {\n");
-			//sb.append("  var tgn_agree = getCookie(\"tgn_agree1\");\n");
-			//sb.append("  if (tgn_agree==\"\") {\n");
-			//sb.append("    $('.tgn_agree').show();");
-			//sb.append("  }\n");			
-
-			sb.append("  $('#available_notebooks').tablesorter({theme:'blue', headers:{5:{sorter:'text'}}, sortList: [[0,0],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['123px','50px','100px', '315px', '200px', '200px', '310px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
-			//sb.append("  $('#available_notebooks').tablesorterPager({container: $(\"#pager_available\"),removeRows: false});\n");
-
+			sb.append("  $('#available_notebooks').tablesorter({theme:'blue', textExtraction:{0:function(node, table, cellIndex){return $(node).find(\"a\").text();}}, headers:{5:{sorter:'text'}}, sortList: [[0,0],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['123px','50px','100px', '315px', '200px', '200px', '310px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
 			sb.append("  $('#available_notebooks th').css('text-align','center');\n");
 			sb.append("  $('#available_notebooks th').css('padding','0px');\n");	
-			sb.append("\n\nsetTimeout(UnreviewedCheckin, 300000);\n\n");	
+			sb.append("  setTimeout(UnreviewedCheckin, 300000);\n");	
+			sb.append("  master_busy = false;\n");	
+			sb.append("  document.body.style.visibility=\"visible\";\n");	
 			sb.append("});\n\n");
-
 			sb.append("</script>\n");
 			sb.append("</body>\n");
 			sb.append("</html>\n");
@@ -3513,7 +3910,7 @@ public class TGN {
 			String dbFilePath = storageDir+"/"+geneSymbol+".sqlite";
 			connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);  
 			statement = connection.createStatement();
-			rs = statement.executeQuery("select id, column_display_text from source_documents order by id");
+			rs = statement.executeQuery("select id, column_display_text from source_documents order by column_display_text");
 			while(rs.next()){
 				LinkedHashMap<String, String> rowMap = new LinkedHashMap<>();
 				rowMap.put("id", rs.getString("id")); 
@@ -3544,7 +3941,7 @@ public class TGN {
 			String dbFilePath = storageDir+"/"+geneSymbol+".sqlite";
 			connection = DriverManager.getConnection("jdbc:sqlite:"+dbFilePath);  
 			statement = connection.createStatement();
-			result = statement.executeQuery("select id, column_display_text from source_documents order by id");
+			result = statement.executeQuery("select id, column_display_text from source_documents order by column_display_text");
 			while(result.next()){
 				LinkedHashMap<String, String> rowMap = new LinkedHashMap<>();
 				rowMap.put("id", result.getString("id")); 
@@ -3578,6 +3975,31 @@ public class TGN {
 		}
 	}
 
+	public static boolean DBVersionOK(String storage_dir, String db) throws Exception {
+		Connection connection = null;
+		Statement statement = null;
+		try {
+			File dbFile = new File(storage_dir+db+".sqlite");
+			if (!dbFile.exists()) throw new Exception();
+			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+db+".sqlite");
+			statement = connection.createStatement();		
+			String db_version = "";
+			ResultSet rs = statement.executeQuery("select value from other_info where parameter = 'db_version'");
+			while(rs.next()) {
+				db_version = rs.getString(1);
+			}
+			rs.close();
+			if (db_version.equals(backend_db_version)) return true;
+			return false;
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		} finally {
+			try {if (statement!=null) statement.close();} catch (Exception ee) {}
+			try {if (connection!=null) connection.close();} catch (Exception ee) {}
+		}
+	}
+	
 	public static void UpdateTagAssign(String storage_dir, SubmitTagAssignPostMsg stapm) throws Exception {
 		Connection connection = null;
 		Statement statement = null;
@@ -3585,6 +4007,7 @@ public class TGN {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+stapm.db+".sqlite");
 			statement = connection.createStatement();		
 			if (stapm.addif1.equals("1")) {
+				// to be uptight we should double check to make sure it isn't already present
 				statement.executeUpdate("insert into applied_tags (tag_id) values ("+stapm.tag_id+")");
 			} else {
 				statement.executeUpdate("delete from applied_tags where tag_id="+stapm.tag_id);
@@ -3608,12 +4031,12 @@ public class TGN {
 			connection.setAutoCommit(false);
 			statement = connection.createStatement();	
 			statement2 = connection.createStatement();	
-			result = statement.executeQuery("select show_in_svg, marker_equivalence_set, index_variant_mapping_id from variant_mapping_gwas_results where id = "+rgrpm.gwas_db_id);
-			String mes = "";
+			result = statement.executeQuery("select show_in_svg, credible_set, index_variant_mapping_id from variant_mapping_gwas_results where id = "+rgrpm.gwas_db_id);
+			String cs = "";
 			String show_in_svg = "";
 			String ivid = "";
 			while(result.next()) {
-				mes = result.getString("marker_equivalence_set");
+				cs = result.getString("credible_set");
 				show_in_svg = result.getString("show_in_svg");
 				ivid = result.getString("index_variant_mapping_id");
 			}
@@ -3624,14 +4047,22 @@ public class TGN {
 				iv_cnt = result.getInt(1);
 			}
 			result.close();
+			result = statement.executeQuery("select count(*) from variant_mapping_eqtl_results where index_variant_mapping_id = "+ivid);
+			while(result.next()) {
+				iv_cnt += result.getInt(1);
+			}
+			result.close();
+			
 			statement.executeUpdate("delete from variant_mapping_gwas_results where id = "+rgrpm.gwas_db_id);
+			// delete cascade will remove rows from gwas_custom_credible_set_members
+			
 			if (iv_cnt==1) {
-				statement2.executeUpdate("delete from gwas_ld_credible_set_r2_values where index_variant_mapping_id = "+ivid);
+				statement2.executeUpdate("delete from ld_credible_set_r2_values where index_variant_mapping_id = "+ivid);
 			}
 			connection.commit();
 			Vector<ArrayList<Integer>> v = GetAllGWASOverlaps(connection, -1);
 			ArrayList<Integer> svg_change_a = new ArrayList<>();
-			if (show_in_svg.equals("0") || mes.equals("Unset")) svg_change_a.add(Integer.valueOf(0));
+			if (show_in_svg.equals("0") || cs.equals("Unset")) svg_change_a.add(Integer.valueOf(0));
 			else svg_change_a.add(Integer.valueOf(1));
 			v.add(svg_change_a);
 			return v;
@@ -3651,32 +4082,42 @@ public class TGN {
 		Connection connection = null;
 		Statement statement = null;
 		Statement statement2 = null;
-		Statement statement3 = null;
 		ResultSet result = null;
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
 			connection.setAutoCommit(false);
 			statement = connection.createStatement();
 			statement2 = connection.createStatement();
-			statement3 = connection.createStatement();
-			result = statement.executeQuery("select show_in_svg, eqtl_marker_equivalence_set_id from variant_mapping_eqtl_results where id = "+rerpm.eqtl_db_id);
+			result = statement.executeQuery("select show_in_svg, credible_set, index_variant_mapping_id from variant_mapping_eqtl_results where id = "+rerpm.eqtl_db_id);
+			String cs = "";
 			String show_in_svg = "";
-			String emesi = "";
+			String ivid = "";
 			while(result.next()) {
+				cs = result.getString("credible_set");
 				show_in_svg = result.getString("show_in_svg");
-				emesi = result.getString("eqtl_marker_equivalence_set_id");
-				if (result.wasNull()) emesi = "";
+				ivid = result.getString("index_variant_mapping_id");
 			}
 			result.close();
 			
-			// the manual eQTLs won't have any credible sets (except a few hacked ones)
-			if (!emesi.equals("")) {
-				statement.executeUpdate("delete from eqtl_marker_equivalence_set_members where eqtl_marker_equivalence_set_id = "+rerpm.eqtl_db_id);
-				statement2.executeUpdate("delete from eqtl_marker_equivalence_sets where id = "+rerpm.eqtl_db_id);
+			result = statement.executeQuery("select count(*) from variant_mapping_gwas_results where index_variant_mapping_id = "+ivid);
+			int iv_cnt=-1;
+			while(result.next()) {
+				iv_cnt = result.getInt(1);
 			}
-			statement3.executeUpdate("delete from variant_mapping_eqtl_results where id = "+rerpm.eqtl_db_id);
+			result.close();
+			result = statement.executeQuery("select count(*) from variant_mapping_eqtl_results where index_variant_mapping_id = "+ivid);
+			while(result.next()) {
+				iv_cnt += result.getInt(1);
+			}
+			result.close();
+			statement.executeUpdate("delete from variant_mapping_eqtl_results where id = "+rerpm.eqtl_db_id);
+			// delete cascade will remove rows from eqtl_custom_credible_set_members
+			
+			if (iv_cnt==1) {
+				statement2.executeUpdate("delete from ld_credible_set_r2_values where index_variant_mapping_id = "+ivid);
+			}
 			connection.commit();
-			if (show_in_svg.equals("0")) return false;
+			if (show_in_svg.equals("0") || cs.equals("Unset")) return false;
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -3686,7 +4127,6 @@ public class TGN {
 			try {if (result!=null) result.close();} catch (Exception ee) {}
 			try {if (statement!=null) statement.close();} catch (Exception ee) {}	
 			try {if (statement2!=null) statement2.close();} catch (Exception ee) {}	
-			try {if (statement3!=null) statement3.close();} catch (Exception ee) {}	
 			try {if (connection!=null) connection.close();} catch (Exception ee) {}
 		}
 	}
@@ -3939,8 +4379,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(4))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(3))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(pm_linkout)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(0))+"</a></td>");	
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");	
-			//sb.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");	
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -3951,8 +4390,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(4))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(3))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(pm_linkout)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(0))+"</a></td>");
-			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
-			//sb2.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -3982,7 +4420,7 @@ public class TGN {
 		}
 	}	
 
-	public static Vector<String> CreateNewCredibleSet(String gene_symbol, String storage_dir, CreateNewCredibleSetPostMsg cncspm) throws Exception {
+	public static Vector<String> CreateCustomCredibleSet(String gene_symbol, String storage_dir, CreateCustomCredibleSetPostMsg cccspm) throws Exception {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet result = null;
@@ -3991,16 +4429,16 @@ public class TGN {
 		try {
 			String errors = "";
 			
-			cncspm.credible_set_name = cncspm.credible_set_name.trim();
-			if (cncspm.credible_set_name.equals("")) errors = "No credible-set name provided.";
-			if (cncspm.credible_set_name.equalsIgnoreCase("add credible set") || cncspm.credible_set_name.equalsIgnoreCase("delete credible set") || cncspm.credible_set_name.equalsIgnoreCase("unset") || cncspm.credible_set_name.equalsIgnoreCase("none")) {
+			cccspm.credible_set_name = cccspm.credible_set_name.trim();
+			if (cccspm.credible_set_name.equals("")) errors = "No credible-set name provided.";
+			if (cccspm.credible_set_name.equalsIgnoreCase("add custom") || cccspm.credible_set_name.equalsIgnoreCase("delete custom") || cccspm.credible_set_name.equalsIgnoreCase("unset") || cccspm.credible_set_name.equalsIgnoreCase("none")) {
 				errors = "Poor credible-set name provided.";
 			}
 			
-			cncspm.index_variant_posterior = cncspm.index_variant_posterior.trim();
+			cccspm.index_variant_posterior = cccspm.index_variant_posterior.trim();
 			Double iv_posterior = -1.0;
 			try {
-				iv_posterior = Double.valueOf(cncspm.index_variant_posterior);
+				iv_posterior = Double.valueOf(cccspm.index_variant_posterior);
 				if (iv_posterior<0.0 || iv_posterior>1.0) {
 					if (!errors.equals("")) errors+="\n";
 					errors+="No valid posterior provided for index variant.";
@@ -4015,21 +4453,37 @@ public class TGN {
 			
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
 			connection.setAutoCommit(false);
-			statement = connection.createStatement();	
-			result = statement.executeQuery("select index_variant_mapping_id from variant_mapping_gwas_results where id = "+cncspm.gwas_db_id);
-			while(result.next()) {
+
+			String results_table = "variant_mapping_gwas_results";
+			String isql = "insert into gwas_custom_credible_set_members (" +
+					"variant_mapping_gwas_result_id,"+
+					"variant_mapping_id,"+
+					"posterior,"+
+					"meta_resource_id ) values (?,?,?,(select id from meta_resources where name='Manual'))";
+			if (cccspm.gwas_or_eqtl.equals("eqtl")) {
+				results_table = "variant_mapping_eqtl_results";
+				isql = "insert into eqtl_custom_credible_set_members (" +
+						"variant_mapping_eqtl_result_id,"+
+						"variant_mapping_id,"+
+						"posterior,"+
+						"meta_resource_id ) values (?,?,?,(select id from meta_resources where name='Manual'))";
+			}
+
+			statement = connection.createStatement();
+			result = statement.executeQuery("select index_variant_mapping_id from "+results_table+" where id = "+cccspm.db_id);
+			while (result.next()) {
 				String id = result.getString(1);
 				counts.put(id, Integer.valueOf(1));
 			}
 			result.close();
-			
+
 			boolean rs_problems = false;
 			boolean post_problems = false;
-			
+
 			pstatement = connection.prepareStatement("select id from variant_mappings where name = ?");
-			for (int i=0; i<cncspm.member_rs_numbers.size(); ++i) {
-				String rsn = cncspm.member_rs_numbers.get(i).trim();
-				String pos = cncspm.member_posteriors.get(i);	
+			for (int i=0; i<cccspm.member_rs_numbers.size(); ++i) {
+				String rsn = cccspm.member_rs_numbers.get(i).trim();
+				String pos = cccspm.member_posteriors.get(i);	
 				Double posterior = -1.0;
 				try {
 					posterior = Double.valueOf(pos.trim());
@@ -4060,48 +4514,40 @@ public class TGN {
 				result.close();	
 			}
 			pstatement.close();
-			
+
 			if (rs_problems) {
 				if (!errors.equals("")) errors+="\n";
 				errors+="Some member variants are missing or are not uniquely mapped to the region.";
 			}
-			
+
 			if (post_problems) {
 				if (!errors.equals("")) errors+="\n";
 				errors+="Some member posteriors are missing or invalid.";
 			}
-			
+
 			if (!errors.equals("")) {
 				Vector<String> toret = new Vector<>();
 				toret.add(errors);
-				toret.add("");
-				toret.add("");				
+				toret.add("");			
 				return toret;
 			}
-			
-			pstatement = connection.prepareStatement("update variant_mapping_gwas_results set credible_set_name = ?, credible_set_posterior = ? where id = ?");
-			pstatement.setString(1, cncspm.credible_set_name);
-			pstatement.setDouble(2, iv_posterior);
-			pstatement.setString(3, cncspm.gwas_db_id);
-			pstatement.executeUpdate();
-			
-			String isql = "insert into credible_set_members (" +
-					"variant_mapping_gwas_result_id,"+
-					"variant_mapping_id,"+
-					"posterior,"+
-					"meta_resource_id ) values (?,?,?,(select id from meta_resources where name='Manual'))";
 
+			pstatement = connection.prepareStatement("update "+results_table+" set custom_credible_set_name = ?, custom_credible_set_posterior = ? where id = ?");
+			pstatement.setString(1, cccspm.credible_set_name);
+			pstatement.setDouble(2, iv_posterior);
+			pstatement.setString(3, cccspm.db_id);
+			pstatement.executeUpdate();
 			pstatement2 = connection.prepareStatement(isql);
 			for (int i=0; i<vm_ids.size(); ++i) {
-				pstatement2.setString(1, cncspm.gwas_db_id);
+				pstatement2.setString(1, cccspm.db_id);
 				pstatement2.setString(2, vm_ids.get(i));
-				pstatement2.setString(3, cncspm.member_posteriors.get(i).trim());
+				pstatement2.setString(3, cccspm.member_posteriors.get(i).trim());
 				pstatement2.executeUpdate();
 			}
 			connection.commit();
 			Vector<String> toret = new Vector<>();
 			toret.add("");
-			toret.add(cncspm.credible_set_name+" ("+vm_ids.size()+")");
+			toret.add(cccspm.credible_set_name+" ("+vm_ids.size()+")");
 			return toret;			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -4157,7 +4603,8 @@ public class TGN {
 		resultMap.put("pub_year", docYear);
 		resultMap.put("outbound_link", urlS);
 		resultMap.put("publisher", metaNodeMap.get("citation_publisher").toString());
-		resultMap.put("abstract", metaNodeMap.get("og:description").toString());
+		if (metaNodeMap.get("og:description")!=null) resultMap.put("abstract", metaNodeMap.get("og:description").toString());
+		else resultMap.put("abstract", metaNodeMap.get("og-description").toString());
 		if (resultMap.size() < 1){
 			resultMap.put("error", "Error retrieving this doi= "+urlS); 
 		}
@@ -4286,8 +4733,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("pub_year"))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("publisher"))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(lhm.get("outbound_link"))+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(lhm.get("title"))+"</a></td>");
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
-			//sb.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -4298,8 +4744,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("pub_year"))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("publisher"))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(lhm.get("outbound_link"))+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(lhm.get("title"))+"</a></td>");
-			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
-			//sb2.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -4455,8 +4900,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_year)+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><div>"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"<button style=\"margin-left:10px;\" class=\"ak_table_button "+rowclass+"\" onclick=\"DownloadFile('sourcedocumentsrow"+source_documents_id+"')\" >Download</button></div></td>");		
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"</td>");	
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
-			//sb.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -4467,8 +4911,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_year)+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><div>"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"<button style=\"margin-left:10px;\" class=\"ak_table_button "+rowclass+"\" onclick=\"DownloadFile('sourcedocumentsrow"+source_documents_id+"')\" >Download</button></div></td>");		
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"</td>");
-			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
-			//sb2.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -4501,7 +4944,7 @@ public class TGN {
 	public static String PushNewWebToDBs(String storage_dir, SubmitPushNewWebPostMsg snwpm) throws Exception {
 		Connection connection = null;
 		try {
-			
+
 			String errors = "";
 			try {
 				Integer i = Integer.valueOf(snwpm.push_year.trim());
@@ -4511,7 +4954,6 @@ public class TGN {
 			} catch (Exception eee) {
 				errors += "No valid year was provided.";
 			}
-			
 			snwpm.push_site = snwpm.push_site.trim();
 			if (snwpm.push_site.equals("")) {
 				if (!errors.equals("")) errors+= "\n";
@@ -4519,23 +4961,20 @@ public class TGN {
 			} else {
 				try {
 					URL path = new URL(snwpm.push_site.trim());
-					URLConnection conn = path.openConnection();
+					path.openConnection();
 				} catch (Exception eak) {
 					if (!errors.equals("")) errors+= "\n";
 					errors+="Site does not appear valid.";
 				}
 			}
-			
 			if (snwpm.push_description.equals("")) {
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No description was provided.";	
 			}
-			
 			if (snwpm.push_dbs.size()==0) {
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No DBs targetted for push.";
 			}
-			
 			if (!errors.equals("")) return errors;
 			String results = "";
 			for (int i=0; i<snwpm.push_dbs.size(); ++i) {
@@ -4546,94 +4985,109 @@ public class TGN {
 				}
 				Boolean sy = gene_synchronize_objects.get(gene_symbol);
 				synchronized(sy) {
-				boolean stop_early = false;
-				connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
-			
-				PreparedStatement pstatement = connection.prepareStatement("select count(*) from web_documents where site = ?");
-				pstatement.setString(1, snwpm.push_site);
-				ResultSet rsq = pstatement.executeQuery();
-				String count = "";
-				while(rsq.next()) {
-					count = rsq.getString(1);
-				}
-				rsq.close();
-				pstatement.close();
-				if (!count.equals("0")) {
-					stop_early = true;
-					if (!results.equals("")) results+= "\n";
-					results += gene_symbol.toUpperCase()+": site already exists in database.";
-				} 
-				
-				pstatement = connection.prepareStatement("select count(*) from source_documents where column_display_text = ?");
-				pstatement.setString(1, snwpm.push_description);
-				rsq = pstatement.executeQuery();
-				count = "";
-				while(rsq.next()) {
-					count = rsq.getString(1);
-				}
-				rsq.close();
-				pstatement.close();
-				if (!count.equals("0")) {
-					if (!stop_early) {
-					stop_early = true;
-					if (!results.equals("")) results+= "\n";
-					results += gene_symbol.toUpperCase()+": reference description already exists in database.";
+					boolean stop_early = false;
+					connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
+					Statement statement = null;
+					statement = connection.createStatement();		
+					String db_version = "";
+					ResultSet rs = statement.executeQuery("select value from other_info where parameter = 'db_version'");
+					while(rs.next()) {
+						db_version = rs.getString(1);
 					}
-				}
+					rs.close();
+					statement.close();
 
-				if (stop_early) {
+					if (!db_version.equals(backend_db_version)) {
+						if (!results.equals("")) results+= "\n";
+						results += gene_symbol.toUpperCase()+": skipped because of incompatible db version.";
+						stop_early = true;
+					} else {
+						PreparedStatement pstatement = connection.prepareStatement("select count(*) from web_documents where site = ?");
+						pstatement.setString(1, snwpm.push_site);
+						ResultSet rsq = pstatement.executeQuery();
+						String count = "";
+						while(rsq.next()) {
+							count = rsq.getString(1);
+						}
+						rsq.close();
+						pstatement.close();
+						if (!count.equals("0")) {
+							stop_early = true;
+							if (!results.equals("")) results+= "\n";
+							results += gene_symbol.toUpperCase()+": site already exists in database.";
+						} 
+
+						pstatement = connection.prepareStatement("select count(*) from source_documents where column_display_text = ?");
+						pstatement.setString(1, snwpm.push_description);
+						rsq = pstatement.executeQuery();
+						count = "";
+						while(rsq.next()) {
+							count = rsq.getString(1);
+						}
+						rsq.close();
+						pstatement.close();
+						if (!count.equals("0")) {
+							if (!stop_early) {
+								stop_early = true;
+								if (!results.equals("")) results+= "\n";
+								results += gene_symbol.toUpperCase()+": reference description already exists in database.";
+							}
+						}
+					}
+
+					if (stop_early) {
+						connection.close();
+						continue;
+					}
+
+					String isql = "insert into source_documents (" +
+							"document_type,"+
+							"column_display_text,"+
+							"outbound_link,"+
+							"document_year,"+
+							"has_been_reviewed,"+
+							"meta_resource_id ) values (?,?,?,?,0,(select id from meta_resources where name='Manual'))";
+
+					PreparedStatement pstmt = connection.prepareStatement(isql);
+					pstmt.setString(1, "web");
+					pstmt.setString(2, snwpm.push_description);
+					pstmt.setString(3, snwpm.push_site);
+					pstmt.setString(4, snwpm.push_year.trim());
+					pstmt.executeUpdate();
+					rs = pstmt.getGeneratedKeys();
+					String source_documents_id = "";
+					while(rs.next()) {
+						source_documents_id = rs.getString(1);
+					}
+					rs.close();
+					pstmt.close();
+
+					String isql2 = "insert into web_documents (" +
+							"source_document_id,"+
+							"site,"+
+							"description ) values (?,?,?)";
+					pstmt = connection.prepareStatement(isql2);
+					pstmt.setString(1, source_documents_id);
+					pstmt.setString(2, snwpm.push_site);
+					pstmt.setString(3, snwpm.push_description);           
+					pstmt.executeUpdate();
+					rs = pstmt.getGeneratedKeys();
+					String web_documents_id = "";
+					while(rs.next()) {
+						web_documents_id = rs.getString(1);
+					}
+					rs.close();
+					pstmt.close(); 
+
+					pstmt = connection.prepareStatement("update source_documents set document_type_db_location = ? where id = ?");
+					pstmt.setString(1, "web_documents.id "+web_documents_id);
+					pstmt.setString(2, source_documents_id);
+					pstmt.executeUpdate();
+					pstmt.close();
 					connection.close();
-					continue;
-				}
 
-				String isql = "insert into source_documents (" +
-					"document_type,"+
-					"column_display_text,"+
-					"outbound_link,"+
-					"document_year,"+
-					"has_been_reviewed,"+
-					"meta_resource_id ) values (?,?,?,?,0,(select id from meta_resources where name='Manual'))";
-
-				PreparedStatement pstmt = connection.prepareStatement(isql);
-				pstmt.setString(1, "web");
-				pstmt.setString(2, snwpm.push_description);
-				pstmt.setString(3, snwpm.push_site);
-				pstmt.setString(4, snwpm.push_year.trim());
-				pstmt.executeUpdate();
-				ResultSet rs = pstmt.getGeneratedKeys();
-				String source_documents_id = "";
-				while(rs.next()) {
-					source_documents_id = rs.getString(1);
-				}
-				rs.close();
-				pstmt.close();
-
-				String isql2 = "insert into web_documents (" +
-						"source_document_id,"+
-						"site,"+
-						"description ) values (?,?,?)";
-				pstmt = connection.prepareStatement(isql2);
-				pstmt.setString(1, source_documents_id);
-				pstmt.setString(2, snwpm.push_site);
-				pstmt.setString(3, snwpm.push_description);           
-				pstmt.executeUpdate();
-				rs = pstmt.getGeneratedKeys();
-				String web_documents_id = "";
-				while(rs.next()) {
-					web_documents_id = rs.getString(1);
-				}
-				rs.close();
-				pstmt.close(); 
-
-				pstmt = connection.prepareStatement("update source_documents set document_type_db_location = ? where id = ?");
-				pstmt.setString(1, "web_documents.id "+web_documents_id);
-				pstmt.setString(2, source_documents_id);
-				pstmt.executeUpdate();
-				pstmt.close();
-				connection.close();
-				
-				if (!results.equals("")) results+= "\n";
-				results += gene_symbol.toUpperCase()+": web reference added.";
+					if (!results.equals("")) results+= "\n";
+					results += gene_symbol.toUpperCase()+": web reference added.";
 				}
 			}
 			return results;
@@ -4686,7 +5140,7 @@ public class TGN {
 				} else {
 					try {
 						URL path = new URL(snwpm.web_site.trim());
-						URLConnection conn = path.openConnection();
+						path.openConnection();
 					} catch (Exception eak) {
 						if (!errors.equals("")) errors+= "\n";
 						errors+="Site does not appear valid.";
@@ -4789,8 +5243,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_year)+"</td>");			
 			sb.append("<td class=\"ak_tablecell\" style=\"text-align: center;\"><a href=\""+StringEscapeUtils.escapeHtml4(snwpm.web_site)+"\"  target=\"_blank\">"+StringEscapeUtils.escapeHtml4(snwpm.web_site.replaceAll("/", "/\u200B"))+"</a></td>");				
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_description)+"</td>");	
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
-			//sb.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -4801,8 +5254,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_year)+"</td>");			
 			sb2.append("<td class=\"ak_tablecell\" style=\"text-align: center;\"><a href=\""+StringEscapeUtils.escapeHtml4(snwpm.web_site)+"\"  target=\"_blank\">"+StringEscapeUtils.escapeHtml4(snwpm.web_site.replaceAll("/", "/\u200B"))+"</a></td>");	
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_description)+"</td>");	
-			sb2.append("<td style=\"position:relative;\' ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
-			//sb2.append("<td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\' ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -4832,7 +5284,7 @@ public class TGN {
 		}
 	}	
 
-	public static Vector<String> SubmitNewGWASRow(String gene_symbol, String storage_dir, SubmitNewGWASRowPostMsg sngrpm) throws Exception {
+	public static Vector<String> SaveNewGWAS(String gene_symbol, String storage_dir, SaveNewGWASPostMsg sngpm) throws Exception {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet result = null;
@@ -4845,20 +5297,20 @@ public class TGN {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
 			connection.setAutoCommit(false);
 
-			if (sngrpm.phenotype.trim().equals("")) errors += "No phenotype was provided.";
-			if (sngrpm.source_db_id.equals("-1")) { // should otherwise exist in the db, though explicit check probably useful
+			if (sngpm.phenotype.trim().equals("")) errors += "No phenotype was provided.";
+			if (sngpm.source_db_id.equals("-1")) { // should otherwise exist in the db, though explicit check probably useful
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No Source selected.";
 			}		
 			String variant_mapping_id="";
 			int vm_cnt=0;				
-			sngrpm.index_variant = sngrpm.index_variant.toLowerCase().trim();
-			if (sngrpm.index_variant.equals("")) {
+			sngpm.index_variant = sngpm.index_variant.toLowerCase().trim();
+			if (sngpm.index_variant.equals("")) {
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No index variant provided.";
 			} else {
 				pstatement = connection.prepareStatement("select id from variant_mappings where name = ?");
-				pstatement.setString(1, sngrpm.index_variant);
+				pstatement.setString(1, sngpm.index_variant);
 				result = pstatement.executeQuery();
 				while(result.next()) {
 					vm_cnt++;
@@ -4875,15 +5327,15 @@ public class TGN {
 					errors+="Index variant not uniquely mapped in region.";
 				}
 			}
-			sngrpm.allele = sngrpm.allele.toUpperCase().trim();
+			sngpm.allele = sngpm.allele.toUpperCase().trim();
 
 			double pval = -1.0;
-			if (sngrpm.pvalue.trim().equals("")) {
+			if (sngpm.pvalue.trim().equals("")) {
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No pvalue provided.";
 			} else {
 				try {
-					pval = Double.parseDouble(sngrpm.pvalue.trim());
+					pval = Double.parseDouble(sngpm.pvalue.trim());
 					if (pval<0.0 || pval >1.0) throw new Exception();
 				} catch (Exception eee) {
 					pval = -1.0;
@@ -4894,10 +5346,10 @@ public class TGN {
 
 			double oddsratio_beta = -1.0;
 			boolean or_beta_set = false;
-			if (!sngrpm.or_beta.trim().equals("")) {
+			if (!sngpm.or_beta.trim().equals("")) {
 				or_beta_set = true;
 				try {
-					oddsratio_beta = Double.parseDouble(sngrpm.or_beta.trim());
+					oddsratio_beta = Double.parseDouble(sngpm.or_beta.trim());
 				} catch (Exception eee) {
 					oddsratio_beta = -1.0;
 					if (!errors.equals("")) errors+= "\n";
@@ -4920,27 +5372,24 @@ public class TGN {
 					"pvalue,"+
 					"or_beta, "+
 					"allele, "+
-					//"allele_matches_fstrand_variant_allele, "+
 					"curator_comment, "+
 					"svg_display_name, "+
 					"show_in_svg, " +
-					"marker_equivalence_set, " +
+					"credible_set, " +
 					"meta_resource_id, is_pqtl ) values (?,?,?,?,?,?,?,?,0,'Unset',(select id from meta_resources where name='Manual'), ?)";
 
 			pstatement = connection.prepareStatement(isql);
 			pstatement.setString(1, variant_mapping_id);
-			pstatement.setString(2, sngrpm.phenotype);
-			pstatement.setString(3, sngrpm.source_db_id);
+			pstatement.setString(2, sngpm.phenotype);
+			pstatement.setString(3, sngpm.source_db_id);
 			pstatement.setDouble(4,pval);
 			if (or_beta_set) pstatement.setDouble(5, oddsratio_beta);
 			else  pstatement.setString(5, "");
-			pstatement.setString(6, sngrpm.allele);
-			//if (allele_matches_fstrand_allele) pstmt.setInt(7, 1);
-			//else pstmt.setInt(7, 0);
-			pstatement.setString(7, sngrpm.comment);
+			pstatement.setString(6, sngpm.allele);
+			pstatement.setString(7, sngpm.comment);
 
 			String pval_string = String.format("%.2e", Double.valueOf(pval));
-			String sdn = sngrpm.phenotype +" "+ pval_string;
+			String sdn = sngpm.phenotype +" "+ pval_string;
 			String or_beta_string = "";
 			if (or_beta_set) {
 				BigDecimal bd1 = new BigDecimal(oddsratio_beta);
@@ -4948,12 +5397,12 @@ public class TGN {
 				or_beta_string = bd1.toString();
 				sdn+=" "+ or_beta_string;
 			}
-			if (!sngrpm.allele.equals("")) {
-				sdn+=" "+ sngrpm.allele;
+			if (!sngpm.allele.equals("")) {
+				sdn+=" "+ sngpm.allele;
 			}
 
 			pstatement.setString(8, sdn);
-			pstatement.setString(9, sngrpm.is_pqtl);
+			pstatement.setString(9, sngpm.is_pqtl);
 			pstatement.executeUpdate();
 			result = pstatement.getGeneratedKeys();
 			String gwas_table_row_id = "";
@@ -4969,9 +5418,14 @@ public class TGN {
 				iv_cnt = result.getInt(1);
 			}
 			result.close();
+			result = statement.executeQuery("select count(*) from variant_mapping_eqtl_results where index_variant_mapping_id = "+variant_mapping_id);
+			while(result.next()) {
+				iv_cnt += result.getInt(1);
+			}
+			result.close();
 			if (iv_cnt==1) {
 
-				isql = "insert into gwas_ld_credible_set_r2_values (" +
+				isql = "insert into ld_credible_set_r2_values (" +
 						"index_variant_mapping_id,"+
 						"variant_mapping_id2,"+
 						"r2_value,"+
@@ -4979,7 +5433,7 @@ public class TGN {
 						"meta_resource_id, "+
 						"when_created ) select variant_mapping_id1, variant_mapping_id2, r2_value, reference_dataset_id, meta_resource_id, when_created from r2_values where variant_mapping_id1 = ?";
 				pstatement2 = connection.prepareStatement(isql);
-				String isql2 = "insert into gwas_ld_credible_set_r2_values (" +
+				String isql2 = "insert into ld_credible_set_r2_values (" +
 						"index_variant_mapping_id,"+
 						"variant_mapping_id2,"+
 						"r2_value,"+
@@ -5017,7 +5471,7 @@ public class TGN {
 			for (int i=0; i<all_ld_datasets.size(); ++i) {
 				String ds = all_ld_datasets.get(i);
 				if (typed_in.contains(ds)) {
-					String cstring = "select count(*) from gwas_ld_credible_set_r2_values where reference_dataset_id = (select id from reference_datasets where name = '"+ds+"') and r2_value>=0.6 and (index_variant_mapping_id ="+variant_mapping_id+")";
+					String cstring = "select count(*) from ld_credible_set_r2_values where reference_dataset_id = (select id from reference_datasets where name = '"+ds+"') and r2_value>=0.6 and (index_variant_mapping_id ="+variant_mapping_id+")";
 					result = statement.executeQuery(cstring);
 					while (result.next()) {
 						String count = result.getString(1);
@@ -5033,7 +5487,7 @@ public class TGN {
 			String outbound_link="";
 			String column_display_text="";
 			String document_year="";
-			result = statement.executeQuery("select outbound_link, column_display_text, document_year from source_documents where id = "+sngrpm.source_db_id);
+			result = statement.executeQuery("select outbound_link, column_display_text, document_year from source_documents where id = "+sngpm.source_db_id);
 			while(result.next()) {
 				outbound_link = result.getString("outbound_link");
 				if (result.wasNull()) outbound_link = "";
@@ -5044,22 +5498,21 @@ public class TGN {
 
 			StringBuffer sb = new StringBuffer();
 			String rowclass = "akgwasrowclass"+gwas_table_row_id;
-			sb.append("<tr id=\'gwasrow"+gwas_table_row_id+"\'>");
-			sb.append("  <td style=\"position:relative;\"><textarea class=\"ak_gwas_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startgwassvgdisplaynametimer(this)\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
-			sb.append("  <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngrpm.phenotype)+"</td>\n");
+			sb.append("<tr id=\'gwasrow"+gwas_table_row_id+"\' style=\"height:2.5em;\">");
+			sb.append("  <td style=\"position:relative;\"><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
+			sb.append("  <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngpm.phenotype)+"</td>\n");
 			if (outbound_link.equals("")) {
 				sb.append("  <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(column_display_text)+"</td>\n");	
 			} else {
 				sb.append("  <td class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(column_display_text)+"</a></td>\n");		
 			}
 			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(document_year))+"</td>\n");
-			//sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngrpm.index_variant)+"</td>\n");
-			sb.append("  <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(sngrpm.index_variant)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sngrpm.index_variant)+"</a></td>\n");
+			sb.append("  <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(sngpm.index_variant)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sngpm.index_variant)+"</a></td>\n");
 			
-			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngrpm.allele)/*+allele_mod*/+"</td>\n");			
+			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngpm.allele)/*+allele_mod*/+"</td>\n");			
 			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pval_string)+"</td>\n");
 			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(or_beta_string)+"</td>\n");
-			sb.append("  <td><select class=\"ak_mes_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateGWASMarkerEquivalenceSet(this)\" data-cmes=\"Unset\" data-dbid=\""+gwas_table_row_id+"\">\n");
+			sb.append("  <td><select class=\"ak_cs_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateGWASCredibleSet(this)\" data-ccs=\"Unset\" data-dbid=\""+gwas_table_row_id+"\">\n");
 			sb.append("    <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
 			sb.append("    <option value=\"None\">None</option>\n");
 			for (int ij=0; ij<LDdatasets.size(); ++ij) {
@@ -5068,12 +5521,12 @@ public class TGN {
 				String dsc = LDdatasetsHighR2Count.get(ij);
 				sb.append("    <option value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
 			}
-			sb.append("    <option value=\"Add credible set\">Add credible set</option>\n");
+			sb.append("    <option value=\"Add custom\">Add custom</option>\n");
 			sb.append("  </select></td>\n");
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateGWASShowHide(this)\" data-dbid=\""+gwas_table_row_id+"\"></td>\n");
 
-			sb.append("  <td style=\"position:relative;\" ><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startgwascommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(sngrpm.comment)+"</textarea></td>\n");
-			sb.append("  <td style=\"vertical-align: middle;\"><button id=\"x_gwas_"+gwas_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveGWASRow('gwasrow"+gwas_table_row_id+"')\">X</button></td>\n");
+			sb.append("  <td style=\"position:relative;\" ><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(sngpm.comment)+"</textarea></td>\n");
+			sb.append("  <td style=\"vertical-align: middle;\"><button id=\"x_gwas_"+gwas_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveGWASRow('gwasrow"+gwas_table_row_id+"', "+sngpm.is_pqtl+")\">X</button></td>\n");
 			sb.append("</tr>\n");
 
 			Vector<String> toret = new Vector<>();
@@ -5095,31 +5548,36 @@ public class TGN {
 		}
 	}
 
-	public static Vector<String> SubmitNewEQTLRow(String gene_symbol, String storage_dir, SubmitNewEQTLRowPostMsg snerpm) throws Exception {
+	public static Vector<String> SaveNewEQTL(String gene_symbol, String storage_dir, SaveNewEQTLPostMsg snepm) throws Exception {
 		Connection connection = null;
 		PreparedStatement pstatement = null;
+		Statement statement = null;
+		PreparedStatement pstatement2 = null;
+		PreparedStatement pstatement3 = null;
 		ResultSet result = null;
 		try {
 			String errors = "";
-			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");		
-			if (snerpm.tissue.trim().equals("")) errors += "No Tissue was provided.";
-			if (snerpm.db_source_id.equals("") || snerpm.db_source_id.equals("-1")) { // should otherwise exist in the db, though explicit check probably useful
+			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");	
+			connection.setAutoCommit(false);
+			
+			if (snepm.tissue.trim().equals("")) errors += "No Tissue was provided.";
+			if (snepm.db_source_id.equals("") || snepm.db_source_id.equals("-1")) { // should otherwise exist in the db, though explicit check probably useful
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No Source selected.";
 			}		
-			if (snerpm.gene_symbol.equals("")) {
+			if (snepm.gene_symbol.equals("")) {
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No Gene selected.";
 			}	
 			String variant_mapping_id="";
 			int vm_cnt=0;				
-			snerpm.indexvariant = snerpm.indexvariant.toLowerCase().trim();
-			if (snerpm.indexvariant.equals("")) {
+			snepm.indexvariant = snepm.indexvariant.toLowerCase().trim();
+			if (snepm.indexvariant.equals("")) {
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No index variant provided.";
 			} else {
 				pstatement = connection.prepareStatement("select id from variant_mappings where name = ?");
-				pstatement.setString(1, snerpm.indexvariant);
+				pstatement.setString(1, snepm.indexvariant);
 				result = pstatement.executeQuery();
 				while(result.next()) {
 					vm_cnt++;
@@ -5136,14 +5594,14 @@ public class TGN {
 					errors+="Index variant not uniquely mapped in region.";
 				}
 			}
-			snerpm.allele = snerpm.allele.toUpperCase().trim();
+			snepm.allele = snepm.allele.toUpperCase().trim();
 			double pval = -1.0;
-			if (snerpm.pvalue.trim().equals("")) {
+			if (snepm.pvalue.trim().equals("")) {
 				if (!errors.equals("")) errors+= "\n";
 				errors+="No pvalue provided.";
 			} else {
 				try {
-					pval = Double.parseDouble(snerpm.pvalue.trim());
+					pval = Double.parseDouble(snepm.pvalue.trim());
 					if (pval<0.0 || pval >1.0) throw new Exception();
 				} catch (Exception eee) {
 					pval = -1.0;
@@ -5153,7 +5611,7 @@ public class TGN {
 			}
 			double beta = -1.0;
 			try {
-				beta = Double.parseDouble(snerpm.beta.trim());
+				beta = Double.parseDouble(snepm.beta.trim());
 			} catch (Exception eee) {
 				beta = -1.0;
 				if (!errors.equals("")) errors+= "\n";
@@ -5179,19 +5637,20 @@ public class TGN {
 					"curator_comment, "+
 					"svg_display_name, "+
 					"show_in_svg, " +
-					"meta_resource_id ) values (?,?,?,?,?,?,?,?,?,0,(select id from meta_resources where name='Manual'))";
+					"credible_set, "+
+					"meta_resource_id ) values (?,?,?,?,?,?,?,?,?,0,'Unset',(select id from meta_resources where name='Manual'))";
 
 			pstatement = connection.prepareStatement(isql);
 			pstatement.setString(1, variant_mapping_id);
-			pstatement.setString(2, snerpm.gene_symbol);
-			pstatement.setString(3, snerpm.tissue);
-			pstatement.setString(4, snerpm.db_source_id);
+			pstatement.setString(2, snepm.gene_symbol);
+			pstatement.setString(3, snepm.tissue);
+			pstatement.setString(4, snepm.db_source_id);
 			pstatement.setDouble(5, pval);
 			pstatement.setDouble(6, beta);
-			pstatement.setString(7, snerpm.allele);
-			pstatement.setString(8, snerpm.comment);
+			pstatement.setString(7, snepm.allele);
+			pstatement.setString(8, snepm.comment);
 			String pval_string = String.format("%.2e", Double.valueOf(pval));
-			String sdn = "EQTL "+snerpm.gene_symbol+" "+snerpm.tissue +" "+ pval_string;
+			String sdn = "EQTL "+snepm.gene_symbol+" "+snepm.tissue +" "+ pval_string;
 			pstatement.setString(9, sdn);
 			pstatement.executeUpdate();
 			result = pstatement.getGeneratedKeys();
@@ -5201,16 +5660,89 @@ public class TGN {
 			}
 			result.close();
 			pstatement.close();
+			
+			statement = connection.createStatement();
+			result = statement.executeQuery("select count(*) from variant_mapping_gwas_results where index_variant_mapping_id = "+variant_mapping_id);
+			int iv_cnt=-1;
+			while(result.next()) {
+				iv_cnt = result.getInt(1);
+			}
+			result.close();
+			result = statement.executeQuery("select count(*) from variant_mapping_eqtl_results where index_variant_mapping_id = "+variant_mapping_id);
+			while(result.next()) {
+				iv_cnt += result.getInt(1);
+			}
+			result.close();
+			if (iv_cnt==1) {
+				isql = "insert into ld_credible_set_r2_values (" +
+						"index_variant_mapping_id,"+
+						"variant_mapping_id2,"+
+						"r2_value,"+
+						"reference_dataset_id,"+
+						"meta_resource_id, "+
+						"when_created ) select variant_mapping_id1, variant_mapping_id2, r2_value, reference_dataset_id, meta_resource_id, when_created from r2_values where variant_mapping_id1 = ?";
+				pstatement2 = connection.prepareStatement(isql);
+				String isql2 = "insert into ld_credible_set_r2_values (" +
+						"index_variant_mapping_id,"+
+						"variant_mapping_id2,"+
+						"r2_value,"+
+						"reference_dataset_id,"+
+						"meta_resource_id, "+
+						"when_created ) select variant_mapping_id2, variant_mapping_id1, r2_value, reference_dataset_id, meta_resource_id, when_created from r2_values where variant_mapping_id2 = ?";
+				pstatement3 = connection.prepareStatement(isql2);
+
+				pstatement2.setString(1, variant_mapping_id);
+				pstatement2.executeUpdate();
+				pstatement3.setString(1, variant_mapping_id);
+				pstatement3.executeUpdate();
+			}
+
+			connection.commit();
+			
+			Vector<String> all_ld_datasets = new Vector<>();
+			result = statement.executeQuery("select name from reference_datasets where is_ld_reference_dataset=1 order by name");
+			while(result.next()) {
+				String nm = result.getString("name");
+				all_ld_datasets.add(nm);
+			}
+			result.close();
+
+			Vector<String> LDdatasets = new Vector<>();
+			Vector<String> LDdatasetsHighR2Count = new Vector<>();           
+			Vector<String> typed_in = new Vector<>();
+			result = statement.executeQuery("select distinct d.name as name from reference_datasets d, variant_mapping_allele_frequencies f where f.variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = "+variant_mapping_id+") and d.id=f.reference_dataset_id");
+			while (result.next()) {
+				String nm = result.getString("name");
+				typed_in.add(nm);
+			}
+			result.close();
+
+			for (int i=0; i<all_ld_datasets.size(); ++i) {
+				String ds = all_ld_datasets.get(i);
+				if (typed_in.contains(ds)) {
+					String cstring = "select count(*) from ld_credible_set_r2_values where reference_dataset_id = (select id from reference_datasets where name = '"+ds+"') and r2_value>=0.6 and (index_variant_mapping_id ="+variant_mapping_id+")";
+					result = statement.executeQuery(cstring);
+					while (result.next()) {
+						String count = result.getString(1);
+						LDdatasets.add("LD "+ds);
+						LDdatasetsHighR2Count.add(count);
+					}
+					result.close();
+				} else {
+					LDdatasets.add("LD "+ds);
+					LDdatasetsHighR2Count.add("n/a");
+				}
+			}
 
 			StringBuffer sb = new StringBuffer();
 			String rowclass = "akeqtlrowclass"+eqtl_table_row_id;
-			sb.append("  <tr id=\'eqtlrow"+eqtl_table_row_id+"\'>\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"starteqtlsvgdisplaynametimer(this)\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
-			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snerpm.tissue)+"</td>\n");
-			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snerpm.gene_symbol)+"</td>\n");
+			sb.append("  <tr id=\'eqtlrow"+eqtl_table_row_id+"\' style=\"height:2.5em;\">\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
+			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snepm.tissue)+"</td>\n");
+			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snepm.gene_symbol)+"</td>\n");
 				
 			pstatement = connection.prepareStatement("select column_display_text, outbound_link, document_year from source_documents where id = ?");
-			pstatement.setString(1, snerpm.db_source_id);
+			pstatement.setString(1, snepm.db_source_id);
 			result = pstatement.executeQuery();
 			String cdt = "";
 			String ol = "";
@@ -5226,18 +5758,29 @@ public class TGN {
 			if (!ol.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+ol+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(cdt)+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(cdt)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(dy))+"</td>\n");		
-			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(snerpm.indexvariant)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(snerpm.indexvariant)+"</a></td>\n");
+			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(snepm.indexvariant)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(snepm.indexvariant)+"</a></td>\n");
 			String pval_str = String.format("%.2e", Double.valueOf(pval));
 			String beta_str = String.format("%.3f", Double.valueOf(beta));	
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pval_str)+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(beta_str)+"</td>\n");
-			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snerpm.allele)+"</td>\n");
-			sb.append("    <td style=\"text-align:left;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4("None")+"</td>\n");
+			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snepm.allele)+"</td>\n");
+
+			sb.append("  <td><select class=\"ak_cs_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateEQTLCredibleSet(this)\" data-ccs=\"Unset\" data-dbid=\""+eqtl_table_row_id+"\">\n");
+			sb.append("    <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
+			sb.append("    <option value=\"None\">None</option>\n");
+			for (int ij=0; ij<LDdatasets.size(); ++ij) {
+				String ds = LDdatasets.get(ij);
+				String dsr = ds.replace("1000GENOMES:phase_3", "1KGp3");
+				String dsc = LDdatasetsHighR2Count.get(ij);
+				sb.append("    <option value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
+			}
+			sb.append("    <option value=\"Add custom\">Add custom</option>\n");
+			sb.append("  </select></td>\n");
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateEQTLShowHide(this)\" data-dbid=\""+eqtl_table_row_id+"\"></td>\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"starteqtlcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(snerpm.comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(snepm.comment)+"</textarea></td>\n");
 			sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_eqtl_"+eqtl_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveEQTLRow('eqtlrow"+eqtl_table_row_id+"')\">X</button></td>");
 			Vector<ArrayList<Integer>> v = GetAllGWASOverlaps(connection, Integer.valueOf(eqtl_table_row_id));			
-			ArrayList<Integer> vl = v.get(0);
+			ArrayList<Integer> vl = v.get(1);
 			sb.append("    <td id=\'eqtloverlap"+eqtl_table_row_id+"\' style=\"text-align:center;\" class=\"ak_tablecell\">"+vl.get(0)+"</td>\n");
 			sb.append("  </tr>\n");
 			Vector<String> toret = new Vector<>();
@@ -5247,6 +5790,7 @@ public class TGN {
 			return toret;
 		} catch(Exception e) {
 			e.printStackTrace();
+			try {if(connection != null) connection.rollback();} catch (Exception ee) {}
 			throw new Exception(e);
 		} finally {
 			try {if (result!=null) result.close();} catch (Exception ee) {}
@@ -5438,7 +5982,7 @@ public class TGN {
 				} else if (sd.bdoc!=null) {
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.first_author)+"</td>");				
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.pub_year)+"</td>");			
-					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.publisher)+"</td>");			
+					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">bioRxiv"+StringEscapeUtils.escapeHtml4(" ("+sd.bdoc.doi_id+")")+"</td>");			
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(sd.outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.title)+"</a></td>");									
 				} else if (sd.fdoc!=null) {
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"></td>");				
@@ -5459,7 +6003,7 @@ public class TGN {
 						sb.append("<tr style=\"background: #eeeeee !important;\" id='"+new_section.toLowerCase()+"_detail"+d.id+"' class=\"tablesorter-childRow\" >");
 						sb.append("<td colspan=\"4\" style=\"vertical-align: middle\">");
 						sb.append("<div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">");
-						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startdetailcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
+						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
 						sb.append("<a class=\""+rowclass+"\" style=\"display: inline-block;\" href=\""+d.b64_contents+"\" data-lightbox=\""+new_section.toLowerCase()+"_detail"+d.id+"\">");
 						sb.append("<img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>");
 						sb.append("</div></td></tr>");
@@ -5479,7 +6023,7 @@ public class TGN {
 				} else if (sd.bdoc!=null) {
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.first_author)+"</td>");				
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.pub_year)+"</td>");			
-					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.publisher)+"</td>");			
+					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">bioRxiv"+StringEscapeUtils.escapeHtml4(" ("+sd.bdoc.doi_id+")")+"</td>");			
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(sd.outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.title)+"</a></td>");
 				} else if (sd.fdoc!=null) {
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");				
@@ -5500,7 +6044,7 @@ public class TGN {
 						sb.append("<tr style=\"background: #eeeeee !important;\" id='"+old_section.toLowerCase()+"_detail"+d.id+"' class=\"tablesorter-childRow\" >");
 						sb.append("<td colspan=\"4\" style=\"vertical-align: middle\">");
 						sb.append("<div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">");
-						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startdetailcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
+						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
 						sb.append("<a class=\""+rowclass+"\" style=\"display: inline-block;\" href=\""+d.b64_contents+"\" data-lightbox=\""+old_section.toLowerCase()+"_detail"+d.id+"\">");
 						sb.append("<img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>");
 						sb.append("</div></td></tr>");
@@ -5706,7 +6250,7 @@ public class TGN {
 				} else if (sd.bdoc!=null) {
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.first_author)+"</td>");				
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.pub_year)+"</td>");			
-					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.publisher)+"</td>");			
+					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">bioRxiv"+StringEscapeUtils.escapeHtml4(" ("+sd.bdoc.doi_id+")")+"</td>");			
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(sd.outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.title)+"</a></td>");
 				} else if (sd.fdoc!=null) {
 					sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"></td>");				
@@ -5727,7 +6271,7 @@ public class TGN {
 						sb.append("<tr style=\"background: #eeeeee !important;\" id='"+old_section.toLowerCase()+"_detail"+d.id+"' class=\"tablesorter-childRow\">");
 						sb.append("<td colspan=\"4\" style=\"vertical-align: middle\">");
 						sb.append("<div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">");
-						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startdetailcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
+						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
 						sb.append("<a class=\""+rowclass+"\" style=\"display: inline-block;\" href=\""+d.b64_contents+"\" data-lightbox=\""+old_section.toLowerCase()+"_detail"+d.id+"\">");
 						sb.append("<img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>");
 						sb.append("</div></td></tr>");
@@ -5811,10 +6355,10 @@ public class TGN {
 			sb.append("              <option value=\"Protein\">Protein</option>\n");
 			sb.append("            </select>\n");
 			sb.append("          </section>");		
-			sb.append("          <textarea id='detailrowsection"+detail_table_row_id+"' data-fromwhere=\"2\" data-dbid=\""+detail_table_row_id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(sndpm.desc)+"\" onkeyup=\"startdetailcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(sndpm.desc)+"</textarea>\n");
+			sb.append("          <textarea id='detailrowsection"+detail_table_row_id+"' data-fromwhere=\"2\" data-dbid=\""+detail_table_row_id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(sndpm.desc)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(sndpm.desc)+"</textarea>\n");
 			sb.append("          <a style=\"display: inline-block;\" class=\""+rowclass+" "+drowclass+"\" href=\""+sndpm.img_b64+"\" data-lightbox=\"detail"+detail_table_row_id+"\">\n");
 			sb.append("          <img class=\"contain_img "+rowclass+" "+drowclass+"\" src=\""+sndpm.img_b64+"\" width=\"300\" height=\"200\"></img></a>\n");
-			sb.append("          <button id=\"x_detail_"+detail_table_row_id+"\" type=\"button\" class=\"ak_table_button "+rowclass+" "+drowclass+"\" style=\"margin-left:50px;display: inline-block; vertical-align: top; margin-top:90px;\" onclick=\"RemoveDetail('detail"+detail_table_row_id+"')\">Remove</button>\n");
+			sb.append("          <button id=\"x_detail_"+detail_table_row_id+"\" type=\"button\" class=\"ak_table_button "+rowclass+" "+drowclass+"\" style=\"margin-left:40px;display: inline-block; vertical-align: top; margin-top:90px;\" onclick=\"RemoveDetail('detail"+detail_table_row_id+"')\">Remove</button>\n");
 			sb.append("      </div>\n");
 			sb.append("    </td>\n");
 			sb.append("  </tr>\n");				
@@ -5835,101 +6379,32 @@ public class TGN {
 		}
 	}	
 
-	public static void UpdateGWASComment(String gene_symbol, String storage_dir, UpdateGWASCommentPostMsg ugcpm) throws Exception {
+	public static void UpdateComment(String gene_symbol, String storage_dir, UpdateCommentPostMsg ucpm) throws Exception {
 		Connection connection = null;
 		PreparedStatement pstatement = null;
-		/*
-		  n.b. this won't fail if row has been deleted, which should be ok
-		 */
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
-			pstatement = connection.prepareStatement("update variant_mapping_gwas_results set curator_comment=? where id=?");
-			pstatement.setString(1, ugcpm.gwas_comment);
-			pstatement.setInt(2, ugcpm.gwas_db_id);
-			pstatement.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		} finally {
-			try {if (pstatement!=null) pstatement.close();} catch (Exception ee) {}
-			try {if (connection!=null) connection.close();} catch (Exception ee) {}
-		}
-	}
-	
-	public static void UpdateGenePhenComment(String gene_symbol, String storage_dir, UpdateGenePhenCommentPostMsg ugpcpm) throws Exception {
-		Connection connection = null;
-		PreparedStatement pstatement = null;
-		/*
-		  n.b. this won't fail if row has been deleted, which should be ok
-		 */
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
-			pstatement = connection.prepareStatement("update gene_phenotype_associations set curator_comment=? where id=?");
-			pstatement.setString(1, ugpcpm.genephen_comment);
-			pstatement.setInt(2, ugpcpm.genephen_db_id);
-			pstatement.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		} finally {
-			try {if (pstatement!=null) pstatement.close();} catch (Exception ee) {}
-			try {if (connection!=null) connection.close();} catch (Exception ee) {}
-		}
-	}
-	
-	public static void UpdateDetailComment(String gene_symbol, String storage_dir, UpdateDetailCommentPostMsg udcpm) throws Exception {
-		Connection connection = null;
-		PreparedStatement pstatement = null;
-		/*
-		  n.b. this won't fail if row has been deleted, which should be ok
-		 */
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
-			pstatement = connection.prepareStatement("update source_document_details set description=? where id=?");
-			pstatement.setString(1, udcpm.comment);
-			pstatement.setInt(2, udcpm.detail_db_id);
-			pstatement.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		} finally {
-			try {if (pstatement!=null) pstatement.close();} catch (Exception ee) {}
-			try {if (connection!=null) connection.close();} catch (Exception ee) {}
-		}
-	}
-	
-	public static void UpdateEQTLComment(String gene_symbol, String storage_dir, UpdateEQTLCommentPostMsg uecpm) throws Exception {
-		Connection connection = null;
-		PreparedStatement pstatement = null;
-		/*
-		  n.b. this won't fail if row has been deleted, which should be ok
-		 */
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
-			pstatement = connection.prepareStatement("update variant_mapping_eqtl_results set curator_comment=? where id=?");
-			pstatement.setString(1, uecpm.eqtl_comment);
-			pstatement.setInt(2, uecpm.eqtl_db_id);
-			pstatement.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		} finally {
-			try {if (pstatement!=null) pstatement.close();} catch (Exception ee) {}
-			try {if (connection!=null) connection.close();} catch (Exception ee) {}
-		}
-	}
 
-	public static void UpdateSourceComment(String gene_symbol, String storage_dir, UpdateSourceCommentPostMsg uscpm) throws Exception {
-		Connection connection = null;
-		PreparedStatement pstatement = null;
 		/*
 		  n.b. this won't fail if row has been deleted, which should be ok
 		 */
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
-			pstatement = connection.prepareStatement("update source_documents set curator_comment=? where id=?");
-			pstatement.setString(1, uscpm.source_comment);
-			pstatement.setInt(2, uscpm.source_db_id);
+			String which_table = "";
+			String which_column = "curator_comment";
+			if (ucpm.origin.equals("detail")) {
+				which_table="source_document_details";
+				which_column="description";
+			} else if (ucpm.origin.equals("gwas")) {
+				which_table="variant_mapping_gwas_results";
+			} else if (ucpm.origin.equals("eqtl")) {
+				which_table="variant_mapping_eqtl_results";
+			} else if (ucpm.origin.equals("genephen")) {
+				which_table="gene_phenotype_associations";
+			} else if (ucpm.origin.equals("source")) {
+				which_table="source_documents";
+			}
+			pstatement = connection.prepareStatement("update "+which_table+" set "+which_column+"=? where id=?");
+			pstatement.setString(1, ucpm.comment);
+			pstatement.setInt(2, ucpm.db_id);
 			pstatement.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -5939,7 +6414,7 @@ public class TGN {
 			try {if (connection!=null) connection.close();} catch (Exception ee) {}
 		}
 	}
-	
+		
 	public static Vector<String> UpdateSourceReview(String gene_symbol, String storage_dir, UpdateSourceReviewPostMsg usrpm) throws Exception {
 		Connection connection = null;
 		PreparedStatement pstatement = null;
@@ -5980,7 +6455,7 @@ public class TGN {
 		}
 	}
 	
-	public static boolean UpdateGWASSVGDisplayName(String gene_symbol, String storage_dir, UpdateGWASSVGDisplayNamePostMsg usdnpm) throws Exception {
+	public static boolean UpdateSVGDisplayName(String gene_symbol, String storage_dir, UpdateSVGDisplayNamePostMsg usdnpm) throws Exception {
 		Connection connection = null;
 		PreparedStatement pstatement = null;
 		Statement statement = null;
@@ -5994,53 +6469,19 @@ public class TGN {
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
 			statement = connection.createStatement();
-			rs = statement.executeQuery("select show_in_svg, marker_equivalence_set from variant_mapping_gwas_results where id = "+usdnpm.gwas_db_id);
+			rs = statement.executeQuery("select show_in_svg, credible_set from variant_mapping_"+usdnpm.origin+"_results where id = "+usdnpm.db_id);
 			String show_in_svg = "";
-			String mes = "";
+			String cs = "";
 			while(rs.next()) {
 				show_in_svg = rs.getString("show_in_svg");
-				mes = rs.getString("marker_equivalence_set");
+				cs = rs.getString("credible_set");
 			}
 			rs.close();
-			pstatement = connection.prepareStatement("update variant_mapping_gwas_results set svg_display_name=? where id=?");
+			pstatement = connection.prepareStatement("update variant_mapping_"+usdnpm.origin+"_results set svg_display_name=? where id=?");
 			pstatement.setString(1, usdnpm.svgdisplayname);
-			pstatement.setInt(2, usdnpm.gwas_db_id);
+			pstatement.setInt(2, usdnpm.db_id);
 			pstatement.executeUpdate();
-			if (show_in_svg.equals("0") || mes.equals("Unset")) return false;
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception(e);
-		} finally {
-			try {if (rs!=null) rs.close();} catch (Exception ee) {}
-			try {if (statement!=null) statement.close();} catch (Exception ee) {}
-			try {if (pstatement!=null) pstatement.close();} catch (Exception ee) {}
-			try {if (connection!=null) connection.close();} catch (Exception ee) {}
-		}
-	}  
-
-	public static boolean UpdateEQTLSVGDisplayName(String gene_symbol, String storage_dir, UpdateEQTLSVGDisplayNamePostMsg usdnpm) throws Exception {
-		/*
-		  See comment for previous function
-		 */
-		Connection connection = null;
-		PreparedStatement pstatement = null;
-		ResultSet rs = null;
-		Statement statement = null;
-		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
-			statement = connection.createStatement();
-			rs = statement.executeQuery("select show_in_svg from variant_mapping_eqtl_results where id = "+usdnpm.eqtl_db_id);
-			String show = "";
-			while(rs.next()) {
-				show = rs.getString("show_in_svg");
-			}
-			rs.close();
-			pstatement = connection.prepareStatement("update variant_mapping_eqtl_results set svg_display_name=? where id=?");
-			pstatement.setString(1, usdnpm.svgdisplayname);
-			pstatement.setInt(2, usdnpm.eqtl_db_id);
-			pstatement.executeUpdate();
-			if (show.equals("0")) return false;
+			if (show_in_svg.equals("0") || cs.equals("Unset")) return false;
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -6070,7 +6511,7 @@ public class TGN {
 		}
 	}
 
-	public static Vector<ArrayList<Integer>> UpdateGWASMarkerEquivalenceSet(String gene_symbol, String storage_dir, UpdateGWASMarkerEquivalenceSetPostMsg umespm) throws Exception {
+	public static Vector<ArrayList<Integer>> UpdateGWASCredibleSet(String gene_symbol, String storage_dir, UpdateGWASCredibleSetPostMsg ugcspm) throws Exception {
 		Connection connection = null;
 		Statement statement = null;
 		PreparedStatement pstatement = null;
@@ -6078,15 +6519,15 @@ public class TGN {
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
 			statement = connection.createStatement();
-			rs = statement.executeQuery("select show_in_svg from variant_mapping_gwas_results where id = "+umespm.gwas_db_id);
+			rs = statement.executeQuery("select show_in_svg from variant_mapping_gwas_results where id = "+ugcspm.gwas_db_id);
 			String show = "";
 			while(rs.next()) {
 				show = rs.getString("show_in_svg");
 			}
 			rs.close();
-			pstatement = connection.prepareStatement("update variant_mapping_gwas_results set marker_equivalence_set = ? where id = ?");
-			pstatement.setString(1, umespm.marker_equivalence_set);
-			pstatement.setInt(2, umespm.gwas_db_id);
+			pstatement = connection.prepareStatement("update variant_mapping_gwas_results set credible_set = ? where id = ?");
+			pstatement.setString(1, ugcspm.credible_set);
+			pstatement.setInt(2, ugcspm.gwas_db_id);
 			pstatement.executeUpdate();
 			
 			Vector<ArrayList<Integer>> v = GetAllGWASOverlaps(connection, -1);
@@ -6106,7 +6547,41 @@ public class TGN {
 			try {if (connection!=null) connection.close();} catch (Exception ee) {}
 		}
 	}
+	
+	public static boolean UpdateEQTLCredibleSet(String gene_symbol, String storage_dir, UpdateEQTLCredibleSetPostMsg uecspm) throws Exception {
+		
+		Connection connection = null;
+		Statement statement = null;
+		PreparedStatement pstatement = null;
+		ResultSet rs = null;
+		try {
+			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
+			statement = connection.createStatement();
+			rs = statement.executeQuery("select show_in_svg from variant_mapping_eqtl_results where id = "+uecspm.eqtl_db_id);
+			String show = "";
+			while(rs.next()) {
+				show = rs.getString("show_in_svg");
+			}
+			rs.close();
+			pstatement = connection.prepareStatement("update variant_mapping_eqtl_results set credible_set = ? where id = ?");
+			pstatement.setString(1, uecspm.credible_set);
+			pstatement.setInt(2, uecspm.eqtl_db_id);
+			pstatement.executeUpdate();
+			
+			if (show.equals("1")) return true;
+			return false;
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		} finally {
+			try {if (rs!=null) rs.close();} catch (Exception ee) {}
+			try {if (statement!=null) statement.close();} catch (Exception ee) {}
+			try {if (pstatement!=null) pstatement.close();} catch (Exception ee) {}
+			try {if (connection!=null) connection.close();} catch (Exception ee) {}
+		}
+	}
+	
 	public static Vector<String> RecoverPubmed(String pubmedId) throws Exception {
 
 		String pubmedUrl ="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id="+pubmedId+"&retmode=xml";
@@ -6159,7 +6634,6 @@ public class TGN {
 							break;
 						}
 					}
-
 					if (i.matches("\\s+<ISOAbbreviation>.*")) {
 						i=i.replaceFirst("^\\s+<ISOAbbreviation>", "");
 						i=i.replaceFirst("</ISOAbbreviation>\\s*$", "");
@@ -6281,7 +6755,7 @@ public class TGN {
 		return toret;		
 	}				
 
-	public static Vector<ArrayList<Integer>> DeleteCredibleSet(String gene_symbol, String storage_dir, DeleteCredibleSetPostMsg dcspm) throws Exception {
+	public static Vector<ArrayList<Integer>> DeleteGWASCustomCredibleSet(String gene_symbol, String storage_dir, DeleteGWASCustomCredibleSetPostMsg dgcspm) throws Exception {
 		Connection connection = null;
 		Statement statement = null;
 		PreparedStatement pstatement1 = null;
@@ -6292,26 +6766,26 @@ public class TGN {
 			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
 			connection.setAutoCommit(false);
 			statement = connection.createStatement();
-			rs = statement.executeQuery("select show_in_svg, marker_equivalence_set from variant_mapping_gwas_results where id = "+dcspm.gwas_db_id);
-			String mes = "";
+			rs = statement.executeQuery("select show_in_svg, credible_set from variant_mapping_gwas_results where id = "+dgcspm.gwas_db_id);
+			String cs = "";
 			String show = "";
 			while(rs.next()) {
-				mes = rs.getString("marker_equivalence_set");
+				cs = rs.getString("credible_set");
 				show = rs.getString("show_in_svg");
 			}
 			rs.close();
-			String new_mes = mes;
-			if (mes.equals("Credible set")) {
+			String new_cs = cs;
+			if (cs.equals("Custom")) {
 				if (show.equals("1")) svg_change = true;
-				new_mes = "Unset";
+				new_cs = "Unset";
 			}
-			pstatement1 = connection.prepareStatement("delete from credible_set_members where variant_mapping_gwas_result_id = ?");
-			pstatement1.setInt(1, dcspm.gwas_db_id);
+			pstatement1 = connection.prepareStatement("delete from gwas_custom_credible_set_members where variant_mapping_gwas_result_id = ?");
+			pstatement1.setInt(1, dgcspm.gwas_db_id);
 			pstatement1.executeUpdate();
 
-			pstatement2 = connection.prepareStatement("update variant_mapping_gwas_results set credible_set_name = null, credible_set_posterior=null, marker_equivalence_set = ? where id = ?");
-			pstatement2.setString(1, new_mes);
-			pstatement2.setInt(2, dcspm.gwas_db_id);
+			pstatement2 = connection.prepareStatement("update variant_mapping_gwas_results set custom_credible_set_name = null, custom_credible_set_posterior = null, credible_set = ? where id = ?");
+			pstatement2.setString(1, new_cs);
+			pstatement2.setInt(2, dgcspm.gwas_db_id);
 			pstatement2.executeUpdate();
 			connection.commit();
 			Vector<ArrayList<Integer>> v = GetAllGWASOverlaps(connection, -1);
@@ -6320,6 +6794,54 @@ public class TGN {
 			else svg_change_a.add(Integer.valueOf(0));
 			v.add(svg_change_a);
 			return v;
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {if (connection!=null) connection.rollback();} catch (Exception ee) {}
+			throw new Exception(e);
+		} finally {
+			try {if (rs!=null) rs.close();} catch (Exception ee) {}
+			try {if (statement!=null) statement.close();} catch (Exception ee) {}
+			try {if (pstatement1!=null) pstatement1.close();} catch (Exception ee) {}
+			try {if (pstatement2!=null) pstatement2.close();} catch (Exception ee) {}
+			try {if (connection!=null) connection.close();} catch (Exception ee) {}
+		}
+	}
+	
+	public static boolean DeleteEQTLCustomCredibleSet(String gene_symbol, String storage_dir, DeleteEQTLCustomCredibleSetPostMsg decspm) throws Exception {
+		Connection connection = null;
+		Statement statement = null;
+		PreparedStatement pstatement1 = null;
+		PreparedStatement pstatement2 = null;
+		ResultSet rs = null;
+		try {
+			boolean svg_change = false;
+			connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
+			connection.setAutoCommit(false);
+			statement = connection.createStatement();
+			rs = statement.executeQuery("select show_in_svg, credible_set from variant_mapping_eqtl_results where id = "+decspm.eqtl_db_id);
+			String cs = "";
+			String show = "";
+			while(rs.next()) {
+				cs = rs.getString("credible_set");
+				show = rs.getString("show_in_svg");
+			}
+			rs.close();
+			String new_cs = cs;
+			if (cs.equals("Custom")) {
+				if (show.equals("1")) svg_change = true;
+				new_cs = "Unset";
+			}
+			pstatement1 = connection.prepareStatement("delete from eqtl_custom_credible_set_members where variant_mapping_eqtl_result_id = ?");
+			pstatement1.setInt(1, decspm.eqtl_db_id);
+			pstatement1.executeUpdate();
+
+			pstatement2 = connection.prepareStatement("update variant_mapping_eqtl_results set custom_credible_set_name = null, custom_credible_set_posterior = null, credible_set = ? where id = ?");
+			pstatement2.setString(1, new_cs);
+			pstatement2.setInt(2, decspm.eqtl_db_id);
+			pstatement2.executeUpdate();
+			connection.commit();
+			if (svg_change) return true;
+			else  return false;
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {if (connection!=null) connection.rollback();} catch (Exception ee) {}
@@ -6344,13 +6866,13 @@ public class TGN {
 			statement = connection.createStatement();
 			String show_val = "0";
 			if (uspm.show_or_hide.equals("Show")) show_val = "1";
-			rs = statement.executeQuery("select marker_equivalence_set from variant_mapping_gwas_results v where id = "+uspm.gwas_db_id);
-			String mes = "";
+			rs = statement.executeQuery("select credible_set from variant_mapping_gwas_results v where id = "+uspm.gwas_db_id);
+			String cs = "";
 			while(rs.next()) {
-				mes = rs.getString("marker_equivalence_set");
+				cs = rs.getString("credible_set");
 			}
 			rs.close();
-			if (mes.equals("Unset")) svg_change = false;
+			if (cs.equals("Unset")) svg_change = false;
 			pstatement = connection.prepareStatement("update variant_mapping_gwas_results set show_in_svg = "+show_val+" where id = ?");
 			pstatement.setInt(1, uspm.gwas_db_id);
 			pstatement.executeUpdate();
@@ -6421,40 +6943,40 @@ public class TGN {
 		ResultSet rs = null;
 		ResultSet rs2 = null;
 		try {
-			pstb = connection.prepareStatement("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1 from gwas_ld_credible_set_r2_values r, variant_mappings v1 where v1.id=r.variant_mapping_id2 and r.reference_dataset_id = (select id from reference_datasets where name = ? ) and r.index_variant_mapping_id = ? and r.r2_value >= 0.6");
+			pstb = connection.prepareStatement("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1 from ld_credible_set_r2_values r, variant_mappings v1 where v1.id=r.variant_mapping_id2 and r.reference_dataset_id = (select id from reference_datasets where name = ? ) and r.index_variant_mapping_id = ? and r.r2_value >= 0.6");
 			statement = connection.createStatement();
 			statement2 = connection.createStatement();
-			rs = statement.executeQuery("select v.name as name, v.id as vm_id, g.id as id, v.start_1based as start_1based, v.end_1based as end_1based, marker_equivalence_set, credible_set_name from variant_mapping_gwas_results g, variant_mappings v where g.index_variant_mapping_id = v.id and show_in_svg=1 and marker_equivalence_set!='Unset'");
+			rs = statement.executeQuery("select v.name as name, v.id as vm_id, g.id as id, v.start_1based as start_1based, v.end_1based as end_1based, credible_set, custom_credible_set_name from variant_mapping_gwas_results g, variant_mappings v where g.index_variant_mapping_id = v.id and show_in_svg=1 and credible_set!='Unset'");
 			while(rs.next()) {
 				int gwas_table_row_id = rs.getInt("id");
 				String index_variant_name = rs.getString("name");
 				int index_variant_mapping_id = rs.getInt("vm_id");
 				int index_variant_location_start = rs.getInt("start_1based");
 				int index_variant_location_end = rs.getInt("end_1based");
-				String marker_equivalence_set = rs.getString("marker_equivalence_set");
-				String credible_set_name = rs.getString("credible_set_name");
-				if (rs.wasNull()) credible_set_name = "";
+				String credible_set = rs.getString("credible_set");
+				String custom_credible_set_name = rs.getString("custom_credible_set_name");
+				if (rs.wasNull()) custom_credible_set_name = "";
 				GWASResult gwr = new GWASResult();
 				gwr.index_variant_name = index_variant_name;
 				gwr.index_variant_start = index_variant_location_start;
 				gwr.index_variant_end = index_variant_location_end;
 				gwr.gwas_table_row_id = gwas_table_row_id;
-				gwr.marker_equivalence_set = marker_equivalence_set;
-				gwr.credible_set_name = credible_set_name;
+				gwr.credible_set = credible_set;
+				gwr.custom_credible_set_name = custom_credible_set_name;
 				agr.add(gwr);
-				if (marker_equivalence_set.equals("Credible set")) {
-					rs2 = statement2.executeQuery("select v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1 from credible_set_members csm, variant_mappings v1 where variant_mapping_id=v1.id and variant_mapping_gwas_result_id = "+gwas_table_row_id);						
+				if (credible_set.equals("Custom")) {
+					rs2 = statement2.executeQuery("select v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1 from gwas_custom_credible_set_members csm, variant_mappings v1 where variant_mapping_id=v1.id and variant_mapping_gwas_result_id = "+gwas_table_row_id);						
 					while (rs2.next()) {
 						int s1b = rs2.getInt("start_1based1");
 						int e1b = rs2.getInt("end_1based1");
 						String lvn = rs2.getString("name1");
-						gwr.mes_locs_starts.add(Integer.valueOf(s1b));
-						gwr.mes_locs_ends.add(Integer.valueOf(e1b));
-						gwr.mes_variants.add(lvn);
+						gwr.cs_locs_starts.add(Integer.valueOf(s1b));
+						gwr.cs_locs_ends.add(Integer.valueOf(e1b));
+						gwr.cs_variants.add(lvn);
 					}
 					rs2.close();	
 				} else {
-					String sel_dataset = marker_equivalence_set.substring(3); // trim off leading "LD "
+					String sel_dataset = credible_set.substring(3); // trim off leading "LD "
 					pstb.setString(1,sel_dataset);
 					pstb.setInt(2, index_variant_mapping_id);
 					rs2 = pstb.executeQuery();					
@@ -6462,9 +6984,9 @@ public class TGN {
 						int s1b = rs2.getInt("start_1based1");
 						int e1b = rs2.getInt("end_1based1");
 						String lvn = rs2.getString("name1");
-						gwr.mes_locs_starts.add(Integer.valueOf(s1b));
-						gwr.mes_locs_ends.add(Integer.valueOf(e1b));
-						gwr.mes_variants.add(lvn);
+						gwr.cs_locs_starts.add(Integer.valueOf(s1b));
+						gwr.cs_locs_ends.add(Integer.valueOf(e1b));
+						gwr.cs_variants.add(lvn);
 					}
 					rs2.close();
 				}
@@ -6472,36 +6994,33 @@ public class TGN {
 			rs.close();
 
 			if (eqtl_id==-1) {
-				rs = statement.executeQuery("select v.name as name, v.id as vm_id, q.id as id, v.start_1based as start_1based, v.end_1based as end_1based, eqtl_marker_equivalence_set_id from variant_mapping_eqtl_results q, variant_mappings v where q.index_variant_mapping_id = v.id");
+				rs = statement.executeQuery("select v.name as name, v.id as vm_id, q.id as id, v.start_1based as start_1based, v.end_1based as end_1based from variant_mapping_eqtl_results q, variant_mappings v where q.index_variant_mapping_id = v.id");
 			} else {
-				rs = statement.executeQuery("select v.name as name, v.id as vm_id, q.id as id, v.start_1based as start_1based, v.end_1based as end_1based, eqtl_marker_equivalence_set_id from variant_mapping_eqtl_results q, variant_mappings v where q.index_variant_mapping_id = v.id and q.id="+eqtl_id);	
+				rs = statement.executeQuery("select v.name as name, v.id as vm_id, q.id as id, v.start_1based as start_1based, v.end_1based as end_1based from variant_mapping_eqtl_results q, variant_mappings v where q.index_variant_mapping_id = v.id and q.id="+eqtl_id);	
 			}
 			while(rs.next()) {
 				String index_variant_name = rs.getString("name");
 				int index_variant_location_start = rs.getInt("start_1based");
 				int index_variant_location_end = rs.getInt("end_1based");
-				String eqtl_marker_equivalence_set_id = rs.getString("eqtl_marker_equivalence_set_id");
-				if (rs.wasNull()) eqtl_marker_equivalence_set_id = "";
-				int eqtl_table_row_id = rs.getInt("id");
+				int eqtl_table_row_id = rs.getInt("id");				
+				int index_variant_mapping_id = rs.getInt("vm_id");
 				EQTLResult er = new EQTLResult();
 				er.index_variant_name = index_variant_name;
 				er.index_variant_start = index_variant_location_start;
 				er.index_variant_end = index_variant_location_end;
-				er.eqtl_marker_equivalence_set_id = eqtl_marker_equivalence_set_id;
-
-				if (!er.eqtl_marker_equivalence_set_id.equals("")) {
-					rs2 = statement2.executeQuery("select v.id as vid, v.name as name, v.start_1based as start_1based, v.end_1based as end_1based from variant_mappings v, eqtl_marker_equivalence_set_members where eqtl_marker_equivalence_set_id = "+er.eqtl_marker_equivalence_set_id+" and v.id = variant_mapping_id and r2_to_index_variant>=0.6");			
-					while (rs2.next()) {
-						int s1b = rs2.getInt("start_1based");
-						int e1b = rs2.getInt("end_1based");
-						String vn = rs2.getString("name");
-						er.ld_locs_starts.add(Integer.valueOf(s1b));
-						er.ld_locs_ends.add(Integer.valueOf(e1b));
-						er.ld_variants.add(vn);
-					}
-					rs2.close();	
-				} 
-
+				pstb.setString(1,"1000GENOMES:phase_3:EUR");
+				pstb.setInt(2, index_variant_mapping_id);
+				rs2 = pstb.executeQuery();					
+				while (rs2.next()) {
+					int s1b = rs2.getInt("start_1based1");
+					int e1b = rs2.getInt("end_1based1");
+					String lvn = rs2.getString("name1");
+					er.cs_locs_starts.add(Integer.valueOf(s1b));
+					er.cs_locs_ends.add(Integer.valueOf(e1b));
+					er.cs_variants.add(lvn);
+				}
+				rs2.close();
+								
 				int association_result_overlap_count = 0;
 				for (int i=0; i<agr.size(); ++i) {
 					GWASResult gw = agr.get(i);
@@ -6510,10 +7029,10 @@ public class TGN {
 						association_result_overlap_count++;
 						continue;
 					}
-					for (int j=0; j<gw.mes_variants.size(); ++j) {
-						String var = gw.mes_variants.get(j);
-						Integer vend = gw.mes_locs_ends.get(j);
-						Integer vstart = gw.mes_locs_starts.get(j);
+					for (int j=0; j<gw.cs_variants.size(); ++j) {
+						String var = gw.cs_variants.get(j);
+						Integer vend = gw.cs_locs_ends.get(j);
+						Integer vstart = gw.cs_locs_starts.get(j);
 						if (er.index_variant_name.equals(var) && er.index_variant_start==vstart && er.index_variant_end==vend) {
 							found = true;
 							association_result_overlap_count++;
@@ -6521,19 +7040,19 @@ public class TGN {
 						}
 					}
 					if (found) continue;
-					for (int k=0; k<er.ld_variants.size(); ++k) {
-						String ev = er.ld_variants.get(k);
-						Integer eend = er.ld_locs_ends.get(k);
-						Integer estart = er.ld_locs_starts.get(k);
+					for (int k=0; k<er.cs_variants.size(); ++k) {
+						String ev = er.cs_variants.get(k);
+						Integer eend = er.cs_locs_ends.get(k);
+						Integer estart = er.cs_locs_starts.get(k);
 						if (ev.equals(gw.index_variant_name) && eend==gw.index_variant_end && estart==gw.index_variant_start) {
 							association_result_overlap_count++;
 							found = true;
 							break;
 						}
-						for (int j=0; j<gw.mes_variants.size(); ++j) {
-							String var = gw.mes_variants.get(j);
-							Integer vend = gw.mes_locs_ends.get(j);
-							Integer vstart = gw.mes_locs_starts.get(j);
+						for (int j=0; j<gw.cs_variants.size(); ++j) {
+							String var = gw.cs_variants.get(j);
+							Integer vend = gw.cs_locs_ends.get(j);
+							Integer vstart = gw.cs_locs_starts.get(j);
 							if (ev.equals(var) && eend==vend && estart==vstart) {
 								found = true;
 								association_result_overlap_count++;
@@ -6566,8 +7085,7 @@ public class TGN {
 		
 		File dbFile = new File(storage_dir+gene_symbol+".sqlite");
 		if (!dbFile.exists()) throw new Exception();
-		
-		String backend_version = "1.1";
+
 		StringBuilder sb = new StringBuilder();
 		Connection connection = null;
 		GeneAnnotation TargetAnnotation = new GeneAnnotation();
@@ -6593,124 +7111,6 @@ public class TGN {
 		Statement statement = connection.createStatement();
 		Statement statement2 = connection.createStatement();
 		Statement statement3 = connection.createStatement();
-		
-		/*
-		 * DB TWEAKS
-		 */
-		
-		if (1==1) {
-			DatabaseMetaData md = connection.getMetaData();
-			
-			boolean add_pqtl = true;
-			ResultSet rs = md.getColumns(null, null, "variant_mapping_gwas_results", "is_pqtl");
-			while (rs.next()) {
-				add_pqtl = false;
-			}
-			rs.close();
-			
-			if (add_pqtl) {
-				statement.executeUpdate("alter table variant_mapping_gwas_results add is_pqtl INTEGER NOT NULL DEFAULT 0");
-				statement.executeUpdate("update variant_mapping_gwas_results set is_pqtl=1 where curator_comment like 'pQTL from INTERVAL%'");
-			}
-			
-			
-			
-		}
-		
-		
-		if (1==0) {
-			
-			//statement.executeUpdate("CREATE TABLE if not exists gene_phenotype_associations (gene_id TEXT NOT NULL, gene_symbol TEXT NOT NULL, phenotype TEXT NOT NULL, source TEXT NOT NULL, source_id TEXT NOT NULL, source_linkout TEXT, meta_resource_id INTEGER NOT NULL REFERENCES meta_resources(id), when_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-			
-			statement.executeUpdate("CREATE TABLE if not exists allele_phenotype_associations (variant_mapping_id INTEGER NOT NULL REFERENCES variant_mappings(id), phenotype TEXT NOT NULL, source TEXT NOT NULL, source_id TEXT NOT NULL, source_linkout TEXT, unaudited_risk_allele TEXT, clinical_significance TEXT, meta_resource_id INTEGER NOT NULL REFERENCES meta_resources(id), when_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-			
-			DatabaseMetaData md = connection.getMetaData();
-			boolean new_r2_table_found = false;
-			ResultSet rs = md.getTables(null, null, "gwas_ld_credible_set_r2_values", null);
-			while (rs.next()) {
-				new_r2_table_found = true;
-			}
-			rs.close();
-			
-			boolean add_effect_allele = true;
-			rs = md.getColumns(null, null, "variant_mapping_eqtl_results", "effect_allele");
-			while (rs.next()) {
-				add_effect_allele = false;
-			}
-			rs.close();
-			
-			if (add_effect_allele) {
-				statement.executeUpdate("alter table variant_mapping_eqtl_results add effect_allele TEXT");
-			}
-			
-			boolean add_comment = true;
-			rs = md.getColumns(null, null, "source_documents", "curator_comment");
-			while (rs.next()) {
-				add_comment = false;
-			}
-			rs.close();
-			
-			if (add_comment) {
-				statement.executeUpdate("alter table source_documents add curator_comment TEXT");
-				statement.executeUpdate("alter table source_documents add has_been_reviewed INTEGER");
-				statement.executeUpdate("update source_documents set has_been_reviewed=0");
-			}
-			
-			if (!new_r2_table_found) {
-				
-				statement.executeUpdate("CREATE TABLE gwas_ld_credible_set_r2_values (index_variant_mapping_id INTEGER NOT NULL REFERENCES variant_mappings(id), variant_mapping_id2 INTEGER NOT NULL REFERENCES variant_mappings(id), r2_value NUMBER NOT NULL, reference_dataset_id INTEGER NOT NULL REFERENCES reference_datasets(id), meta_resource_id INTEGER NOT NULL REFERENCES meta_resources(id), when_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-
-				statement.executeUpdate("CREATE INDEX grv_index1 on gwas_ld_credible_set_r2_values(index_variant_mapping_id)");
-				statement.executeUpdate("CREATE INDEX grv_index2 on gwas_ld_credible_set_r2_values(variant_mapping_id2)");
-				statement.executeUpdate("CREATE INDEX grv_index3 on gwas_ld_credible_set_r2_values(reference_dataset_id)");
-				statement.executeUpdate("CREATE INDEX grv_index4 on gwas_ld_credible_set_r2_values(r2_value)");
-				
-				statement.executeUpdate("CREATE INDEX vmaaemf_index2 on variant_mapping_alt_allele_exacsubpop_max_frequencies (frequency)");
-				
-				Vector<String> ivs = new Vector<>();
-				rs = statement.executeQuery("select distinct index_variant_mapping_id from variant_mapping_gwas_results");
-				while (rs.next()) {
-					String iv = rs.getString(1);
-					ivs.add(iv);
-				}
-				rs.close();
-				
-				String isql = "insert into gwas_ld_credible_set_r2_values (" +
-						"index_variant_mapping_id,"+
-						"variant_mapping_id2,"+
-						"r2_value,"+
-						"reference_dataset_id,"+
-						"meta_resource_id, "+
-						"when_created ) select variant_mapping_id1, variant_mapping_id2, r2_value, reference_dataset_id, meta_resource_id, when_created from r2_values where variant_mapping_id1 = ?";
-				PreparedStatement pstmt = connection.prepareStatement(isql);
-				String isql2 = "insert into gwas_ld_credible_set_r2_values (" +
-						"index_variant_mapping_id,"+
-						"variant_mapping_id2,"+
-						"r2_value,"+
-						"reference_dataset_id,"+
-						"meta_resource_id, "+
-						"when_created ) select variant_mapping_id2, variant_mapping_id1, r2_value, reference_dataset_id, meta_resource_id, when_created from r2_values where variant_mapping_id2 = ?";
-				PreparedStatement pstmt2 = connection.prepareStatement(isql2);
-				
-				
-				for (int i=0; i<ivs.size(); ++i) {
-					String ivid = ivs.get(i);
-					System.out.println("migrating "+ivid);
-					pstmt.setString(1, ivid);
-					pstmt.executeUpdate();
-					pstmt2.setString(1, ivid);
-					pstmt2.executeUpdate();
-				}
-				pstmt.close();
-				pstmt2.close();
-				
-			}
-		}
-		
-		
-		/*
-		 * 
-		 */
 		
 		String db_version = "";
 		ResultSet rs = statement.executeQuery("select value from other_info where parameter = 'db_version'");
@@ -6793,9 +7193,10 @@ public class TGN {
 		}
 		rs.close();
 
-		rs = statement.executeQuery("select name from meta_resources where name like 'Ensembl%'");
+		rs = statement.executeQuery("select name from meta_resources where name like 'Ensembl%' order by id asc");
 		while(rs.next()) {
 			resource_name = rs.getString("name");
+			break;
 		}
 		rs.close();
 
@@ -6935,7 +7336,6 @@ public class TGN {
 		pmillis = cmillis;
 
 		// source documents
-
 		
 		int unreviewed_reference_count = 0;
 		int total_reference_count = 0;
@@ -7093,12 +7493,14 @@ public class TGN {
 		pmillis = cmillis;
 
 		// GWAS results
-
+		
+		Hashtable<String, String> is_coding_hash = new Hashtable<>();		
+		
 		PreparedStatement pstm = connection.prepareStatement("select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = ?) and is_coding_impact=1");		
 		PreparedStatement pst = connection.prepareStatement("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, (select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = v1.id) and is_coding_impact=1) as v1chk, v2.id as vid2, v2.name as name2, v2.start_1based as start_1based2, v2.end_1based as end_1based2, (select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = v2.id) and is_coding_impact=1) as v2chk,r.r2_value as r2_value from r2_values r inner join variant_mappings v1 on  v1.id=r.variant_mapping_id1 inner join variant_mappings v2 on v2.id=r.variant_mapping_id2 where r.reference_dataset_id = (select id from reference_datasets where name = ? ) and (r.variant_mapping_id1 = ? or r.variant_mapping_id2 = ?) and r.r2_value >= 0.6");
-		PreparedStatement pstb = connection.prepareStatement("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, (select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = v1.id) and is_coding_impact=1) as v1chk,r.r2_value as r2_value from gwas_ld_credible_set_r2_values r, variant_mappings v1 where v1.id=r.variant_mapping_id2 and r.reference_dataset_id = (select id from reference_datasets where name = ? ) and r.index_variant_mapping_id = ? and r.r2_value >= 0.6 order by v1.start_1based");
-		Hashtable<String, String> is_coding_hash = new Hashtable<>();
-		rs = statement.executeQuery("select v.name as name, m.name as mname, svg_display_name, v.id as vm_id, g.id as id, v.start_1based as start_1based, v.end_1based as end_1based, trait, column_display_text, outbound_link, document_year, pvalue, or_beta, allele, allele_is_fstrand_audited, g.curator_comment as curator_comment, show_in_svg, marker_equivalence_set, credible_set_name, credible_set_posterior, is_pqtl from variant_mapping_gwas_results g, variant_mappings v, source_documents p, meta_resources m where g.index_variant_mapping_id = v.id and p.id=source_document_id and m.id=g.meta_resource_id order by document_year desc");
+		PreparedStatement pstb = connection.prepareStatement("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, (select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = v1.id) and is_coding_impact=1) as v1chk,r.r2_value as r2_value from ld_credible_set_r2_values r, variant_mappings v1 where v1.id=r.variant_mapping_id2 and r.reference_dataset_id = (select id from reference_datasets where name = ? ) and r.index_variant_mapping_id = ? and r.r2_value >= 0.6 order by v1.start_1based");
+
+		rs = statement.executeQuery("select v.name as name, m.name as mname, svg_display_name, v.id as vm_id, g.id as id, v.start_1based as start_1based, v.end_1based as end_1based, trait, column_display_text, outbound_link, document_year, pvalue, or_beta, allele, allele_is_fstrand_audited, g.curator_comment as curator_comment, show_in_svg, credible_set, custom_credible_set_name, custom_credible_set_posterior, is_pqtl from variant_mapping_gwas_results g, variant_mappings v, source_documents p, meta_resources m where g.index_variant_mapping_id = v.id and p.id=source_document_id and m.id=g.meta_resource_id order by document_year desc");
 		while(rs.next()) {
 			long g_cmillis = System.currentTimeMillis();
 			long g_pmillis = g_cmillis;
@@ -7137,16 +7539,14 @@ public class TGN {
 			String allele_sup = "";
 			String f_audited = rs.getString("allele_is_fstrand_audited");
 			if (f_audited.equals("1")) allele_sup ="<br>Audited";
-			//String allele_matches_fstrand_variant_allele = rs.getString("allele_matches_fstrand_variant_allele");
-			//if (allele_matches_fstrand_variant_allele.equals("0") && !allele.equals("")) allele+="*";
 			String curator_comment = rs.getString("curator_comment"); if (rs.wasNull()) curator_comment = "";
-			String marker_equivalence_set = rs.getString("marker_equivalence_set");
-			String credible_set_name = rs.getString("credible_set_name");
-			if (rs.wasNull()) credible_set_name = "";
-			double credible_set_posterior = -1.0;
-			String csp = rs.getString("credible_set_posterior");
+			String credible_set = rs.getString("credible_set");
+			String custom_credible_set_name = rs.getString("custom_credible_set_name");
+			if (rs.wasNull()) custom_credible_set_name = "";
+			double custom_credible_set_posterior = -1.0;
+			String csp = rs.getString("custom_credible_set_posterior");
 			if (!rs.wasNull() && !csp.equals("")) {
-				credible_set_posterior = Double.valueOf(csp);
+				custom_credible_set_posterior = Double.valueOf(csp);
 			}
 			String show_in_svg = rs.getString("show_in_svg");
 			IndexVariant giv;
@@ -7181,12 +7581,12 @@ public class TGN {
 			gwr.gwas_table_row_id = gwas_table_row_id;
 			gwr.curator_comment = curator_comment;
 			if (show_in_svg.equals("1")) gwr.show_in_svg = true;
-			gwr.marker_equivalence_set = marker_equivalence_set;
-			gwr.credible_set_name = credible_set_name;
-			gwr.credible_set_posterior = credible_set_posterior;
+			gwr.credible_set = credible_set;
+			gwr.custom_credible_set_name = custom_credible_set_name;
+			gwr.custom_credible_set_posterior = custom_credible_set_posterior;
 			giv.gwas_results.add(gwr);
 			all_gwas_results.add(gwr);
-			if (gwr.show_in_svg && !gwr.marker_equivalence_set.equals("Unset")) {
+			if (gwr.show_in_svg && !gwr.credible_set.equals("Unset")) {
 				LDGMarker lm = null;
 				if (ldgmarkers.containsKey(Integer.valueOf(index_variant_mapping_id))) {
 					lm = ldgmarkers.get(Integer.valueOf(index_variant_mapping_id));
@@ -7267,10 +7667,10 @@ public class TGN {
 			if (output_profile) System.out.println(" stage 2: "+g_delta+" ms");
 			g_pmillis = g_cmillis;
 
-			if (marker_equivalence_set.equals("Credible set")) {
+			if (credible_set.equals("Custom")) {
 				gwr.typed_in_accepted_dataset = true; // arbitrary
 				
-				rs2 = statement2.executeQuery("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, posterior from credible_set_members csm, variant_mappings v1 where variant_mapping_id=v1.id and variant_mapping_gwas_result_id = "+gwas_table_row_id);						
+				rs2 = statement2.executeQuery("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, posterior from gwas_custom_credible_set_members csm, variant_mappings v1 where variant_mapping_id=v1.id and variant_mapping_gwas_result_id = "+gwas_table_row_id);						
 				
 				while (rs2.next()) {
 					int vid1 = rs2.getInt("vid1");
@@ -7294,50 +7694,50 @@ public class TGN {
 						else is_coding_hash.put(String.valueOf(vid1), "0");
 					}
 					int insert_before_this_index=-1;
-					for (int ij=0; ij<gwr.mes_locs_starts.size(); ++ij) {
-						Integer lls = gwr.mes_locs_starts.get(ij);
+					for (int ij=0; ij<gwr.cs_locs_starts.size(); ++ij) {
+						Integer lls = gwr.cs_locs_starts.get(ij);
 						if (lls>s1b) {
 							insert_before_this_index=ij;
 							break;
 						}
 					}
 					if (insert_before_this_index==-1) {
-						gwr.mes_locs_starts.add(Integer.valueOf(s1b));
-						gwr.mes_locs_ends.add(Integer.valueOf(e1b));
-						gwr.mes_variants.add(lvn);
-						gwr.mes_posterior.add(pos);
-						if (v_is_coding) gwr.mes_coding.add("1");
-						else gwr.mes_coding.add("0");
+						gwr.cs_locs_starts.add(Integer.valueOf(s1b));
+						gwr.cs_locs_ends.add(Integer.valueOf(e1b));
+						gwr.cs_variants.add(lvn);
+						gwr.cs_posterior.add(pos);
+						if (v_is_coding) gwr.cs_coding.add("1");
+						else gwr.cs_coding.add("0");
 					} else {
-						gwr.mes_locs_starts.add(insert_before_this_index, Integer.valueOf(s1b));
-						gwr.mes_locs_ends.add(insert_before_this_index, Integer.valueOf(e1b));
-						gwr.mes_variants.add(insert_before_this_index, lvn);	
-						gwr.mes_posterior.add(insert_before_this_index, pos);
-						if (v_is_coding) gwr.mes_coding.add(insert_before_this_index, "1");
-						else gwr.mes_coding.add(insert_before_this_index, "0");
+						gwr.cs_locs_starts.add(insert_before_this_index, Integer.valueOf(s1b));
+						gwr.cs_locs_ends.add(insert_before_this_index, Integer.valueOf(e1b));
+						gwr.cs_variants.add(insert_before_this_index, lvn);	
+						gwr.cs_posterior.add(insert_before_this_index, pos);
+						if (v_is_coding) gwr.cs_coding.add(insert_before_this_index, "1");
+						else gwr.cs_coding.add(insert_before_this_index, "0");
 					} 
 				}
 				rs2.close();	
-				gwr.credible_set_member_count = gwr.mes_posterior.size();
+				gwr.custom_credible_set_member_count = gwr.cs_posterior.size();
 			}
 			
-			if (!marker_equivalence_set.equals("None") && !marker_equivalence_set.equals("Unset") && !marker_equivalence_set.equals("Credible set")) {
-				String sel_dataset = marker_equivalence_set.substring(3); // trim off leading "LD "
+			if (!credible_set.equals("None") && !credible_set.equals("Unset") && !credible_set.equals("Custom")) {
+				String sel_dataset = credible_set.substring(3); // trim off leading "LD "
 
 				gwr.typed_in_accepted_dataset = false;
-				int idx = gwr.LDdatasets.indexOf(marker_equivalence_set);
+				int idx = gwr.LDdatasets.indexOf(credible_set);
 				if (idx>-1) {
 					String c = gwr.LDdatasetsHighR2Count.get(idx);
 					if (!c.equals("n/a")) gwr.typed_in_accepted_dataset = true;
 				}
-				rs2 = statement2.executeQuery("select count(*) from credible_set_members where variant_mapping_gwas_result_id = "+gwr.gwas_table_row_id);
+				rs2 = statement2.executeQuery("select count(*) from gwas_custom_credible_set_members where variant_mapping_gwas_result_id = "+gwr.gwas_table_row_id);
 				while (rs2.next()) {
-					gwr.credible_set_member_count = rs2.getInt(1);
+					gwr.custom_credible_set_member_count = rs2.getInt(1);
 				}
 				rs2.close();
 				pstb.setString(1,sel_dataset);
 				pstb.setInt(2, index_variant_mapping_id);
-				rs2 = pstb.executeQuery();					
+				rs2 = pstb.executeQuery();			
 				while (rs2.next()) {
 					String r2 = rs2.getString("r2_value");
 					boolean v_is_coding = false;
@@ -7346,12 +7746,12 @@ public class TGN {
 					String lvn = rs2.getString("name1");
 					int v1chk = rs2.getInt("v1chk");
 					if (v1chk>0) v_is_coding = true;
-					gwr.mes_locs_starts.add(Integer.valueOf(s1b));
-					gwr.mes_locs_ends.add(Integer.valueOf(e1b));
-					gwr.mes_variants.add(lvn);
-					gwr.mes_r2.add(r2);
-					if (v_is_coding) gwr.mes_coding.add("1");
-					else gwr.mes_coding.add("0");
+					gwr.cs_locs_starts.add(Integer.valueOf(s1b));
+					gwr.cs_locs_ends.add(Integer.valueOf(e1b));
+					gwr.cs_variants.add(lvn);
+					gwr.cs_r2.add(r2);
+					if (v_is_coding) gwr.cs_coding.add("1");
+					else gwr.cs_coding.add("0");
 
 				}
 				rs2.close();
@@ -7364,27 +7764,23 @@ public class TGN {
 
 		}
 		rs.close();
-		pstm.close();
-		pst.close();
-		pstb.close();
 		cmillis = System.currentTimeMillis();
 		delta = cmillis - pmillis;		
 		if (output_profile) System.out.println("done collecting gwas "+delta+" ms");
 		pmillis = cmillis;
 
 		//// EQTL results
-
-		rs = statement.executeQuery("select v.name as name, svg_display_name, v.id as vm_id, q.id as id, v.start_1based as start_1based, v.end_1based as end_1based, gene_symbol, effect_allele, tissue, column_display_text, outbound_link, document_year, pvalue, beta, show_in_svg, q.curator_comment as curator_comment, eqtl_marker_equivalence_set_id from variant_mapping_eqtl_results q, variant_mappings v, source_documents p where q.index_variant_mapping_id = v.id and p.id=source_document_id order by document_year desc");
-
+		
+		rs = statement.executeQuery("select v.name as name, m.name as mname, svg_display_name, v.id as vm_id, q.id as id, v.start_1based as start_1based, v.end_1based as end_1based, gene_symbol, effect_allele, tissue, column_display_text, outbound_link, document_year, pvalue, beta, effect_allele_is_fstrand_audited, q.curator_comment as curator_comment, show_in_svg, credible_set, custom_credible_set_name, custom_credible_set_posterior from variant_mapping_eqtl_results q, variant_mappings v, source_documents p, meta_resources m where q.index_variant_mapping_id = v.id and p.id=source_document_id and m.id=q.meta_resource_id order by document_year desc");
 		while(rs.next()) {
+			long g_cmillis = System.currentTimeMillis();
+			long g_pmillis = g_cmillis;
+			int eqtl_table_row_id = rs.getInt("id");
 			String svg_display_name = rs.getString("svg_display_name");
 			String index_variant_name = rs.getString("name");
-			String show_in_svg = rs.getString("show_in_svg");
 			int index_variant_mapping_id = rs.getInt("vm_id");
 			int index_variant_location_start = rs.getInt("start_1based");
 			int index_variant_location_end = rs.getInt("end_1based");
-			String eqtl_marker_equivalence_set_id = rs.getString("eqtl_marker_equivalence_set_id");
-			if (rs.wasNull()) eqtl_marker_equivalence_set_id = "";
 			boolean is_coding = false;
 			ResultSet rs2 = statement2.executeQuery("select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = "+index_variant_mapping_id+") and is_coding_impact=1");
 			while (rs2.next()) {
@@ -7392,27 +7788,38 @@ public class TGN {
 				if (chk>0) is_coding = true;
 			}
 			rs2.close();
-			String effect_allele = rs.getString("effect_allele");
-			if (rs.wasNull()) effect_allele = "";
 			String tissue = rs.getString("tissue");
-			tissue = tissue.replaceAll("_", " ");
-			String gsymbol = rs.getString("gene_symbol");
+			String g_symbol = rs.getString("gene_symbol");
 			String column_display_text = rs.getString("column_display_text");
 			String outbound_link = rs.getString("outbound_link");
-			String pvalue = String.format("%.2e", Double.parseDouble(rs.getString("pvalue")));
-			String beta = String.format("%.3f", Double.parseDouble(rs.getString("beta")));
+			String pvalue = String.format("%.2e", Double.valueOf(rs.getString("pvalue")));
+			String beta = rs.getString("beta");
+			if (rs.wasNull()) beta = "";
 			int document_year = rs.getInt("document_year");
-			String myb = beta;
+			String myor = beta;
 			try {
-				BigDecimal bd1 = new BigDecimal(beta);
+				BigDecimal bd1 = new BigDecimal(myor);
 				bd1 = bd1.setScale(2, RoundingMode.HALF_UP);
-				myb = bd1.toString();
+				myor = bd1.toString();
 			} catch (Exception eee) {
-				myb = beta;
+				myor = beta;
 			}
-			beta = myb;
+			beta = myor;
+			String effect_allele = rs.getString("effect_allele");
+			if (rs.wasNull()) effect_allele = "";
+			String effect_allele_sup = "";
+			String f_audited = rs.getString("effect_allele_is_fstrand_audited");
+			if (f_audited.equals("1")) effect_allele_sup ="<br>Audited";
 			String curator_comment = rs.getString("curator_comment"); if (rs.wasNull()) curator_comment = "";
-			int eqtl_table_row_id = rs.getInt("id");
+			String credible_set = rs.getString("credible_set");
+			String custom_credible_set_name = rs.getString("custom_credible_set_name");
+			if (rs.wasNull()) custom_credible_set_name = "";
+			double custom_credible_set_posterior = -1.0;
+			String csp = rs.getString("custom_credible_set_posterior");
+			if (!rs.wasNull() && !csp.equals("")) {
+				custom_credible_set_posterior = Double.valueOf(csp);
+			}
+			String show_in_svg = rs.getString("show_in_svg");
 			IndexVariant giv;
 			String vkey = index_variant_name+" "+index_variant_location_start+" "+index_variant_location_end;
 			if (!gwas_eqtl_index_variants.contains(vkey)) {
@@ -7426,28 +7833,33 @@ public class TGN {
 			} else {
 				giv = assoc_result_hash.get(vkey);
 			}
-
-			EQTLResult er = new EQTLResult();
-			er.svg_display_name = svg_display_name;
-			er.index_variant_name = index_variant_name;
-			er.index_variant_start = index_variant_location_start;
-			er.index_variant_end = index_variant_location_end;
-			er.column_display_text = column_display_text;
-			er.outbound_link = outbound_link;
-			er.document_year = document_year;
-			er.effect_allele = effect_allele;
-			er.beta = beta;
-			er.pvalue = pvalue;
-			er.tissue = tissue;
-			er.gene_symbol = gsymbol;
-			er.eqtl_table_row_id = eqtl_table_row_id;
-			er.curator_comment = curator_comment;
-			if (show_in_svg.equals("1")) er.show_in_svg = true;
-			er.eqtl_marker_equivalence_set_id = eqtl_marker_equivalence_set_id;
-			giv.eqtl_results.add(er);
-			all_eqtl_results.add(er);
-
-			if (er.show_in_svg) {
+			
+			EQTLResult eqr = new EQTLResult();
+			String nm = rs.getString("mname");
+			if (nm.indexOf("Ensembl")>-1) eqr.automatic = true;
+			eqr.effect_allele = effect_allele;
+			eqr.effect_allele_sup = effect_allele_sup;
+			eqr.svg_display_name = svg_display_name;
+			eqr.index_variant_name = index_variant_name;
+			eqr.index_variant_start = index_variant_location_start;
+			eqr.index_variant_end = index_variant_location_end;
+			eqr.column_display_text = column_display_text;
+			eqr.outbound_link = outbound_link;
+			eqr.document_year = document_year;
+			eqr.beta = beta;
+			eqr.pvalue = pvalue;
+			eqr.tissue = tissue;
+			eqr.gene_symbol = g_symbol;
+			
+			eqr.eqtl_table_row_id = eqtl_table_row_id;
+			eqr.curator_comment = curator_comment;
+			if (show_in_svg.equals("1")) eqr.show_in_svg = true;
+			eqr.credible_set = credible_set;
+			eqr.custom_credible_set_name = custom_credible_set_name;
+			eqr.custom_credible_set_posterior = custom_credible_set_posterior;
+			giv.eqtl_results.add(eqr);
+			all_eqtl_results.add(eqr);
+			if (eqr.show_in_svg && !eqr.credible_set.equals("Unset")) {
 				LDGMarker lm = null;
 				if (ldgmarkers.containsKey(Integer.valueOf(index_variant_mapping_id))) {
 					lm = ldgmarkers.get(Integer.valueOf(index_variant_mapping_id));
@@ -7465,103 +7877,195 @@ public class TGN {
 					}
 					ldgmarkersbs.set(idx);
 				}
-				lm.eqtl_results.add(er);
-			}	
-
-			rs2 = statement2.executeQuery("select name from meta_resources where id = (select meta_resource_id from variant_mapping_eqtl_results where id = "+er.eqtl_table_row_id+")");
-			while (rs2.next()) {
-				String nm = rs2.getString("name");
-				if (nm.indexOf("Ensembl")>-1) er.automatic = true;
+				lm.eqtl_results.add(eqr);
 			}
-			rs2.close();				
+
+			g_cmillis = System.currentTimeMillis();
+			long g_delta = g_cmillis - g_pmillis;		
+			if (output_profile) System.out.println(" stage 1: "+g_delta+" ms");
+			g_pmillis = g_cmillis;
+
 			rs2 = statement2.executeQuery("select max(frequency) from variant_mapping_allele_frequencies where reference_dataset_id = (select id from reference_datasets where name = '1000GENOMES:phase_3:EUR') and variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = "+index_variant_mapping_id+")");
 			while (rs2.next()) {
 				Double mf = rs2.getDouble(1);
 				BigDecimal bd1 = new BigDecimal(1.0-mf);
 				bd1 = bd1.setScale(3, RoundingMode.HALF_UP);
-				er.sum_1kgp3eur_maf_str = bd1.toString();
+				eqr.sum_1kgp3eur_maf_str = bd1.toString();
 			}
 			rs2.close();
 			
-			if (!er.eqtl_marker_equivalence_set_id.equals("")) {
-				rs2 = statement2.executeQuery("select name from reference_datasets where id = (select reference_dataset_id from eqtl_marker_equivalence_sets where id = "+er.eqtl_marker_equivalence_set_id+")");
+			Vector<String> typed_in = new Vector<>();
+			rs2 = statement2.executeQuery("select distinct d.name as name from reference_datasets d, variant_mapping_allele_frequencies f where f.variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = "+index_variant_mapping_id+") and d.id=f.reference_dataset_id");
+			while (rs2.next()) {
+				String mnm = rs2.getString("name");
+				typed_in.add(mnm);
+			}
+			rs2.close();
+
+			{
+				PreparedStatement pstatement = connection.prepareStatement("select reference_dataset_id, count(reference_dataset_id) as ct from r2_values where r2_value>=0.6 and (variant_mapping_id1 = ? or variant_mapping_id2 = ?) group by reference_dataset_id");
+
+				pstatement.setInt(1, index_variant_mapping_id);
+				pstatement.setInt(2, index_variant_mapping_id);
+				Hashtable<String,String> cts = new Hashtable<>();
+				rs2 = pstatement.executeQuery();
 				while (rs2.next()) {
-					String nm = rs2.getString("name");
-					er.marker_equivalence_set_label = "LD "+nm;
+					String id = rs2.getString(1);
+					String count = rs2.getString(2);
+					cts.put(id, count);
 				}
 				rs2.close();
-				rs2 = statement2.executeQuery("select count(*) from eqtl_marker_equivalence_set_members where eqtl_marker_equivalence_set_id = "+er.eqtl_marker_equivalence_set_id+" and r2_to_index_variant>=0.6");
-				while (rs2.next()) {
-					String cnt = rs2.getString(1);
-					er.marker_equivalence_set_count_label = "("+cnt+")";
-				}
-				rs2.close();
-				rs2 = statement2.executeQuery("select v.id as vid, v.name as name, v.start_1based as start_1based, v.end_1based as end_1based, r2_to_index_variant, pvalue, beta from variant_mappings v, eqtl_marker_equivalence_set_members where eqtl_marker_equivalence_set_id = "+er.eqtl_marker_equivalence_set_id+" and v.id = variant_mapping_id and r2_to_index_variant>=0.6 order by v.start_1based");			
-				while (rs2.next()) {
-					String vid = rs2.getString("vid");
-					int s1b = rs2.getInt("start_1based");
-					int e1b = rs2.getInt("end_1based");
-					String vn = rs2.getString("name");
-					String r2 = rs2.getString("r2_to_index_variant");
-					String pv = rs2.getString("pvalue");
-					String vbeta = rs2.getString("beta");
-					boolean v_is_coding = false;
-					ResultSet rs3 = statement3.executeQuery("select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = "+vid+") and is_coding_impact=1");
-					while (rs3.next()) {
-						int chk = rs3.getInt(1);
-						if (chk>0) v_is_coding = true;
+
+				for (int i=0; i<all_ld_datasets.size(); ++i) {
+					String ds = all_ld_datasets.get(i);
+					String dsid = all_ld_dataset_ids.get(i);
+					if (typed_in.contains(ds)) {
+						if (cts.containsKey(dsid)) {
+							eqr.LDdatasets.add("LD "+ds);
+							eqr.LDdatasetsHighR2Count.add(cts.get(dsid));	
+						} else {
+							eqr.LDdatasets.add("LD "+ds);
+							eqr.LDdatasetsHighR2Count.add("0");
+						}
+					} else {
+						eqr.LDdatasets.add("LD "+ds);
+						eqr.LDdatasetsHighR2Count.add("n/a");
 					}
-					rs3.close();
-					er.ld_locs_starts.add(Integer.valueOf(s1b));
-					er.ld_locs_ends.add(Integer.valueOf(e1b));
-					er.ld_variants.add(vn);
-					er.ld_r2.add(r2);
-					er.ld_pv.add(pv);
-					er.ld_beta.add(vbeta);
-					if (v_is_coding) er.ld_coding.add("1");
-					else er.ld_coding.add("0");
+				}
+				pstatement.close();
+			}
+
+			g_cmillis = System.currentTimeMillis();
+			g_delta = g_cmillis - g_pmillis;		
+			if (output_profile) System.out.println(" stage 2: "+g_delta+" ms");
+			g_pmillis = g_cmillis;
+
+			if (credible_set.equals("Custom")) {
+				eqr.typed_in_accepted_dataset = true; // arbitrary
+				
+				rs2 = statement2.executeQuery("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, posterior from eqtl_custom_credible_set_members csm, variant_mappings v1 where variant_mapping_id=v1.id and variant_mapping_eqtl_result_id = "+eqtl_table_row_id);						
+				
+				while (rs2.next()) {
+					int vid1 = rs2.getInt("vid1");
+					String pos = rs2.getString("posterior");
+					boolean v_is_coding = false;
+					int s1b = rs2.getInt("start_1based1");
+					int e1b = rs2.getInt("end_1based1");
+					String lvn = rs2.getString("name1");
+					if (is_coding_hash.containsKey(String.valueOf(vid1))) {
+						String v = is_coding_hash.get(String.valueOf(vid1));
+						if (v.equals("1")) v_is_coding = true;
+					} else {
+						pstm.setInt(1, vid1);
+						ResultSet rs3 = pstm.executeQuery();
+						while (rs3.next()) {
+							int chk = rs3.getInt(1);
+							if (chk>0) v_is_coding = true;
+						}
+						rs3.close();
+						if (v_is_coding) is_coding_hash.put(String.valueOf(vid1), "1");
+						else is_coding_hash.put(String.valueOf(vid1), "0");
+					}
+					int insert_before_this_index=-1;
+					for (int ij=0; ij<eqr.cs_locs_starts.size(); ++ij) {
+						Integer lls = eqr.cs_locs_starts.get(ij);
+						if (lls>s1b) {
+							insert_before_this_index=ij;
+							break;
+						}
+					}
+					if (insert_before_this_index==-1) {
+						eqr.cs_locs_starts.add(Integer.valueOf(s1b));
+						eqr.cs_locs_ends.add(Integer.valueOf(e1b));
+						eqr.cs_variants.add(lvn);
+						eqr.cs_posterior.add(pos);
+						if (v_is_coding) eqr.cs_coding.add("1");
+						else eqr.cs_coding.add("0");
+					} else {
+						eqr.cs_locs_starts.add(insert_before_this_index, Integer.valueOf(s1b));
+						eqr.cs_locs_ends.add(insert_before_this_index, Integer.valueOf(e1b));
+						eqr.cs_variants.add(insert_before_this_index, lvn);	
+						eqr.cs_posterior.add(insert_before_this_index, pos);
+						if (v_is_coding) eqr.cs_coding.add(insert_before_this_index, "1");
+						else eqr.cs_coding.add(insert_before_this_index, "0");
+					} 
 				}
 				rs2.close();	
-			} else {
-				er.marker_equivalence_set_label = "None";
+				eqr.custom_credible_set_member_count = eqr.cs_posterior.size();
 			}
 			
-			er.association_overlap_count = 0;
+			if (!credible_set.equals("None") && !credible_set.equals("Unset") && !credible_set.equals("Custom")) {
+				String sel_dataset = credible_set.substring(3); // trim off leading "LD "
+
+				eqr.typed_in_accepted_dataset = false;
+				int idx = eqr.LDdatasets.indexOf(credible_set);
+				if (idx>-1) {
+					String c = eqr.LDdatasetsHighR2Count.get(idx);
+					if (!c.equals("n/a")) eqr.typed_in_accepted_dataset = true;
+				}
+				rs2 = statement2.executeQuery("select count(*) from eqtl_custom_credible_set_members where variant_mapping_eqtl_result_id = "+eqr.eqtl_table_row_id);
+				while (rs2.next()) {
+					eqr.custom_credible_set_member_count = rs2.getInt(1);
+				}
+				rs2.close();
+				pstb.setString(1,sel_dataset);
+				pstb.setInt(2, index_variant_mapping_id);
+				rs2 = pstb.executeQuery();					
+				while (rs2.next()) {
+					String r2 = rs2.getString("r2_value");
+					boolean v_is_coding = false;
+					int s1b = rs2.getInt("start_1based1");
+					int e1b = rs2.getInt("end_1based1");
+					String lvn = rs2.getString("name1");
+					int v1chk = rs2.getInt("v1chk");
+					if (v1chk>0) v_is_coding = true;
+					eqr.cs_locs_starts.add(Integer.valueOf(s1b));
+					eqr.cs_locs_ends.add(Integer.valueOf(e1b));
+					eqr.cs_variants.add(lvn);
+					eqr.cs_r2.add(r2);
+					if (v_is_coding) eqr.cs_coding.add("1");
+					else eqr.cs_coding.add("0");
+
+				}
+				rs2.close();
+			}
+
+			eqr.association_overlap_count = 0;
 			for (int i=0; i<all_gwas_results.size(); ++i) {
 				GWASResult gw = all_gwas_results.get(i);
-				if (gw.show_in_svg && !gw.marker_equivalence_set.equals("Unset")) {
+				if (gw.show_in_svg && !gw.credible_set.equals("Unset")) {
 					boolean found = false;
-					if (er.index_variant_name.equals(gw.index_variant_name) && er.index_variant_start==gw.index_variant_start && er.index_variant_end==gw.index_variant_end) {
-						er.association_overlap_count++;
+					if (eqr.index_variant_name.equals(gw.index_variant_name) && eqr.index_variant_start==gw.index_variant_start && eqr.index_variant_end==gw.index_variant_end) {
+						eqr.association_overlap_count++;
 						continue;
 					}
-					for (int j=0; j<gw.mes_variants.size(); ++j) {
-						String var = gw.mes_variants.get(j);
-						Integer vend = gw.mes_locs_ends.get(j);
-						Integer vstart = gw.mes_locs_starts.get(j);
-						if (er.index_variant_name.equals(var) && er.index_variant_start==vstart && er.index_variant_end==vend) {
+					for (int j=0; j<gw.cs_variants.size(); ++j) {
+						String var = gw.cs_variants.get(j);
+						Integer vend = gw.cs_locs_ends.get(j);
+						Integer vstart = gw.cs_locs_starts.get(j);
+						if (eqr.index_variant_name.equals(var) && eqr.index_variant_start==vstart && eqr.index_variant_end==vend) {
 							found = true;
-							er.association_overlap_count++;
+							eqr.association_overlap_count++;
 							break;
 						}
 					}
 					if (found) continue;
-					for (int k=0; k<er.ld_variants.size(); ++k) {
-						String ev = er.ld_variants.get(k);
-						Integer eend = er.ld_locs_ends.get(k);
-						Integer estart = er.ld_locs_starts.get(k);
+					for (int k=0; k<eqr.cs_variants.size(); ++k) {
+						String ev = eqr.cs_variants.get(k);
+						Integer eend = eqr.cs_locs_ends.get(k);
+						Integer estart = eqr.cs_locs_starts.get(k);
 						if (ev.equals(gw.index_variant_name) && eend==gw.index_variant_end && estart==gw.index_variant_start) {
-							er.association_overlap_count++;
+							eqr.association_overlap_count++;
 							found = true;
 							break;
 						}
-						for (int j=0; j<gw.mes_variants.size(); ++j) {
-							String var = gw.mes_variants.get(j);
-							Integer vend = gw.mes_locs_ends.get(j);
-							Integer vstart = gw.mes_locs_starts.get(j);
+						for (int j=0; j<gw.cs_variants.size(); ++j) {
+							String var = gw.cs_variants.get(j);
+							Integer vend = gw.cs_locs_ends.get(j);
+							Integer vstart = gw.cs_locs_starts.get(j);
 							if (ev.equals(var) && eend==vend && estart==vstart) {
 								found = true;
-								er.association_overlap_count++;
+								eqr.association_overlap_count++;
 								break;
 							}
 						}
@@ -7569,14 +8073,22 @@ public class TGN {
 					}
 				}
 			}
+			
+			g_cmillis = System.currentTimeMillis();
+			g_delta = g_cmillis - g_pmillis;		
+			if (output_profile) System.out.println(" stage 3: "+g_delta+" ms");
+			g_pmillis = g_cmillis;
+
 		}
 		rs.close();
-
+		pstm.close();
+		pst.close();
+		pstb.close();
 		cmillis = System.currentTimeMillis();
 		delta = cmillis - pmillis;		
 		if (output_profile) System.out.println("done collecting eqtl "+delta+" ms");
 		pmillis = cmillis;
-
+		
 		// phenotype associations
 		
 		Vector<GenePhenAssoc> genephenassocs = new Vector<>();
@@ -7777,19 +8289,22 @@ public class TGN {
 			Hashtable<String, String> found = new Hashtable<>();
 			for (int j=0; j<giv.gwas_results.size(); ++j) {
 				GWASResult g = giv.gwas_results.get(j);
-				if (!g.marker_equivalence_set.equals("Unset") && g.show_in_svg) { // will be shown
+				if (!g.credible_set.equals("Unset") && g.show_in_svg) { // will be shown
 					gwas_extra+=20; // we have to show the summary text somewhere
-					if (!found.containsKey(g.marker_equivalence_set) || g.marker_equivalence_set.equals("Credible set")) {
-						found.put(g.marker_equivalence_set, "1");
+					if (!found.containsKey(g.credible_set) || g.credible_set.equals("Custom")) {
+						found.put(g.credible_set, "1");
 						gwas_extra+=20; // we'll have to add the LD line
 					}
 				}
 			}
 			for (int j=0; j<giv.eqtl_results.size(); ++j) {
 				EQTLResult q = giv.eqtl_results.get(j);
-				if (q.show_in_svg) {
+				if (!q.credible_set.equals("Unset") && q.show_in_svg) { // will be shown
 					gwas_extra+=20; // we have to show the summary text somewhere
-					gwas_extra+=20; // we'll have to add the LD line
+					if (!found.containsKey(q.credible_set) || q.credible_set.equals("Custom")) {
+						found.put(q.credible_set, "1");
+						gwas_extra+=20; // we'll have to add the LD line
+					}
 				}
 			}	
 		}
@@ -7802,16 +8317,7 @@ public class TGN {
 			layout.block_count+=ldg.markers.size();
 			for (int j=0; j<ldg.markers.size(); ++j) {
 				LDGMarker lm = ldg.markers.get(j);
-				int b_ctr=0;
-				for (int k=0; k<lm.coding_impacts.size(); ++k) {
-					b_ctr++;
-				}
-				for (int k=0; k<lm.gwas_results.size(); ++k) {
-					b_ctr++;
-				}
-				for (int k=0; k<lm.eqtl_results.size(); ++k) {
-					b_ctr++;
-				}
+				int b_ctr= lm.coding_impacts.size() + lm.gwas_results.size() + lm.eqtl_results.size();
 				if (b_ctr>max_squares) max_squares = b_ctr;
 			}
 		}
@@ -7881,9 +8387,8 @@ public class TGN {
 
 		// Generate HTML
 		
-		sb.append(GetHTMLStart("TGN - "+gene_symbol.toUpperCase(),backend_version,db_version));
+		sb.append(GetHTMLStart("TGN - "+gene_symbol.toUpperCase(), db_version));
 		
-
 		// svg
 		
 		sb.append("<div id='main'>\n");
@@ -7942,9 +8447,11 @@ public class TGN {
 
 		sb.append("<div id=\"ak_supl_div\" align=\"center\" style=\"margin-top:10px;\">\n");
 		sb.append("</div>\n");
-		sb.append("<div id=\"crediblesetoverlay\" align=\"center\" class=\"akmodal\">\n");
+		sb.append("<div id=\"customcrediblesetoverlay\" align=\"center\" class=\"akmodal\">\n");
 		sb.append("</div>\n");
-		sb.append("<div id=\"addeqtloverlay\" align=\"center\" class=\"akmodal\">\n");
+		sb.append("<div id=\"aboutoverlay\" align=\"center\" class=\"akmodal\">");
+		sb.append("</div>\n");
+		sb.append("<div id=\"addneweqtloverlay\" align=\"center\" class=\"akmodal\">\n");
 		sb.append("</div>\n");
 		sb.append("<div id=\"adddetailoverlay\" align=\"center\" class=\"akmodal\">\n");
 		sb.append("</div>\n");
@@ -7956,7 +8463,7 @@ public class TGN {
 		sb.append("</div>\n");
 		sb.append("<div id=\"addweboverlay\" align=\"center\" class=\"akmodal\">\n");
 		sb.append("</div>\n");
-		sb.append("<div id=\"addgwasoverlay\" align=\"center\" class=\"akmodal\">\n");
+		sb.append("<div id=\"addnewgwasoverlay\" align=\"center\" class=\"akmodal\">\n");
 		sb.append("</div>\n");
 
 		// svg controls
@@ -8012,8 +8519,8 @@ public class TGN {
 			GWASResult g = all_gwas_results.get(j);
 			if (g.is_pqtl) continue;
 			String rowclass = "akgwasrowclass"+g.gwas_table_row_id;
-			sb.append("  <tr id=\'gwasrow"+g.gwas_table_row_id+"\'>\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_gwas_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startgwassvgdisplaynametimer(this)\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
+			sb.append("  <tr id=\'gwasrow"+g.gwas_table_row_id+"\' style=\"height:2.5em;\">\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.trait)+"</td>\n");
 			if (!g.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+g.outbound_link+"\" target=\"_blank\">"+g.column_display_text+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+g.column_display_text+"</td>\n");
@@ -8022,33 +8529,33 @@ public class TGN {
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.allele)+g.allele_sup+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.pvalue))+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.or_beta))+"</td>\n");
-			sb.append("    <td><select class=\"ak_mes_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateGWASMarkerEquivalenceSet(this)\" data-dbid=\""+g.gwas_table_row_id+"\">\n");
-			if (g.marker_equivalence_set.equals("Unset")) sb.append("      <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
+			sb.append("    <td><select class=\"ak_cs_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateGWASCredibleSet(this)\" data-dbid=\""+g.gwas_table_row_id+"\">\n");
+			if (g.credible_set.equals("Unset")) sb.append("      <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
 			else sb.append("      <option value=\"Unset\">Unset</option>\n");
-			if (g.marker_equivalence_set.equals("None")) sb.append("      <option selected=\"selected\" value=\"None\">None</option>\n");
+			if (g.credible_set.equals("None")) sb.append("      <option selected=\"selected\" value=\"None\">None</option>\n");
 			else sb.append("      <option value=\"None\">None</option>\n");
 			for (int ij=0; ij<g.LDdatasets.size(); ++ij) {
 				String ds = g.LDdatasets.get(ij);
 				String dsr = ds.replace("1000GENOMES:phase_3", "1KGp3");
 				String dsc = g.LDdatasetsHighR2Count.get(ij);
-				if (g.marker_equivalence_set.equals(ds)) sb.append("      <option selected=\"selected\" value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
+				if (g.credible_set.equals(ds)) sb.append("      <option selected=\"selected\" value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
 				else sb.append("      <option value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
 			}
-			if (g.credible_set_name.equals("")) {
-				sb.append("      <option value=\"Add credible set\">Add credible set</option>\n");
+			if (g.custom_credible_set_name.equals("")) {
+				sb.append("      <option value=\"Add custom\">Add custom</option>\n");
 			} else {
-				if (g.marker_equivalence_set.equals("Credible set")) {
-					sb.append("      <option selected=\"selected\" value=\"Credible set\">"+StringEscapeUtils.escapeHtml4(g.credible_set_name)+" ("+g.credible_set_member_count+")</option>\n");		
+				if (g.credible_set.equals("Custom")) {
+					sb.append("      <option selected=\"selected\" value=\"Custom\">"+StringEscapeUtils.escapeHtml4(g.custom_credible_set_name)+" ("+g.custom_credible_set_member_count+")</option>\n");		
 				} else {
-					sb.append("      <option value=\"Credible set\">"+StringEscapeUtils.escapeHtml4(g.credible_set_name)+" ("+g.credible_set_member_count+")</option>\n");
+					sb.append("      <option value=\"Custom\">"+StringEscapeUtils.escapeHtml4(g.custom_credible_set_name)+" ("+g.custom_credible_set_member_count+")</option>\n");
 				}
-				sb.append("      <option value=\"Delete credible set\">Delete credible set</option>\n");
+				sb.append("      <option value=\"Delete custom\">Delete custom</option>\n");
 			}	
 			sb.append("    </select></td>\n");
 			String ckd = "";
 			if (g.show_in_svg) ckd = "checked";
-			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateGWASShowHide(this)\" data-dbid=\""+g.gwas_table_row_id+"\" "+ckd+"></td>\n");
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startgwascommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"text-align:center;\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateGWASShowHide(this)\" data-dbid=\""+g.gwas_table_row_id+"\" "+ckd+"></td>\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
 			if (!g.automatic) sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_gwas_"+g.gwas_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveGWASRow('gwasrow"+g.gwas_table_row_id+"', 0)\">X</button></td>");
 			else sb.append("    <td style=\"vertical-align: middle;\"></td>");
 			sb.append("  </tr>\n");
@@ -8070,7 +8577,7 @@ public class TGN {
 		sb.append("<option value=\"30\">30</option>\n");
 		sb.append("<option value=\"40\">40</option>\n");
 		sb.append("</select>\n");
-		sb.append("<button style=\"margin-left: 200px;\" class=\"ak_table_button\" id=\"gwas_add_button\" onclick=\"AddGWASOverlay(0)\">Add Association</button>\n");
+		sb.append("<button style=\"margin-left: 200px;\" class=\"ak_table_button\" id=\"gwas_add_button\" onclick=\"AddNewGWASOverlay(0)\">Add Association</button>\n");
 		sb.append("</div>\n");		
 		sb.append("</div>\n");
 		sb.append("</div>\n");
@@ -8079,7 +8586,6 @@ public class TGN {
 		// gwas details
 		
 		sb.append(CreateDetailAccordion("associationDetailsAccordion", "Association Details", "associationDetailsDiv", "associationdetailstable", allsourcedocuments, "Association", "association_details_pager"));
-		
 		
 		// pqtl
 
@@ -8109,8 +8615,8 @@ public class TGN {
 			GWASResult g = all_gwas_results.get(j);
 			if (!g.is_pqtl) continue;
 			String rowclass = "akgwasrowclass"+g.gwas_table_row_id;
-			sb.append("  <tr id=\'gwasrow"+g.gwas_table_row_id+"\'>\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_gwas_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startgwassvgdisplaynametimer(this)\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
+			sb.append("  <tr id=\'gwasrow"+g.gwas_table_row_id+"\' style=\"height:2.5em;\">\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.trait)+"</td>\n");
 			if (!g.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+g.outbound_link+"\" target=\"_blank\">"+g.column_display_text+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+g.column_display_text+"</td>\n");
@@ -8119,33 +8625,33 @@ public class TGN {
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.allele)+g.allele_sup+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.pvalue))+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.or_beta))+"</td>\n");
-			sb.append("    <td><select class=\"ak_mes_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateGWASMarkerEquivalenceSet(this)\" data-dbid=\""+g.gwas_table_row_id+"\">\n");
-			if (g.marker_equivalence_set.equals("Unset")) sb.append("      <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
+			sb.append("    <td><select class=\"ak_cs_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateGWASCredibleSet(this)\" data-dbid=\""+g.gwas_table_row_id+"\">\n");
+			if (g.credible_set.equals("Unset")) sb.append("      <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
 			else sb.append("      <option value=\"Unset\">Unset</option>\n");
-			if (g.marker_equivalence_set.equals("None")) sb.append("      <option selected=\"selected\" value=\"None\">None</option>\n");
+			if (g.credible_set.equals("None")) sb.append("      <option selected=\"selected\" value=\"None\">None</option>\n");
 			else sb.append("      <option value=\"None\">None</option>\n");
 			for (int ij=0; ij<g.LDdatasets.size(); ++ij) {
 				String ds = g.LDdatasets.get(ij);
 				String dsr = ds.replace("1000GENOMES:phase_3", "1KGp3");
 				String dsc = g.LDdatasetsHighR2Count.get(ij);
-				if (g.marker_equivalence_set.equals(ds)) sb.append("      <option selected=\"selected\" value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
+				if (g.credible_set.equals(ds)) sb.append("      <option selected=\"selected\" value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
 				else sb.append("      <option value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
 			}
-			if (g.credible_set_name.equals("")) {
-				sb.append("      <option value=\"Add credible set\">Add credible set</option>\n");
+			if (g.custom_credible_set_name.equals("")) {
+				sb.append("      <option value=\"Add custom\">Add custom</option>\n");
 			} else {
-				if (g.marker_equivalence_set.equals("Credible set")) {
-					sb.append("      <option selected=\"selected\" value=\"Credible set\">"+StringEscapeUtils.escapeHtml4(g.credible_set_name)+" ("+g.credible_set_member_count+")</option>\n");		
+				if (g.credible_set.equals("Custom")) {
+					sb.append("      <option selected=\"selected\" value=\"Custom\">"+StringEscapeUtils.escapeHtml4(g.custom_credible_set_name)+" ("+g.custom_credible_set_member_count+")</option>\n");		
 				} else {
-					sb.append("      <option value=\"Credible set\">"+StringEscapeUtils.escapeHtml4(g.credible_set_name)+" ("+g.credible_set_member_count+")</option>\n");
+					sb.append("      <option value=\"Custom\">"+StringEscapeUtils.escapeHtml4(g.custom_credible_set_name)+" ("+g.custom_credible_set_member_count+")</option>\n");
 				}
-				sb.append("      <option value=\"Delete credible set\">Delete credible set</option>\n");
+				sb.append("      <option value=\"Delete custom\">Delete custom</option>\n");
 			}	
 			sb.append("    </select></td>\n");
 			String ckd = "";
 			if (g.show_in_svg) ckd = "checked";
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateGWASShowHide(this)\" data-dbid=\""+g.gwas_table_row_id+"\" "+ckd+"></td>\n");
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startgwascommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
 			if (!g.automatic) sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_gwas_"+g.gwas_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveGWASRow('gwasrow"+g.gwas_table_row_id+"', 1)\">X</button></td>");
 			else sb.append("    <td style=\"vertical-align: middle;\"></td>");
 			sb.append("  </tr>\n");
@@ -8167,7 +8673,7 @@ public class TGN {
 		sb.append("<option value=\"30\">30</option>\n");
 		sb.append("<option value=\"40\">40</option>\n");
 		sb.append("</select>\n");
-		sb.append("<button style=\"margin-left: 200px;\" class=\"ak_table_button\" id=\"pqtl_add_button\" onclick=\"AddGWASOverlay(1)\">Add pQTL</button>\n");
+		sb.append("<button style=\"margin-left: 200px;\" class=\"ak_table_button\" id=\"pqtl_add_button\" onclick=\"AddNewGWASOverlay(1)\">Add pQTL</button>\n");
 		sb.append("</div>\n");		
 		sb.append("</div>\n");
 		sb.append("</div>\n");
@@ -8176,12 +8682,6 @@ public class TGN {
 		// pqtl details
 		
 		sb.append(CreateDetailAccordion("pqtlDetailsAccordion", "pQTL Details", "pqtlDetailsDiv", "pqtldetailstable", allsourcedocuments, "PQTL", "pqtl_details_pager"));
-		
-	
-		
-		
-		
-		
 		
 		// eqtl
 
@@ -8212,9 +8712,8 @@ public class TGN {
 		for (int j=0; j<all_eqtl_results.size(); ++j) {
 			EQTLResult q = all_eqtl_results.get(j);
 			String rowclass = "akeqtlrowclass"+q.eqtl_table_row_id;
-			sb.append("  <tr id=\'eqtlrow"+q.eqtl_table_row_id+"\'>\n");
-			//sb.append("    <td><textarea class=\"ak_eqtl_sdn ak_tablecell "+rowclass+"\" style=\"width:145px; height:100%\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"starteqtlsvgdisplaynametimer(this)\">"+StringEscapeUtils.escapeHtml4(q.svg_display_name)+"</textarea></td>\n");
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_eqtl_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"starteqtlsvgdisplaynametimer(this)\">"+StringEscapeUtils.escapeHtml4(q.svg_display_name)+"</textarea></td>\n");
+			sb.append("  <tr id=\'eqtlrow"+q.eqtl_table_row_id+"\' style=\"height:2.5em;\">\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(q.svg_display_name)+"</textarea></td>\n");
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.tissue)+"</td>\n");
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.gene_symbol)+"</td>\n");
 			if (!q.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+q.outbound_link+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(q.column_display_text)+"</a></td>\n");
@@ -8224,17 +8723,36 @@ public class TGN {
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.pvalue)+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.beta)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.effect_allele)+"</td>\n");
-			String dsr = q.marker_equivalence_set_label.replace("1000GENOMES:phase_3", "1KGp3");
-			if (q.marker_equivalence_set_count_label.equals("")) {
-				sb.append("    <td style=\"text-align:left;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(dsr)+"</td>\n");
-			} else {
-				sb.append("    <td style=\"text-align:left;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(dsr+" "+q.marker_equivalence_set_count_label)+"</td>\n");
+			
+			
+			sb.append("    <td><select class=\"ak_cs_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateEQTLCredibleSet(this)\" data-dbid=\""+q.eqtl_table_row_id+"\">\n");
+			if (q.credible_set.equals("Unset")) sb.append("      <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
+			else sb.append("      <option value=\"Unset\">Unset</option>\n");
+			if (q.credible_set.equals("None")) sb.append("      <option selected=\"selected\" value=\"None\">None</option>\n");
+			else sb.append("      <option value=\"None\">None</option>\n");
+			for (int ij=0; ij<q.LDdatasets.size(); ++ij) {
+				String ds = q.LDdatasets.get(ij);
+				String dsr = ds.replace("1000GENOMES:phase_3", "1KGp3");
+				String dsc = q.LDdatasetsHighR2Count.get(ij);
+				if (q.credible_set.equals(ds)) sb.append("      <option selected=\"selected\" value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
+				else sb.append("      <option value=\""+StringEscapeUtils.escapeHtml4(ds)+"\">"+StringEscapeUtils.escapeHtml4(dsr)+" ("+dsc+")</option>\n");
 			}
+			if (q.custom_credible_set_name.equals("")) {
+				sb.append("      <option value=\"Add custom\">Add custom</option>\n");
+			} else {
+				if (q.credible_set.equals("Custom")) {
+					sb.append("      <option selected=\"selected\" value=\"Custom\">"+StringEscapeUtils.escapeHtml4(q.custom_credible_set_name)+" ("+q.custom_credible_set_member_count+")</option>\n");		
+				} else {
+					sb.append("      <option value=\"Custom\">"+StringEscapeUtils.escapeHtml4(q.custom_credible_set_name)+" ("+q.custom_credible_set_member_count+")</option>\n");
+				}
+				sb.append("      <option value=\"Delete custom\">Delete custom</option>\n");
+			}	
+			sb.append("    </select></td>\n");
+			
 			String ckd = "";
 			if (q.show_in_svg) ckd = "checked";
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateEQTLShowHide(this)\" data-dbid=\""+q.eqtl_table_row_id+"\" "+ckd+"></td>\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"starteqtlcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(q.curator_comment)+"</textarea></td>\n");
-			//sb.append("    <td><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"starteqtlcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(q.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(q.curator_comment)+"</textarea></td>\n");
 			if (!q.automatic) sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_eqtl_"+q.eqtl_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveEQTLRow('eqtlrow"+q.eqtl_table_row_id+"')\">X</button></td>");
 			else sb.append("    <td style=\"vertical-align: middle;\"></td>");
 			sb.append("    <td id=\'eqtloverlap"+q.eqtl_table_row_id+"\' style=\"text-align:center;\" class=\"ak_tablecell\">"+q.association_overlap_count+"</td>\n");			
@@ -8257,12 +8775,12 @@ public class TGN {
 		sb.append("<option value=\"30\">30</option>\n");
 		sb.append("<option value=\"40\">40</option>\n");
 		sb.append("</select>\n");
-		sb.append("<button style=\"margin-left: 200px;\" class=\"ak_table_button\" id=\"eqtl_add_button\" onclick=\"AddEQTLOverlay()\">Add eQTL</button>\n");
+		sb.append("<button style=\"margin-left: 200px;\" class=\"ak_table_button\" id=\"eqtl_add_button\" onclick=\"AddNewEQTLOverlay()\">Add eQTL</button>\n");
 		sb.append("</div>\n");		
 		sb.append("</div>\n");
 		sb.append("</div>\n");
 		sb.append("</div>\n");
-
+		
 		// variants of interest
 
 		sb.append("<div style=\"width:1300px; margin: 0 auto;\">\n");
@@ -8365,7 +8883,7 @@ public class TGN {
 			} else {
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(gp.linkout)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(gp.source)+"</a></td>\n");
 			}
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_genephen_comment ak_tablecell\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gp.db_id+"\" placeholder=\"Enter comment\" onkeyup=\"startgenephencommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(gp.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_genephen_comment ak_tablecell\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gp.db_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'genephen')\">"+StringEscapeUtils.escapeHtml4(gp.curator_comment)+"</textarea></td>\n");
 			sb.append("  </tr>\n");
 		}
 		sb.append("</tbody>\n");		
@@ -8404,7 +8922,7 @@ public class TGN {
 			PhenAlleleAssoc pa = phenalleleassocs.get(i);
 			sb.append("  <tr>\n");
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pa.phenotype)+"</td>\n");
-			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pa.phenotype)+"</td>\n");
+			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pa.variant)+"</td>\n");
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pa.unaudited_risk_allele)+"</td>\n");
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pa.clinical_significance)+"</td>\n");
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pa.gene_string)+"</td>\n");
@@ -8480,7 +8998,7 @@ public class TGN {
 			} else if (sd.bdoc!=null) {
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.first_author)+"</td>\n");				
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.pub_year)+"</td>\n");			
-				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.publisher)+"</td>\n");			
+				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">bioRxiv"+StringEscapeUtils.escapeHtml4(" ("+sd.bdoc.doi_id+")")+"</td>\n");			
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(sd.outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.title)+"</a></td>\n");					
 			} else if (sd.fdoc!=null) {
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");				
@@ -8490,21 +9008,19 @@ public class TGN {
 			} else if (sd.wdoc!=null) {
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");				
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.wdoc.year)+"</td>\n");		
-				//sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(sd.outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sd.wdoc.site)+"</a></td>\n");
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(sd.outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sd.wdoc.site.replaceAll("/", "/\u200B"))+"</a></td>\n");
 				// put a zero-width space after each slash to facilitate word wrapping
 				
-				
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.wdoc.description)+"</td>\n");	
 			}
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+sd.id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(sd.curator_comment)+"</textarea></td>\n");
-			//sb.append("    <td><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"width:173px; height:100%\" data-dbid=\""+sd.id+"\" placeholder=\"Enter comment\" onkeyup=\"startsourcecommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(sd.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+sd.id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+StringEscapeUtils.escapeHtml4(sd.curator_comment)+"</textarea></td>\n");
 			String xtra = "";
 			if (sd.details.size()>0) xtra = " ("+sd.details.size()+")";
 			sb.append("    <td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details"+xtra+"</button></td>");
 			if (!sd.automatic) sb.append("    <td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+sd.id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+sd.id+"')\">X</button></td>");
 			else sb.append("    <td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"></td>");	
 			sb.append("  </tr>\n");
+			
 			for (int j=0; j<sd.details.size(); ++j) {
 				Detail d = sd.details.get(j);
 				String drowclass="akdetailrowclass"+d.id;
@@ -8530,17 +9046,18 @@ public class TGN {
 				else sb.append("    <option value=\"Protein\">Protein</option>\n");
 				sb.append("            </select>\n");
 				sb.append("          </section>");		
-				sb.append("          <textarea id='detailrow"+d.id+"' data-fromwhere=\"1\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" onkeyup=\"startdetailcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
+				sb.append("          <textarea id='detailrow"+d.id+"' data-fromwhere=\"1\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
 				sb.append("          <a style=\"display: inline-block;\" class=\""+rowclass+" "+drowclass+"\" href=\""+d.b64_contents+"\" data-lightbox=\"detail"+d.id+"\">\n");
 				sb.append("          <img class=\"contain_img "+rowclass+" "+drowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>\n");
-				sb.append("          <button id=\"x_detail_"+d.id+"\" type=\"button\" class=\"ak_table_button "+rowclass+" "+drowclass+"\" style=\"margin-left:50px;display: inline-block; vertical-align: top; margin-top:90px;\" onclick=\"RemoveDetail('detail"+d.id+"')\">Remove</button>\n");
+				sb.append("          <button id=\"x_detail_"+d.id+"\" type=\"button\" class=\"ak_table_button "+rowclass+" "+drowclass+"\" style=\"margin-left:40px;display: inline-block; vertical-align: top; margin-top:90px;\" onclick=\"RemoveDetail('detail"+d.id+"')\">Remove</button>\n");
 				sb.append("      </div>\n");
 				sb.append("    </td>\n");
 				sb.append("  </tr>\n");				
 			}
 			sb.append("<tr style=\"background: #eeeeee !important; \" id=\'adddetail"+sd.id+"\' class=\"tablesorter-childRow\">");
 			sb.append("<td colspan=\"7\" style=\"vertical-align: middle\"><div style=\"text-align: center;\"><button type=\"button\" class=\"ak_table_button "+rowclass+"\" style=\"margin-top:10px; margin-bottom:10px; margin-right:30px;display: inline;\" onclick=\"AddDetailOverlay('sourcedocumentsrow"+sd.id+"')\">Add Detail</button></div></td>");
-			sb.append("  </tr>\n");			
+			sb.append("  </tr>\n");		
+			
 		}
 		sb.append("</tbody>\n");		
 		sb.append("</table>\n");
@@ -8567,12 +9084,11 @@ public class TGN {
 		sb.append("</div>\n");		
 		sb.append("</div>\n");
 		sb.append("</div>\n");
-		sb.append("</div>\n");		
+		
+		sb.append("</div>\n");	
+		sb.append("<p style='font-size: 10px;'></p>\n");		
 		
 		// supplemental methods etc.
-		/*
-		sb.append(AKJavascriptFxns.getJavascriptFunctions());
-*/
 		
 		sb.append("<script type=\"text/javascript\">\n");
 		
@@ -8592,10 +9108,6 @@ public class TGN {
 		sb.append("});\n");
 		
 		sb.append("$( document ).ready(function() {\n");
-		//sb.append("  var tgn_agree = getCookie(\"tgn_agree1\");\n");
-		//sb.append("  if (tgn_agree==\"\") {\n");
-		//sb.append("    $('.tgn_agree').show();");
-		//sb.append("  }\n");
 		sb.append("  $('#aksummaryarea').attr('data-curval', $( '#aksummaryarea' ).val());\n");	
 		sb.append("  $('.ak_gwas_comment').each(function(i, obj) {\n");	
 		sb.append("    $(this).attr('data-curval', $(this).val());\n");
@@ -8609,28 +9121,29 @@ public class TGN {
 		sb.append("  $('.ak_source_comment').each(function(i, obj) {\n");	
 		sb.append("    $(this).attr('data-curval', $(this).val());\n");
 		sb.append("  });\n");
-		sb.append("  $('.ak_gwas_sdn').each(function(i, obj) {\n");	
+		sb.append("  $('.ak_sdn').each(function(i, obj) {\n");	
 		sb.append("    $(this).attr('data-curval', $(this).val());\n");
 		sb.append("  });\n");
-		sb.append("  $('.ak_eqtl_sdn').each(function(i, obj) {\n");	
-		sb.append("    $(this).attr('data-curval', $(this).val());\n");
+		sb.append("  $('.ak_cs_selector').each(function(i, obj) {\n");	
+		sb.append("    $(this).attr('data-ccs', $(this).val());\n");
 		sb.append("  });\n");
-		sb.append("  $('.ak_mes_selector').each(function(i, obj) {\n");	
-		sb.append("    $(this).attr('data-cmes', $(this).val());\n");
-		sb.append("  });\n");
-		sb.append("  $('.ak_mes_selector').select2({minimumResultsForSearch: 20});\n");
+		sb.append("  $('.ak_cs_selector').select2({minimumResultsForSearch: 20});\n");
 		sb.append("  $('.ak_detail_section_selector').select2({minimumResultsForSearch: 20});\n");
-		sb.append("  $('#gwastable').tablesorter({theme:'blue', headers:{8:{sorter:'select'}, 9:{sorter:'checkbox'}, 11:{sorter:'akmanual'}}, sortList: [[11,1],[0,0]], widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'gwas_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['147px', '125px', '175px', '55px', '98px', '85px', '80px', '88px', '156px', '60px', '175px', '40px']}});\n");
+		sb.append("  $('#gwastable').tablesorter({theme:'blue', textExtraction:{2:function(node, table, cellIndex){if ($(node).find(\"a\").length>0) { return $(node).find(\"a\").text(); } return $(node).text(); }, 4:function(node, table, cellIndex){return $(node).find(\"a\").text();}}, headers:{4:{sorter:'text'}, 8:{sorter:'select'}, 9:{sorter:'checkbox'}, 11:{sorter:'akmanual'}}, sortList: [[11,1],[0,0]], widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'gwas_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['147px', '125px', '175px', '55px', '98px', '85px', '80px', '88px', '156px', '60px', '175px', '40px']}  });\n");
+		
+		// textSorter addition sorts the rs#s as pure text, but make sense for them to be sorted numerically, which is the non-obvious default, since tablesorter chunks the text into alpha and numeric
+		//sb.append("  $('#gwastable').tablesorter({theme:'blue', textExtraction:{4:function(node, table, cellIndex){console.log($(node).find(\"a\").text()); return $(node).find(\"a\").text();}}, headers:{4:{sorter:'text'}, 8:{sorter:'select'}, 9:{sorter:'checkbox'}, 11:{sorter:'akmanual'}}, sortList: [[11,1],[0,0]], widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'gwas_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['147px', '125px', '175px', '55px', '98px', '85px', '80px', '88px', '156px', '60px', '175px', '40px']}, textSorter:{4: $.tablesorter.sortText}  });\n");
+		
 		sb.append("  $('#gwastable').tablesorterPager({container: $(\"#gwas_pager\"),removeRows: false});\n");
 		sb.append("  $('#gwastable th').css('text-align','center');\n");
 		sb.append("  $('#gwastable th').css('padding','0px');\n");	
 		
-		sb.append("  $('#pqtltable').tablesorter({theme:'blue', headers:{8:{sorter:'select'}, 9:{sorter:'checkbox'}, 11:{sorter:'akmanual'}}, sortList: [[11,1],[0,0]], widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'gwas_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['147px', '125px', '175px', '55px', '98px', '85px', '80px', '88px', '156px', '60px', '175px', '40px']}});\n");
+		sb.append("  $('#pqtltable').tablesorter({theme:'blue', textExtraction:{2:function(node, table, cellIndex){if ($(node).find(\"a\").length>0) { return $(node).find(\"a\").text(); } return $(node).text(); }, 4:function(node, table, cellIndex){return $(node).find(\"a\").text();}}, headers:{8:{sorter:'select'}, 9:{sorter:'checkbox'}, 11:{sorter:'akmanual'}}, sortList: [[11,1],[0,0]], widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'gwas_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['147px', '125px', '175px', '55px', '98px', '85px', '80px', '88px', '156px', '60px', '175px', '40px']}});\n");
 		sb.append("  $('#pqtltable').tablesorterPager({container: $(\"#pqtl_pager\"),removeRows: false});\n");
 		sb.append("  $('#pqtltable th').css('text-align','center');\n");
 		sb.append("  $('#pqtltable th').css('padding','0px');\n");	
 		
-		sb.append("  $('#eqtltable').tablesorter({theme:'blue', headers:{10:{sorter:'checkbox'}, 12:{sorter:'akmanual'}, 13:{sorter:'digit'}}, sortList: [[11,1],[0,0]], widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'eqtl_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['147px', '135px', '68px', '155px', '55px', '88px', '72px', '55px', '77px', '121px', '52px', '175px', '40px', '42px']}});\n");
+		sb.append("  $('#eqtltable').tablesorter({theme:'blue', textExtraction:{3:function(node, table, cellIndex){if ($(node).find(\"a\").length>0) { return $(node).find(\"a\").text(); } return $(node).text(); }, 5:function(node, table, cellIndex){return $(node).find(\"a\").text();}}, headers:{9:{sorter:'select'}, 10:{sorter:'checkbox'}, 12:{sorter:'akmanual'}, 13:{sorter:'digit'}}, sortList: [[11,1],[0,0]], widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'eqtl_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['147px', '135px', '75px', '138px', '55px', '88px', '72px', '55px', '77px', '156px', '52px', '150px', '40px', '42px']}});\n");
 		sb.append("  $('#eqtltable').tablesorterPager({container: $(\"#eqtl_pager\"),removeRows: false});\n");
 		sb.append("  $('#eqtltable th').css('padding','0px');\n");	
 		sb.append("  $('#eqtltable th').css('text-align','center');\n");
@@ -8639,13 +9152,13 @@ public class TGN {
 		sb.append("  $('.ui-accordion-content').css('padding','0px');\n");		
 		String updown = "1";
 		if (TargetAnnotation.is_forward_strand==1) updown = "0";
-		sb.append("  $('#voi_table').tablesorter({theme:'blue', headers:{0:{sorter:'checkbox'}}, sortList: [[3,"+updown+"]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['140px','135px', '180px', '130px', '130px', '155px', '155px', '135px', '135px']} });\n");	
+		sb.append("  $('#voi_table').tablesorter({theme:'blue', textExtraction:{1:function(node, table, cellIndex){return $(node).find(\"a\").text();}}, headers:{0:{sorter:'checkbox'}}, sortList: [[3,"+updown+"]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['140px','135px', '180px', '130px', '130px', '155px', '155px', '135px', '135px']} });\n");	
 		sb.append("  $('#voi_table').tablesorterPager({container: $(\"#voi_pager\"),removeRows: false});\n");
 		sb.append("  $('#voi_table th').css('text-align','center');\n");		
 		sb.append("  $('#voi_table th').css('padding','0px');\n");
 		
 		sb.append("  $('#reftable .tablesorter-childRow td').hide();\n");		
-		sb.append("  $('#reftable').tablesorter({theme:'blue', headers:{0:{sorter:'checkbox'}, 7:{sorter:'akmanual'}}, widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'refs_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['85px','145px','75px','200px','430px','175px','140px', '40px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
+		sb.append("  $('#reftable').tablesorter({theme:'blue', textExtraction:{3:function(node, table, cellIndex){if ($(node).find(\"a\").length>0) { return $(node).find(\"a\").text(); } return $(node).text(); }, 4:function(node, table, cellIndex){if ($(node).find(\"a\").length>0) { return $(node).find(\"a\").text(); } return $(node).text(); } }, headers:{0:{sorter:'checkbox'}, 7:{sorter:'akmanual'}}, widgets: ['filter', 'output', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, output_includeHeader:true, output_delivery:'d', output_saveRows:'a', output_separator:'\t', output_replaceQuote:'\u201c;', output_includeHTML:true, output_trimSpaces:true, output_wrapQuotes:true, output_saveFileName:'refs_"+target_name+".xls', resizable_addLastColumn:false, resizable_widths: ['85px','145px','75px','200px','430px','175px','140px', '40px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
 		
 		sb.append("  $('#reftable').tablesorterPager({container: $(\"#ref_pager\"),removeRows: false});\n");
 		sb.append("  $('#reftable').delegate('.detail-toggle', 'click', function() {\n");
@@ -8693,7 +9206,6 @@ public class TGN {
 		sb.append("  $('#proteindetailstable th').css('padding','0px');\n");
 		sb.append("  $('#proteindetailstable tr').show();\n"); // not sure why this is needed by default?
 		
-		
 		sb.append("  $('#associationdetailstable').tablesorter({theme:'blue', sortList: [[0,1],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['232px','82px','326px','651px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
 		sb.append("  $('#associationdetailstable').tablesorterPager({container: $(\"#association_details_pager\"),removeRows: false});\n");
 		sb.append("  $('#associationdetailstable th').css('text-align','center');\n");
@@ -8706,15 +9218,16 @@ public class TGN {
 		sb.append("  $('#pqtldetailstable th').css('padding','0px');\n");
 		sb.append("  $('#pqtldetailstable tr').show();\n"); // not sure why this is needed by default?	
 		
-		
-		sb.append("  $('#genephen_table').tablesorter({theme:'blue', sortList: [[0,1],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['290px','75px','250px', '680px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
+		sb.append("  $('#genephen_table').tablesorter({theme:'blue', textExtraction:{2:function(node, table, cellIndex){if ($(node).find(\"a\").length>0) { return $(node).find(\"a\").text(); } return $(node).text(); } }, sortList: [[0,1],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['290px','75px','250px', '680px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
 		sb.append("  $('#genephen_table').tablesorterPager({container: $(\"#genephen_pager\"),removeRows: false});\n");
 		sb.append("  $('#genephen_table th').css('text-align','center');\n");
 		sb.append("  $('#genephen_table th').css('padding','0px');\n");
-		sb.append("  $('#phenallele_table').tablesorter({theme:'blue', sortList: [[0,1],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['375px','200px','120px', '240px', '242px', '120px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
+		sb.append("  $('#phenallele_table').tablesorter({theme:'blue', textExtraction:{5:function(node, table, cellIndex){if ($(node).find(\"a\").length>0) { return $(node).find(\"a\").text(); } return $(node).text(); } }, sortList: [[0,1],[1,0]], widgets: ['filter', 'resizable'], widgetOptions :{filter_columnFilters:true, filter_hideFilters:true, resizable_addLastColumn:false, resizable_widths: ['375px','200px','120px', '240px', '242px', '120px'] }, cssChildRow: \"tablesorter-childRow\"});\n");
 		sb.append("  $('#phenallele_table').tablesorterPager({container: $(\"#phenallele_pager\"),removeRows: false});\n");
 		sb.append("  $('#phenallele_table th').css('text-align','center');\n");
 		sb.append("  $('#phenallele_table th').css('padding','0px');\n");
+		sb.append("  master_busy = false;\n");	
+		sb.append("  document.body.style.visibility=\"visible\";\n");	
 		sb.append("});\n");
 		sb.append("</script>\n");
 		sb.append("</div>\n");
@@ -8722,114 +9235,6 @@ public class TGN {
 		sb.append("</html>\n");
 		return sb.toString();
 	}	
-    /*
-	public static String GetContact() throws Exception {
-		Vector<String> v = GetHeadAndTailSections("Contact");
-		StringBuilder sb = new StringBuilder();
-		sb.append(v.get(0));
-		sb.append("<div>\n");
-		sb.append("<h1>Contact</h1>\n");
-		sb.append("<p>This software is provided as a beta release to encourage collaboration in the community on Target Gene Notebook as a non-proprietary resource for efficient linking of genetic associations to functional biological information. This process is essential to translating genetic insights into therapeutic hypotheses and, eventually, drug discovery.</p>\n");
-		sb.append("<p>If you have questions, comments, would like to request source code or collaborate on this resource please send an <a href=\"mailto:targetgenenotebook@eisai.com\">email</a>.</p>\n");
-		sb.append("</div>\n");
-		sb.append(v.get(1));
-		return sb.toString();
-	}
-    */
-    /*
-	public static String GetTerms() throws Exception {
-		Vector<String> v = GetHeadAndTailSections("Terms");
-		StringBuilder sb = new StringBuilder();
-		sb.append(v.get(0));
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("public/content/agreement.txt");
-		String agree_text = IOUtils.toString(is);
-		is.close();	
-		sb.append("<div>\n");
-		sb.append("<h1>Terms</h1>\n");
-		String[] lines = agree_text.split("\\r?\\n");
-        for (String line : lines) {
-        	if (line.equals("")) sb.append("<br>\n");
-        	else sb.append("<p>"+StringEscapeUtils.escapeHtml4(line)+"</p>\n");
-        }			
-		sb.append("</div>\n");
-		sb.append(v.get(1));
-		return sb.toString();
-	}
-    */
-    /*
-	public static String GetAbout() throws Exception {
-		Vector<String> v = GetHeadAndTailSections("About");
-		StringBuilder sb = new StringBuilder();
-		sb.append(v.get(0));
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("public/content/about.txt");
-		String about_text = IOUtils.toString(is);
-		is.close();	
-		sb.append("<div>\n");
-		sb.append("<h1>About</h1>\n");
-		String[] lines = about_text.split("\\r?\\n");
-        for (String line : lines) {
-        	if (line.equals("")) sb.append("<br>\n");
-        	else sb.append("<p>"+StringEscapeUtils.escapeHtml4(line)+"</p>\n");
-        }			
-		sb.append("</div>\n");
-		sb.append(v.get(1));
-		return sb.toString();
-	}
-    */
-    /*
-	public static String GetFAQ() throws Exception {
-		Vector<String> v = GetHeadAndTailSections("FAQ");
-		StringBuilder sb = new StringBuilder();
-		sb.append(v.get(0));
-		InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("public/content/faq.txt");
-		String faq_text = IOUtils.toString(is);
-		is.close();	
-		sb.append("<div>\n");
-		sb.append("<h1>FAQ</h1>\n");
-		String[] lines = faq_text.split("\\r?\\n");
-        for (String line : lines) {
-        	if (line.equals("General Use")) sb.append("<h2>"+line+"</h2>\n");
-        	else if (line.equals("Technical Details")) sb.append("<h2>"+line+"</h2>\n");
-        	else if (line.endsWith("?")) {
-        		sb.append("<div>\n");
-        		sb.append("<div class=\"accordion\">\n");
-        		sb.append("<h3 style=\"font: 12px/18px Lato, Sans-serif;\">"+StringEscapeUtils.escapeHtml4(line)+"</h3>\n");
-        		sb.append("<div>\n");
-        		sb.append("<div style=\"width:100%\">\n");
-        	} else if (line.equals("")) {
-        		sb.append("</div>\n");
-        		sb.append("</div>\n");
-        		sb.append("</div>\n");
-        		sb.append("</div>\n");
-        	} else sb.append("<p>"+StringEscapeUtils.escapeHtml4(line)+"</p>\n");
-        }			
-		sb.append("</div>\n");
-		sb.append(v.get(1));
-		return sb.toString();
-	}
-    */	
-	public static Vector<String> GetHeadAndTailSections(String section_name) throws Exception {
-		Vector<String> toret = new Vector<>();
-		StringBuilder sb = new StringBuilder();
-		sb.append(GetHTMLStart("TGN - "+section_name,"",""));
-		toret.add(sb.toString());
-		StringBuilder sb2 = new StringBuilder();
-		sb2.append("<script type=\"text/javascript\">\n");
-		sb2.append("$( document ).ready(function() {\n");
-		sb2.append("  var tgn_agree = getCookie(\"tgn_agree1\");\n");
-		sb2.append("  if (tgn_agree==\"\") {\n");
-		sb2.append("    $('.tgn_agree').show();");
-		sb2.append("  }\n");		
-		sb2.append("  $('.accordion').accordion({collapsible: true, active: false, heightStyle: \"content\"});\n");
-		sb2.append("  $('.ui-accordion').css('padding','0px');\n");
-		sb2.append("  $('.ui-accordion-content').css('padding','0px');\n");	
-		sb2.append("});\n");
-		sb2.append("</script>\n");
-		sb2.append("</body>\n");
-		sb2.append("</html>\n");
-		toret.add(sb2.toString());
-		return toret;
-	}
 		
 	public static String CreateDetailAccordion(String accordion_id, String h3_name, String div_id, String table_id, Vector<SourceDocument> allsourcedocs, String section_name, String pager_id  ) {
 		StringBuffer sb = new StringBuffer();
@@ -8864,7 +9269,7 @@ public class TGN {
 				} else if (sd.bdoc!=null) {
 					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.first_author)+"</td>\n");				
 					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.pub_year)+"</td>\n");			
-					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.publisher)+"</td>\n");			
+					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">bioRxiv"+StringEscapeUtils.escapeHtml4(" ("+sd.bdoc.doi_id+")")+"</td>\n");			
 					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(sd.outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sd.bdoc.title)+"</a></td>\n");									
 				} else if (sd.fdoc!=null) {
 					sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"></td>\n");				
@@ -8885,7 +9290,7 @@ public class TGN {
 						sb.append("  <tr style=\"background: #eeeeee !important;\" id='"+sect_lc+"_detail"+d.id+"' class=\"tablesorter-childRow\" >\n");
 						sb.append("    <td colspan=\"4\" style=\"vertical-align: middle\">\n");
 						sb.append("      <div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">\n");
-						sb.append("        <textarea class=\"ak_tablecell ak_det_desc "+rowclass+"\" id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" onkeyup=\"startdetailcommenttimer(this)\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
+						sb.append("        <textarea class=\"ak_tablecell ak_det_desc "+rowclass+"\" id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
 						sb.append("        <a style=\"display: inline-block;\" class=\""+rowclass+"\" href=\""+d.b64_contents+"\" data-lightbox=\""+sect_lc+"_detail"+d.id+"\">\n");
 						sb.append("        <img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>\n");
 						sb.append("  </div></td></tr>\n");

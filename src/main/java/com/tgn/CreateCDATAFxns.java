@@ -195,15 +195,11 @@ public class CreateCDATAFxns {
 
 		ssb.append("var highlightvariants = function(vname) {\n");
 		ssb.append("  var x1 = document.getElementsByClassName(vname);\n");
-		ssb.append("  var x2 = document.getElementsByClassName('index_'+vname);\n");
-		ssb.append("  if (x1.length + x2.length > 1) {\n");
+		ssb.append("  if (x1.length > 1) {\n");
 		ssb.append("    var i;\n");
 		ssb.append("    for (i = 0; i < x1.length; i++) {\n");
 		ssb.append("      x1[i].setAttribute('fill', '#00ffff');\n");
 		ssb.append("    }\n");
-		ssb.append("    for (i = 0; i < x2.length; i++) {\n");
-		ssb.append("      x2[i].setAttribute('fill', '#00ffff');\n");
-		ssb.append("    }\n");	
 		ssb.append("  }\n");
 		ssb.append("}\n");
 		ssb.append("\n");
@@ -216,17 +212,12 @@ public class CreateCDATAFxns {
 
 		ssb.append("var dehighlightvariants = function(vname) {\n");
 		ssb.append("  var x1 = document.getElementsByClassName(vname);\n");
-		ssb.append("  var x2 = document.getElementsByClassName('index_'+vname);\n");
-		ssb.append("  if (x1.length + x2.length > 1) {\n");
+		ssb.append("  if (x1.length > 1) {\n");
 		ssb.append("    var i;\n");
 		ssb.append("    for (i = 0; i < x1.length; i++) {\n");
 		ssb.append("      var nf = x1[i].getAttribute('data-normalfill');\n");
 		ssb.append("      x1[i].setAttribute('fill', nf);\n");
 		ssb.append("    }\n");
-		ssb.append("    for (i = 0; i < x2.length; i++) {\n");
-		ssb.append("      var nf = x2[i].getAttribute('data-normalfill');\n");
-		ssb.append("      x2[i].setAttribute('fill', nf);\n");
-		ssb.append("    }\n");	
 		ssb.append("  }\n");
 		ssb.append("}\n");
 		ssb.append("\n");
