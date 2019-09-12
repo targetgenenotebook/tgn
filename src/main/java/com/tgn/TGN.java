@@ -1018,7 +1018,7 @@ public class TGN {
 	static String publicFileFolder;
 	static String databaseFolder;
 	static Hashtable<String, Boolean> gene_synchronize_objects = new Hashtable<>();
-	static String backend_version = "1.2.9";
+	static String backend_version = "1.2.10";
 	static String backend_db_version = "1.1";
 
 	public static void main(String[] args) {
@@ -2763,7 +2763,7 @@ public class TGN {
 		sb.append("  var backend_version = '"+backend_version+"';\n");
 		sb.append("  var master_busy = true;\n");
 		sb.append("</script>\n");	
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=07282019\"></script>\n");
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=09122019\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js?v=07282019\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"jquery/jquery-2.2.4.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"FileSaver.js-master/FileSaver.js\"></script>\n");

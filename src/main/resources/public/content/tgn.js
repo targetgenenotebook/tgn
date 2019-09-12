@@ -1239,7 +1239,7 @@ function ShowAboutOverlay() {
 		timeout: 30000,
 		dataType: "text",
 		success: function(returnedbyserver){
-			dcontent+=data;
+			dcontent+=returnedbyserver;
 			dcontent += "</div>";
 			mydiv.innerHTML = dcontent;
 			var tmpb = document.createElement('button');
