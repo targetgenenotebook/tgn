@@ -6,7 +6,7 @@ function UnreviewedCheckin() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/unreviewedcheckin",
+		url: window.location.protocol+"//"+window.location.host+"/unreviewedcheckin",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -152,7 +152,7 @@ UpdateSummary = function() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updatesummary/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updatesummary/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -263,7 +263,7 @@ updatecomment = function(dbid, origin, newcomment, fromwhere) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updatecomment/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updatecomment/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -424,7 +424,7 @@ updatesvgdisplayname = function(dbid, origin, svgdisplayname) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updatesvgdisplayname/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updatesvgdisplayname/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -490,7 +490,7 @@ function AddNewEQTLOverlay() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/get_pub_and_gene_list/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/get_pub_and_gene_list/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -606,7 +606,7 @@ SaveNewEQTL = function() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/saveneweqtl/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/saveneweqtl/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -747,7 +747,7 @@ UpdateEQTLShowHide = function(cbox) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updateeqtlshowhide/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updateeqtlshowhide/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -806,7 +806,7 @@ UpdateSourceReviewed = function(cbox) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updatesourcereview/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updatesourcereview/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -858,7 +858,7 @@ RemoveEQTLRow = function(whichdbid) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/removeeqtlrow/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/removeeqtlrow/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1030,7 +1030,7 @@ SaveCustomCredibleSet = function(db_id, gwas_or_eqtl) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/createcustomcredibleset/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/createcustomcredibleset/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1101,7 +1101,7 @@ DeleteGWASCustomCredibleSet = function(selector) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/deletegwascustomcredibleset/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/deletegwascustomcredibleset/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1172,7 +1172,7 @@ DeleteEQTLCustomCredibleSet = function(selector) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/deleteeqtlcustomcredibleset/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/deleteeqtlcustomcredibleset/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1375,7 +1375,7 @@ SaveNewDetail = function(sd_id) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/submitnewdetail/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/submitnewdetail/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1442,7 +1442,7 @@ RemoveDetail = function(detailid) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/removedetail/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/removedetail/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1517,7 +1517,7 @@ UpdateSection = function(selector) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/submitdetailsectionassignment/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/submitdetailsectionassignment/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1626,7 +1626,7 @@ SaveNewPubmed = function() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/submitnewpubmed/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/submitnewpubmed/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1727,7 +1727,7 @@ SaveNewBiorxiv = function() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/submitnewbiorxiv/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/submitnewbiorxiv/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1852,7 +1852,7 @@ SaveNewFile = function() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/submitnewfile/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/submitnewfile/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -1973,7 +1973,7 @@ SaveNewWeb = function() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/submitnewweb/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/submitnewweb/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2039,7 +2039,7 @@ RemoveRefRow = function(whichdbid) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/oktoremoveref/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/oktoremoveref/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2099,7 +2099,7 @@ function AddNewGWASOverlay(ispqtl) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/get_pub_list/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/get_pub_list/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2206,7 +2206,7 @@ SaveNewGWAS = function(ispqtl) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/savenewgwas/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/savenewgwas/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2275,7 +2275,7 @@ RemoveGWASRow = function(whichdbid, ispqtl) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/removegwasrow/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/removegwasrow/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2391,7 +2391,7 @@ UpdateGWASShowHide = function(cbox) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updategwasshowhide/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updategwasshowhide/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2458,7 +2458,7 @@ UpdateShowHideNonCoding = function(cbox) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updateshowhidenoncoding/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updateshowhidenoncoding/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2520,7 +2520,7 @@ UpdateMarkerForLD = function(cbox) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updatemarkerforld/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updatemarkerforld/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2676,7 +2676,7 @@ UpdateGWASCredibleSet = function(selector) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updategwascredibleset/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updategwascredibleset/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2767,7 +2767,7 @@ UpdateEQTLCredibleSet = function(selector) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updateeqtlcredibleset/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/updateeqtlcredibleset/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -2969,7 +2969,7 @@ DownloadFile = function(whichdbid) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/downloadfile/"+encodeURIComponent(gene_symbol),
+		url: window.location.protocol+"//"+window.location.host+"/downloadfile/"+encodeURIComponent(gene_symbol),
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),

@@ -190,7 +190,7 @@ ToggleAssignToCurrentTGN = function(button) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updatetagassign",
+		url: window.location.protocol+"//"+window.location.host+"/updatetagassign",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -250,7 +250,7 @@ ToggleAssignToCurrentTag = function(button) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/updatetagassign",
+		url: window.location.protocol+"//"+window.location.host+"/updatetagassign",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -310,7 +310,7 @@ function AddAssignByTGNOverlay() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/get_db_tag_assigns",
+		url: window.location.protocol+"//"+window.location.host+"/get_db_tag_assigns",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -415,7 +415,7 @@ function AddAssignByTagOverlay() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/get_db_tag_assigns",
+		url: window.location.protocol+"//"+window.location.host+"/get_db_tag_assigns",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -524,7 +524,7 @@ function AddPushWebReferenceOverlay() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/get_all_db_list",
+		url: window.location.protocol+"//"+window.location.host+"/get_all_db_list",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -644,7 +644,7 @@ PushToDBs = function() {
 			push_dbs: push_to
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/pushweb",
+		url: window.location.protocol+"//"+window.location.host+"/pushweb",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -726,7 +726,7 @@ function AddEditTagOverlay(current_tag_id) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/get_tag_class_list",
+		url: window.location.protocol+"//"+window.location.host+"/get_tag_class_list",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -846,7 +846,7 @@ SaveTag = function() {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/savetag",
+		url: window.location.protocol+"//"+window.location.host+"/savetag",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
@@ -910,7 +910,7 @@ DeleteTag = function(tagid) {
 			backend_version: backend_version
 	};
 	$.ajax({
-		url: "http://"+window.location.host+"/deletetag",
+		url: window.location.protocol+"//"+window.location.host+"/deletetag",
 		type: "post",
 		timeout: 30000,
 		data: JSON.stringify(whattodo),
