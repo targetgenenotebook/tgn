@@ -1018,7 +1018,7 @@ public class TGN {
 	static String publicFileFolder;
 	static String databaseFolder;
 	static Hashtable<String, Boolean> gene_synchronize_objects = new Hashtable<>();
-	static String backend_version = "1.2.11";
+	static String backend_version = "1.2.12";
 	static String backend_db_version = "1.1";
 
 	public static void main(String[] args) {
@@ -2763,8 +2763,8 @@ public class TGN {
 		sb.append("  var backend_version = '"+backend_version+"';\n");
 		sb.append("  var master_busy = true;\n");
 		sb.append("</script>\n");	
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=10232019\"></script>\n");
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js?v=10232019\"></script>\n");
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=10302019\"></script>\n");
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js?v=10302019\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"jquery/jquery-2.2.4.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"FileSaver.js-master/FileSaver.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"lightbox2-master/dist/js/lightbox.js\"></script>\n");
@@ -4264,7 +4264,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(4))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(3))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(pm_linkout)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(0))+"</a></td>");	
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");	
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");	
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -4275,7 +4275,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(4))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(3))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(pm_linkout)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(pubmed_entry.get(0))+"</a></td>");
-			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -4618,7 +4618,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("pub_year"))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("publisher"))+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(lhm.get("outbound_link"))+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(lhm.get("title"))+"</a></td>");
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; left:0; right:0; bottom:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -4629,7 +4629,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("pub_year"))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(lhm.get("publisher"))+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(lhm.get("outbound_link"))+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(lhm.get("title"))+"</a></td>");
-			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -4785,7 +4785,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_year)+"</td>");			
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><div>"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"<button style=\"margin-left:10px;\" class=\"ak_table_button "+rowclass+"\" onclick=\"DownloadFile('sourcedocumentsrow"+source_documents_id+"')\" >Download</button></div></td>");		
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"</td>");	
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -4796,7 +4796,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_year)+"</td>");			
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\"><div>"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"<button style=\"margin-left:10px;\" class=\"ak_table_button "+rowclass+"\" onclick=\"DownloadFile('sourcedocumentsrow"+source_documents_id+"')\" >Download</button></div></td>");		
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snfpm.file_description)+"</td>");
-			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -5128,7 +5128,7 @@ public class TGN {
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_year)+"</td>");			
 			sb.append("<td class=\"ak_tablecell\" style=\"text-align: center;\"><a href=\""+StringEscapeUtils.escapeHtml4(snwpm.web_site)+"\"  target=\"_blank\">"+StringEscapeUtils.escapeHtml4(snwpm.web_site.replaceAll("/", "/\u200B"))+"</a></td>");				
 			sb.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_description)+"</td>");	
-			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
+			sb.append("<td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb.append("<td rowspan=\""+1+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb.append("</tr>");
@@ -5139,7 +5139,7 @@ public class TGN {
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_year)+"</td>");			
 			sb2.append("<td class=\"ak_tablecell\" style=\"text-align: center;\"><a href=\""+StringEscapeUtils.escapeHtml4(snwpm.web_site)+"\"  target=\"_blank\">"+StringEscapeUtils.escapeHtml4(snwpm.web_site.replaceAll("/", "/\u200B"))+"</a></td>");	
 			sb2.append("<td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snwpm.web_description)+"</td>");	
-			sb2.append("<td style=\"position:relative;\' ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
+			sb2.append("<td style=\"position:relative;\' ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+source_documents_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+""+"</textarea></td>\n");
 			sb2.append("<td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details</button></td>");
 			sb2.append("<td rowspan=\""+rowspancount+"\" style=\"vertical-align: middle;\"><button id=\"x_ref_"+source_documents_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveRefRow('sourcedocumentsrow"+source_documents_id+"')\">X</button></td>");
 			sb2.append("</tr>");
@@ -5384,7 +5384,7 @@ public class TGN {
 			StringBuffer sb = new StringBuffer();
 			String rowclass = "akgwasrowclass"+gwas_table_row_id;
 			sb.append("<tr id=\'gwasrow"+gwas_table_row_id+"\' style=\"height:2.5em;\">");
-			sb.append("  <td style=\"position:relative;\"><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
+			sb.append("  <td style=\"position:relative;\"><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter display name\" oninput=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
 			sb.append("  <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngpm.phenotype)+"</td>\n");
 			if (outbound_link.equals("")) {
 				sb.append("  <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(column_display_text)+"</td>\n");	
@@ -5410,7 +5410,7 @@ public class TGN {
 			sb.append("  </select></td>\n");
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateGWASShowHide(this)\" data-dbid=\""+gwas_table_row_id+"\"></td>\n");
 
-			sb.append("  <td style=\"position:relative;\" ><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(sngpm.comment)+"</textarea></td>\n");
+			sb.append("  <td style=\"position:relative;\" ><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gwas_table_row_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(sngpm.comment)+"</textarea></td>\n");
 			sb.append("  <td style=\"vertical-align: middle;\"><button id=\"x_gwas_"+gwas_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveGWASRow('gwasrow"+gwas_table_row_id+"', "+sngpm.is_pqtl+")\">X</button></td>\n");
 			sb.append("</tr>\n");
 
@@ -5622,7 +5622,7 @@ public class TGN {
 			StringBuffer sb = new StringBuffer();
 			String rowclass = "akeqtlrowclass"+eqtl_table_row_id;
 			sb.append("  <tr id=\'eqtlrow"+eqtl_table_row_id+"\' style=\"height:2.5em;\">\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter display name\" oninput=\"startsvgdisplaynametimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(sdn)+"</textarea></td>\n");
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snepm.tissue)+"</td>\n");
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snepm.gene_symbol)+"</td>\n");
 				
@@ -5662,7 +5662,7 @@ public class TGN {
 			sb.append("    <option value=\"Add custom\">Add custom</option>\n");
 			sb.append("  </select></td>\n");
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateEQTLShowHide(this)\" data-dbid=\""+eqtl_table_row_id+"\"></td>\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(snepm.comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+eqtl_table_row_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(snepm.comment)+"</textarea></td>\n");
 			sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_eqtl_"+eqtl_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveEQTLRow('eqtlrow"+eqtl_table_row_id+"')\">X</button></td>");
 			Vector<ArrayList<Integer>> v = GetAllGWASOverlaps(connection, Integer.valueOf(eqtl_table_row_id));			
 			ArrayList<Integer> vl = v.get(1);
@@ -5888,7 +5888,7 @@ public class TGN {
 						sb.append("<tr style=\"background: #eeeeee !important;\" id='"+new_section.toLowerCase()+"_detail"+d.id+"' class=\"tablesorter-childRow\" >");
 						sb.append("<td colspan=\"4\" style=\"vertical-align: middle\">");
 						sb.append("<div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">");
-						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
+						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" oninput=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
 						sb.append("<a class=\""+rowclass+"\" style=\"display: inline-block;\" href=\""+d.b64_contents+"\" data-lightbox=\""+new_section.toLowerCase()+"_detail"+d.id+"\">");
 						sb.append("<img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>");
 						sb.append("</div></td></tr>");
@@ -5929,7 +5929,7 @@ public class TGN {
 						sb.append("<tr style=\"background: #eeeeee !important;\" id='"+old_section.toLowerCase()+"_detail"+d.id+"' class=\"tablesorter-childRow\" >");
 						sb.append("<td colspan=\"4\" style=\"vertical-align: middle\">");
 						sb.append("<div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">");
-						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
+						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" oninput=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
 						sb.append("<a class=\""+rowclass+"\" style=\"display: inline-block;\" href=\""+d.b64_contents+"\" data-lightbox=\""+old_section.toLowerCase()+"_detail"+d.id+"\">");
 						sb.append("<img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>");
 						sb.append("</div></td></tr>");
@@ -6156,7 +6156,7 @@ public class TGN {
 						sb.append("<tr style=\"background: #eeeeee !important;\" id='"+old_section.toLowerCase()+"_detail"+d.id+"' class=\"tablesorter-childRow\">");
 						sb.append("<td colspan=\"4\" style=\"vertical-align: middle\">");
 						sb.append("<div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">");
-						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
+						sb.append("<textarea id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(d.description)+"\" oninput=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>");
 						sb.append("<a class=\""+rowclass+"\" style=\"display: inline-block;\" href=\""+d.b64_contents+"\" data-lightbox=\""+old_section.toLowerCase()+"_detail"+d.id+"\">");
 						sb.append("<img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>");
 						sb.append("</div></td></tr>");
@@ -6240,7 +6240,7 @@ public class TGN {
 			sb.append("              <option value=\"Protein\">Protein</option>\n");
 			sb.append("            </select>\n");
 			sb.append("          </section>");		
-			sb.append("          <textarea id='detailrowsection"+detail_table_row_id+"' data-fromwhere=\"2\" data-dbid=\""+detail_table_row_id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(sndpm.desc)+"\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(sndpm.desc)+"</textarea>\n");
+			sb.append("          <textarea id='detailrowsection"+detail_table_row_id+"' data-fromwhere=\"2\" data-dbid=\""+detail_table_row_id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" data-curval=\""+StringEscapeUtils.escapeHtml4(sndpm.desc)+"\" oninput=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(sndpm.desc)+"</textarea>\n");
 			sb.append("          <a style=\"display: inline-block;\" class=\""+rowclass+" "+drowclass+"\" href=\""+sndpm.img_b64+"\" data-lightbox=\"detail"+detail_table_row_id+"\">\n");
 			sb.append("          <img class=\"contain_img "+rowclass+" "+drowclass+"\" src=\""+sndpm.img_b64+"\" width=\"300\" height=\"200\"></img></a>\n");
 			sb.append("          <button id=\"x_detail_"+detail_table_row_id+"\" type=\"button\" class=\"ak_table_button "+rowclass+" "+drowclass+"\" style=\"margin-left:40px;display: inline-block; vertical-align: top; margin-top:90px;\" onclick=\"RemoveDetail('detail"+detail_table_row_id+"')\">Remove</button>\n");
@@ -8386,7 +8386,7 @@ public class TGN {
 		sb.append("<h3 style=\"font: 12px/18px Lato, Sans-serif;\">Summary"+sstring+"</h3>\n");
 		sb.append("<div>\n");
 		sb.append("<div style=\"width:100%\">\n");
-		sb.append("<textarea placeholder=\"Enter summary\" rows=\"36\" id=\"aksummaryarea\" onkeyup=\"startupdatesummarytimer()\" class=\"form-control\" style=\"width:100%; font-family: Lato, Sans-serif; font-size:12px; line-height:18px\">"+StringEscapeUtils.escapeHtml4(summary)+"</textarea>\n");
+		sb.append("<textarea placeholder=\"Enter summary\" rows=\"36\" id=\"aksummaryarea\" oninput=\"startupdatesummarytimer()\" class=\"form-control\" style=\"width:100%; font-family: Lato, Sans-serif; font-size:12px; line-height:18px\">"+StringEscapeUtils.escapeHtml4(summary)+"</textarea>\n");
 		sb.append("</div>\n");
 		sb.append("</div>\n");
 		sb.append("</div>\n");
@@ -8421,7 +8421,7 @@ public class TGN {
 			if (g.is_pqtl) continue;
 			String rowclass = "akgwasrowclass"+g.gwas_table_row_id;
 			sb.append("  <tr id=\'gwasrow"+g.gwas_table_row_id+"\' style=\"height:2.5em;\">\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" oninput=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.trait)+"</td>\n");
 			if (!g.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+g.outbound_link+"\" target=\"_blank\">"+g.column_display_text+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+g.column_display_text+"</td>\n");
@@ -8456,7 +8456,7 @@ public class TGN {
 			String ckd = "";
 			if (g.show_in_svg) ckd = "checked";
 			sb.append("    <td style=\"text-align:center;\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateGWASShowHide(this)\" data-dbid=\""+g.gwas_table_row_id+"\" "+ckd+"></td>\n");
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
 			if (!g.automatic) sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_gwas_"+g.gwas_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveGWASRow('gwasrow"+g.gwas_table_row_id+"', 0)\">X</button></td>");
 			else sb.append("    <td style=\"vertical-align: middle;\"></td>");
 			sb.append("  </tr>\n");
@@ -8517,7 +8517,7 @@ public class TGN {
 			if (!g.is_pqtl) continue;
 			String rowclass = "akgwasrowclass"+g.gwas_table_row_id;
 			sb.append("  <tr id=\'gwasrow"+g.gwas_table_row_id+"\' style=\"height:2.5em;\">\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"top:0; left:0; right:0; bottom:0; position:absolute; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter display name\" oninput=\"startsvgdisplaynametimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.svg_display_name)+"</textarea></td>\n");	
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.trait)+"</td>\n");
 			if (!g.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+g.outbound_link+"\" target=\"_blank\">"+g.column_display_text+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+g.column_display_text+"</td>\n");
@@ -8552,7 +8552,7 @@ public class TGN {
 			String ckd = "";
 			if (g.show_in_svg) ckd = "checked";
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateGWASShowHide(this)\" data-dbid=\""+g.gwas_table_row_id+"\" "+ckd+"></td>\n");
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_gwas_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+g.gwas_table_row_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'gwas')\">"+StringEscapeUtils.escapeHtml4(g.curator_comment)+"</textarea></td>\n");
 			if (!g.automatic) sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_gwas_"+g.gwas_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveGWASRow('gwasrow"+g.gwas_table_row_id+"', 1)\">X</button></td>");
 			else sb.append("    <td style=\"vertical-align: middle;\"></td>");
 			sb.append("  </tr>\n");
@@ -8614,7 +8614,7 @@ public class TGN {
 			EQTLResult q = all_eqtl_results.get(j);
 			String rowclass = "akeqtlrowclass"+q.eqtl_table_row_id;
 			sb.append("  <tr id=\'eqtlrow"+q.eqtl_table_row_id+"\' style=\"height:2.5em;\">\n");
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter display name\" onkeyup=\"startsvgdisplaynametimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(q.svg_display_name)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_sdn ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter display name\" oninput=\"startsvgdisplaynametimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(q.svg_display_name)+"</textarea></td>\n");
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.tissue)+"</td>\n");
 			sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.gene_symbol)+"</td>\n");
 			if (!q.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+q.outbound_link+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(q.column_display_text)+"</a></td>\n");
@@ -8653,7 +8653,7 @@ public class TGN {
 			String ckd = "";
 			if (q.show_in_svg) ckd = "checked";
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\""+rowclass+"\" onclick=\"UpdateEQTLShowHide(this)\" data-dbid=\""+q.eqtl_table_row_id+"\" "+ckd+"></td>\n");
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(q.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_eqtl_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+q.eqtl_table_row_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'eqtl')\">"+StringEscapeUtils.escapeHtml4(q.curator_comment)+"</textarea></td>\n");
 			if (!q.automatic) sb.append("    <td style=\"vertical-align: middle;\"><button id=\"x_eqtl_"+q.eqtl_table_row_id+"\" type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"ak_table_button "+rowclass+"\" onclick=\"RemoveEQTLRow('eqtlrow"+q.eqtl_table_row_id+"')\">X</button></td>");
 			else sb.append("    <td style=\"vertical-align: middle;\"></td>");
 			sb.append("    <td id=\'eqtloverlap"+q.eqtl_table_row_id+"\' style=\"text-align:center;\" class=\"ak_tablecell\">"+q.association_overlap_count+"</td>\n");			
@@ -8784,7 +8784,7 @@ public class TGN {
 			} else {
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(gp.linkout)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(gp.source)+"</a></td>\n");
 			}
-			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_genephen_comment ak_tablecell\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gp.db_id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'genephen')\">"+StringEscapeUtils.escapeHtml4(gp.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\"><textarea class=\"ak_genephen_comment ak_tablecell\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+gp.db_id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'genephen')\">"+StringEscapeUtils.escapeHtml4(gp.curator_comment)+"</textarea></td>\n");
 			sb.append("  </tr>\n");
 		}
 		sb.append("</tbody>\n");		
@@ -8914,7 +8914,7 @@ public class TGN {
 				
 				sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sd.wdoc.description)+"</td>\n");	
 			}
-			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+sd.id+"\" placeholder=\"Enter comment\" onkeyup=\"startcommenttimer(this,'source')\">"+StringEscapeUtils.escapeHtml4(sd.curator_comment)+"</textarea></td>\n");
+			sb.append("    <td style=\"position:relative;\" ><textarea class=\"ak_source_comment ak_tablecell "+rowclass+"\" style=\"position:absolute; top:0; bottom:0; left:0; right:0; height:100%; width:100%; box-sizing:border-box;\" data-dbid=\""+sd.id+"\" placeholder=\"Enter comment\" oninput=\"startcommenttimer(this,'source')\">"+StringEscapeUtils.escapeHtml4(sd.curator_comment)+"</textarea></td>\n");
 			String xtra = "";
 			if (sd.details.size()>0) xtra = " ("+sd.details.size()+")";
 			sb.append("    <td style=\"vertical-align: middle;\"><button type=\"button\" style=\"display: block; margin: auto; vertical-align: middle;\" class=\"detail-toggle ak_table_button "+rowclass+"\" >Show/Add Details"+xtra+"</button></td>");
@@ -8947,7 +8947,7 @@ public class TGN {
 				else sb.append("    <option value=\"Protein\">Protein</option>\n");
 				sb.append("            </select>\n");
 				sb.append("          </section>");		
-				sb.append("          <textarea id='detailrow"+d.id+"' data-fromwhere=\"1\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
+				sb.append("          <textarea id='detailrow"+d.id+"' data-fromwhere=\"1\" data-dbid=\""+d.id+"\" class=\"ak_tablecell ak_det_desc "+rowclass+" "+drowclass+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 20px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" oninput=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
 				sb.append("          <a style=\"display: inline-block;\" class=\""+rowclass+" "+drowclass+"\" href=\""+d.b64_contents+"\" data-lightbox=\"detail"+d.id+"\">\n");
 				sb.append("          <img class=\"contain_img "+rowclass+" "+drowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>\n");
 				sb.append("          <button id=\"x_detail_"+d.id+"\" type=\"button\" class=\"ak_table_button "+rowclass+" "+drowclass+"\" style=\"margin-left:40px;display: inline-block; vertical-align: top; margin-top:90px;\" onclick=\"RemoveDetail('detail"+d.id+"')\">Remove</button>\n");
@@ -9191,7 +9191,7 @@ public class TGN {
 						sb.append("  <tr style=\"background: #eeeeee !important;\" id='"+sect_lc+"_detail"+d.id+"' class=\"tablesorter-childRow\" >\n");
 						sb.append("    <td colspan=\"4\" style=\"vertical-align: middle\">\n");
 						sb.append("      <div style=\"width:1000px; height:200px; margin-top:10px; margin-bottom:10px; margin-left: auto; margin-right: auto; position: relative;\">\n");
-						sb.append("        <textarea class=\"ak_tablecell ak_det_desc "+rowclass+"\" id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" onkeyup=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
+						sb.append("        <textarea class=\"ak_tablecell ak_det_desc "+rowclass+"\" id='detailrowsection"+d.id+"' data-fromwhere=\"2\" data-dbid=\""+d.id+"\" style=\"width:600px; height:180px; margin-top: 10px !important; margin-right: 70px !important; display: inline-block; vertical-align: top;\" placeholder=\"Enter description\" oninput=\"startcommenttimer(this,'detail')\">"+StringEscapeUtils.escapeHtml4(d.description)+"</textarea>\n");
 						sb.append("        <a style=\"display: inline-block;\" class=\""+rowclass+"\" href=\""+d.b64_contents+"\" data-lightbox=\""+sect_lc+"_detail"+d.id+"\">\n");
 						sb.append("        <img class=\"contain_img "+rowclass+"\" src=\""+d.b64_contents+"\" width=\"300\" height=\"200\"></img></a>\n");
 						sb.append("  </div></td></tr>\n");

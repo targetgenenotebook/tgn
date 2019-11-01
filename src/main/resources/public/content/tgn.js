@@ -86,13 +86,10 @@ function startcommenttimer(textarea, origin) {
 	}
 	if (index>-1) {
 		clearTimeout(comment_timerchecks[origin][index]);
-	}
-	var comtext = textarea.value;
-	if (index>-1) {
-		comment_timerchecks[origin][index] = setTimeout(function() {updatecomment(db_id, origin, comtext, fromwhere)}, 2000);
+		comment_timerchecks[origin][index] = setTimeout(function() {updatecomment(db_id, origin, textarea.value, fromwhere)}, 2000);
 	} else {
 		comment_timercheckids[origin].push(db_id);
-		var tmp =  setTimeout(function() {updatecomment(db_id, origin, comtext, fromwhere)}, 2000);
+		var tmp =  setTimeout(function() {updatecomment(db_id, origin, textarea.value, fromwhere)}, 2000);
 		comment_timerchecks[origin].push(tmp);
 	}
 };
@@ -125,13 +122,10 @@ function startsvgdisplaynametimer(inputelement,origin) {
 	}
 	if (index>-1) {
 		clearTimeout(sdn_timerchecks[origin][index]);
-	}
-	var sdntext = inputelement.value;
-	if (index>-1) {
-		sdn_timerchecks[origin][index] = setTimeout(function() {updatesvgdisplayname(db_id, origin, sdntext)}, 2000);
+		sdn_timerchecks[origin][index] = setTimeout(function() {updatesvgdisplayname(db_id, origin, inputelement.value)}, 2000);
 	} else {
 		sdn_timercheckids[origin].push(db_id);
-		var tmp =  setTimeout(function() {updatesvgdisplayname(db_id, origin, sdntext)}, 2000);
+		var tmp =  setTimeout(function() {updatesvgdisplayname(db_id, origin, inputelement.value)}, 2000);
 		sdn_timerchecks[origin].push(tmp);
 	}
 };
@@ -139,6 +133,7 @@ function startsvgdisplaynametimer(inputelement,origin) {
 var updatesummarycheck = null;
 UpdateSummary = function() {
 	if (master_busy) {
+		clearTimeout(updatesummarycheck);
 		updatesummarycheck = setTimeout(function() {UpdateSummary()}, 2000);
 		return;
 	}
@@ -195,21 +190,17 @@ updatecomment = function(dbid, origin, newcomment, fromwhere) {
 			break;
 		}
 	}
+	if (index==-1) {
+		return; // should not happen
+	}
 	if (master_busy) {
-		if (index>-1) {
-			comment_timerchecks[origin][index] = setTimeout(function() {updatecomment(dbid, origin, newcomment, fromwhere)}, 2000);
-		} else {
-			comment_timercheckids[origin].push(dbid);
-			var tmp = setTimeout(function() {updatecomment(dbid, origin, newcomment, fromwhere)}, 2000);
-			comment_timerchecks[origin].push(tmp);
-		}
+		clearTimeout(comment_timerchecks[origin][index]);
+		comment_timerchecks[origin][index] = setTimeout(function() {updatecomment(dbid, origin, newcomment, fromwhere)}, 2000);
 		return;
 	}
 	master_busy = true;
-	if (index>-1) {
-		comment_timerchecks[origin].splice(index,1);
-		comment_timercheckids[origin].splice(index,1);
-	}
+	comment_timerchecks[origin].splice(index,1);
+	comment_timercheckids[origin].splice(index,1);
 	
 	var el_chk = null;
 	var c_val;
@@ -388,21 +379,18 @@ updatesvgdisplayname = function(dbid, origin, svgdisplayname) {
 			break;
 		}
 	}
+	if (index==-1) {
+		return; // should not happen
+	}
 	if (master_busy) {
-		if (index>-1) {
-			sdn_timerchecks[origin][index] = setTimeout(function() {updatesvgdisplayname(dbid, origin, svgdisplayname)}, 2000);
-		} else {
-			sdn_timercheckids[origin].push(dbid);
-			var tmp = setTimeout(function() {updatesvgdisplayname(dbid, origin, svgdisplayname)}, 2000);
-			sdn_timerchecks[origin].push(tmp);
-		}
+		clearTimeout(sdn_timerchecks[origin][index]);
+		sdn_timerchecks[origin][index] = setTimeout(function() {updatesvgdisplayname(dbid, origin, svgdisplayname)}, 2000);
 		return;
 	}
 	master_busy = true;
-	if (index>-1) {
-		sdn_timerchecks[origin].splice(index,1);
-		sdn_timercheckids[origin].splice(index,1);
-	}
+	sdn_timerchecks[origin].splice(index,1);
+	sdn_timercheckids[origin].splice(index,1);
+
 	var el_chk = document.getElementById(origin+"row"+dbid);
 	if (el_chk==null) {  // row got deleted somehow, weird, but we won't error because of it
 		master_busy = false;
