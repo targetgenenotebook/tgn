@@ -1018,7 +1018,7 @@ public class TGN {
 	static String publicFileFolder;
 	static String databaseFolder;
 	static Hashtable<String, Boolean> gene_synchronize_objects = new Hashtable<>();
-	static String backend_version = "1.2.12";
+	static String backend_version = "1.2.14";
 	static String backend_db_version = "1.1";
 
 	public static void main(String[] args) {
@@ -2763,8 +2763,8 @@ public class TGN {
 		sb.append("  var backend_version = '"+backend_version+"';\n");
 		sb.append("  var master_busy = true;\n");
 		sb.append("</script>\n");	
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=10302019\"></script>\n");
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js?v=10302019\"></script>\n");
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=11022019\"></script>\n");
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js?v=11022019\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"jquery/jquery-2.2.4.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"FileSaver.js-master/FileSaver.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"lightbox2-master/dist/js/lightbox.js\"></script>\n");
@@ -3579,9 +3579,7 @@ public class TGN {
 				}
 			}
 			sb.append("</div></p>\n");
-			sb.append("<p style=\"color:#000; font-size: 20px;\"></p>\n");
-			sb.append("<p style=\"color:#000; font-size: 20px;\"></p>\n");
-			sb.append("<h3 style=\"text-align: center; font: 18px/27px Lato, Sans-serif;\">Available Notebooks</h3>\n");
+			sb.append("<h3 style=\"text-align: center; font: 18px/27px Lato, Sans-serif; margin-top:10px;\">Available Notebooks</h3>\n");
 			sb.append("<table id='available_notebooks' class=\"display\" cellspacing=\"0\">\n");		
 			sb.append("  <thead>\n");
 			sb.append("  <tr>\n");

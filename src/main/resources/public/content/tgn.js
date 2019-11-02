@@ -491,8 +491,7 @@ function AddNewEQTLOverlay() {
 				var mydiv = document.getElementById("addneweqtloverlay");
 				mydiv.innerHTML = '';
 				var dcontent = '<div id="akneweqtldiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;">New eQTL</p>';
+				dcontent += '<p style="color:#000; font-size: 20px; margin-top:10px;">New eQTL</p>';
 				dcontent += '<p style="color:#000;">Source:';
 				var s_html = '<select style="width:400px" class="ak_new_eqtl_overlay ak_new_eqtl_source_selector" >';
 				s_html += '<option selected disabled hidden style="display: none" value="">Please select</option>';
@@ -515,9 +514,7 @@ function AddNewEQTLOverlay() {
 				dcontent += '<p style="color:#000;">Beta: <input class="ak_new_eqtl_overlay" id="new_eqtl_beta" style="text-align:center;width:105px;color:#000;" placeholder="Eg. -0.808" type="text" maxlength="15"></p>';
 				dcontent += '<p style="color:#000;">Effect allele (optional): <input class="ak_new_eqtl_overlay" id="new_eqtl_allele" style="text-align:center;width:105px;color:#000;" placeholder="Eg. T" type="text" maxlength="15"></p>';
 				dcontent += '<p style="color:#000; vertical-align: middle;">Comment: <textarea id="new_eqtl_comment" rows="4" cols="50" style="color:#000; vertical-align: middle;" placeholder="Enter comment" class="ak_new_eqtl_overlay ak_tablecell" type="text"></textarea></p>';
-				dcontent += '<p></p>';
-				dcontent += '<button id="ak_add_new_eqtl_button" type="button" class="ak_new_eqtl_overlay btn btn-primary btn-sm" onclick="SaveNewEQTL()">Save</button>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<button id="ak_add_new_eqtl_button" style="margin-bottom:10px;" type="button" class="ak_new_eqtl_overlay btn btn-primary btn-sm" onclick="SaveNewEQTL()">Save</button>';
 				dcontent += "</div>";
 				mydiv.innerHTML = dcontent;
 				var tmpb = document.createElement('button');
@@ -940,8 +937,7 @@ CreateCustomCredibleSetOverlay = function(selector,gwas_or_eqtl) {
 	var mydiv = document.getElementById("customcrediblesetoverlay");
 	mydiv.innerHTML = '';
 	var dcontent = '<div id="aknewcrediblesetdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-	dcontent += '<p style="color:#000; font-size: 20px;">Custom Credible Set</p>';
+	dcontent += '<p style="color:#000; font-size: 20px; margin-top:10px;">Custom Credible Set</p>';
 
 	dcontent += '<p style="color:#000;">Name of credible set: <input class="ak_credibleset_overlay" id="new_credibleset_name" style="text-align:center;width:105px;color:#000;" placeholder="Eg. Some name" type="text" maxlength="15"></p>';
 	dcontent += '<p style="color:#000;">Index-variant ('+rsn+') posterior: <input class="ak_credibleset_overlay" id="new_credibleset_indexvariant_posterior" style="text-align:center;width:105px;color:#000;" placeholder="Eg. 0.75" type="text" maxlength="15"></p>';
@@ -953,10 +949,8 @@ CreateCustomCredibleSetOverlay = function(selector,gwas_or_eqtl) {
 	}
 	dcontent += '</tbody>';
 	dcontent += '</table>';
-	dcontent += '<button type="button" class="ak_credibleset_overlay ak_table_button" onclick="AddCustomCredibleSetOverlayTableRow()">Add Row</button>';
-	dcontent += '<p></p>';
-	dcontent += '<button id="ak_create_credibleset_button" type="button" class="ak_credibleset_overlay btn btn-primary btn-sm" onclick="SaveCustomCredibleSet('+db_id+',\''+gwas_or_eqtl+'\')">Create Credible Set</button>';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+	dcontent += '<button type="button" style="margin-bottom:10px;" class="ak_credibleset_overlay ak_table_button" onclick="AddCustomCredibleSetOverlayTableRow()">Add Row</button>';
+	dcontent += '<button id="ak_create_credibleset_button" style=margin-bottom:10px;" type="button" class="ak_credibleset_overlay btn btn-primary btn-sm" onclick="SaveCustomCredibleSet('+db_id+',\''+gwas_or_eqtl+'\')">Create Credible Set</button>';
 	dcontent += "</div>";
 	mydiv.innerHTML = dcontent;
 	var tmpb = document.createElement('button');
@@ -1220,7 +1214,7 @@ function ShowAboutOverlay() {
 	master_busy = true;
 	var mydiv = document.getElementById("aboutoverlay");
 	mydiv.innerHTML = '';
-	var dcontent = '<div id="akaboutdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 14px; text-align: cetner; color:#000;">';
+	var dcontent = '<div id="akaboutdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 14px; text-align: center; color:#000;">';
 	$.ajax({
 		url: "content/about.txt",
 		type: "get",
@@ -1268,10 +1262,8 @@ function AddDetailOverlay(sourcedocuments_row_id) {
 	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
 	dcontent += '<p style="color:#000; font-size: 20px;">New Detail</p>';
 	dcontent += '<p style="color:#000; vertical-align: middle;"><textarea id="new_detail_description" rows="4" cols="48" style="color:#000; vertical-align: middle;" placeholder="Enter description" class="ak_detail_overlay ak_tablecell" type="text"></textarea></p>';
-	dcontent += '<p></p>';
 	dcontent += '<p style="color:#000; vertical-align: middle;"><a href="javascript:;" class="ak_detail_overlay" id="ak_paste_a" ><div id="ak_dandd" style="width: 300px; height: 200px; display: inline-block; vertical-align: top;"><img id="ak_paste_img" class="ak_detail_overlay contain_img" width="300" height="200"></img></div></a></p>';
-	dcontent += '<button id="ak_add_detail_button" type="button" class="ak_detail_overlay btn btn-primary btn-sm" onclick="SaveNewDetail('+row_id+')">Save</button>';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+	dcontent += '<button id="ak_add_detail_button" style="margin-bottom:10px;" type="button" class="ak_detail_overlay btn btn-primary btn-sm" onclick="SaveNewDetail('+row_id+')">Save</button>';
 	dcontent += "</div>";
 	mydiv.innerHTML = dcontent;
 	var tmpb = document.createElement('button');
@@ -1574,12 +1566,9 @@ function AddPubmedOverlay() {
 	var mydiv = document.getElementById("addpubmedoverlay");
 	mydiv.innerHTML = '';
 	var dcontent = '<div id="aknewpubmeddiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-	dcontent += '<p style="color:#000; font-size: 20px;">New Pubmed</p>';
+	dcontent += '<p style="color:#000; font-size:20px; margin-top:10px;">New Pubmed</p>';
 	dcontent += '<p style="color:#000;">Pubmed ID: <input class="ak_pubmed_overlay" id="new_pubmed_id" style="text-align:center;width:250px;color:#000;" placeholder="Eg. 23817569" type="text" maxlength="15"></p>';
-	dcontent += '<p></p>';
-	dcontent += '<button id="ak_add_pubmed_button" type="button" class="ak_pubmed_overlay btn btn-primary btn-sm" onclick="SaveNewPubmed()">Save</button>';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+	dcontent += '<button id="ak_add_pubmed_button" style="margin-bottom:10px;" type="button" class="ak_pubmed_overlay btn btn-primary btn-sm" onclick="SaveNewPubmed()">Save</button>';
 	dcontent += "</div>";
 	mydiv.innerHTML = dcontent;
 	var tmpb = document.createElement('button');
@@ -1675,12 +1664,9 @@ function AddBiorxivOverlay() {
 	var mydiv = document.getElementById("addbiorxivoverlay");
 	mydiv.innerHTML = '';
 	var dcontent = '<div id="aknewbiorxivdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-	dcontent += '<p style="color:#000; font-size: 20px;">New bioRxiv</p>';
+	dcontent += '<p style="color:#000; font-size:20px; margin-top:10px;">New bioRxiv</p>';
 	dcontent += '<p style="color:#000;">bioRxiv ID: <input class="ak_biorxiv_overlay" id="new_biorxiv_id" style="text-align:center;width:250px;color:#000;" placeholder="Eg. 10.1101/045831" type="text" maxlength="15"></p>';
-	dcontent += '<p></p>';
-	dcontent += '<button id="ak_add_biorxiv_button" type="button" class="ak_biorxiv_overlay btn btn-primary btn-sm" onclick="SaveNewBiorxiv()">Save</button>';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+	dcontent += '<button id="ak_add_biorxiv_button" style="margin-bottom:10px;" type="button" class="ak_biorxiv_overlay btn btn-primary btn-sm" onclick="SaveNewBiorxiv()">Save</button>';
 	dcontent += "</div>";
 	mydiv.innerHTML = dcontent;
 	var tmpb = document.createElement('button');
@@ -1776,14 +1762,11 @@ function AddFileOverlay() {
 	var mydiv = document.getElementById("addfileoverlay");
 	mydiv.innerHTML = '';
 	var dcontent = '<div id="aknewfilediv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-	dcontent += '<p style="color:#000; font-size: 20px;">New File</p>';
+	dcontent += '<p style="color:#000; font-size:20px; margin-top:10px;">New File</p>';
 	dcontent += '<p style="color:#000;">Year: <input class="ak_file_overlay" id="new_file_year" style="text-align:center;width:125px;color:#000;" placeholder="Eg. 2018" type="text" maxlength="4"></p>';
 	dcontent += '<p style="color:#000;"><input id="new_file_file" class="ak_file_overlay" style="text-align:center;width:250px" type="file" onchange="RecoverB64RefFile(this)"></p>';
 	dcontent += '<p style="color:#000; vertical-align: middle;"><textarea id="new_file_description" rows="4" cols="48" style="color:#000; vertical-align: middle;" placeholder="Enter description" class="ak_file_overlay ak_tablecell" type="text"></textarea></p>';
-	dcontent += '<p></p>';
-	dcontent += '<button id="ak_add_file_button" type="button" class="ak_file_overlay btn btn-primary btn-sm" onclick="SaveNewFile()">Save</button>';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+	dcontent += '<button id="ak_add_file_button" style="margin-bottom:10px;" type="button" class="ak_file_overlay btn btn-primary btn-sm" onclick="SaveNewFile()">Save</button>';
 	dcontent += "</div>";
 	mydiv.innerHTML = dcontent;
 	var tmpb = document.createElement('button');
@@ -1901,8 +1884,7 @@ function AddWebOverlay() {
 	var mydiv = document.getElementById("addweboverlay");
 	mydiv.innerHTML = '';
 	var dcontent = '<div id="aknewwebdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-	dcontent += '<p style="color:#000; font-size: 20px;">New Web</p>';
+	dcontent += '<p style="color:#000; font-size: 20px; margin-top:10px;">New Web</p>';
 	dcontent += '<p style="color:#000;">Year: <input class="ak_web_overlay" id="new_web_year" style="text-align:center;width:125px;color:#000;" placeholder="Eg. 2018" type="text" maxlength="4"></p>';
 	dcontent += '<p style="color:#000;"><input id="new_web_site" placeholder="https://www.google.com" class="ak_web_overlay" style="text-align:center;width:450px" type="list" list="siteList"></p>';
 	dcontent += '<datalist id="siteList">';
@@ -1920,9 +1902,7 @@ function AddWebOverlay() {
 	dcontent += '</datalist>';
 	dcontent += '</p>';
 	dcontent += '<p style="color:#000; vertical-align: middle;"><textarea id="new_web_description" rows="4" cols="48" style="color:#000; vertical-align: middle;" placeholder="Enter description" class="ak_web_overlay ak_tablecell" type="text"></textarea></p>';
-	dcontent += '<p></p>';
-	dcontent += '<button id="ak_add_web_button" type="button" class="ak_web_overlay btn btn-primary btn-sm" onclick="SaveNewWeb()">Save</button>';
-	dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+	dcontent += '<button id="ak_add_web_button" style="margin-bottom:10px;" type="button" class="ak_web_overlay btn btn-primary btn-sm" onclick="SaveNewWeb()">Save</button>';
 	dcontent += "</div>";
 	mydiv.innerHTML = dcontent;
 	var tmpb = document.createElement('button');
@@ -2099,11 +2079,10 @@ function AddNewGWASOverlay(ispqtl) {
 				var mydiv = document.getElementById("addnewgwasoverlay");
 				mydiv.innerHTML = '';
 				var dcontent = '<div id="aknewgwasdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
 				if (ispqtl==0) {
-					dcontent += '<p style="color:#000; font-size: 20px;">New Association</p>';
+					dcontent += '<p style="color:#000; font-size:20px; margin-top:10px;">New Association</p>';
 				} else {
-					dcontent += '<p style="color:#000; font-size: 20px;">New pQTL</p>';
+					dcontent += '<p style="color:#000; font-size:20px; margin-top:10px;">New pQTL</p>';
 				}
 				dcontent += '<p style="color:#000;">Phenotype: <input class="ak_new_gwas_overlay" id="new_gwas_phenotype" style="text-align:center;width:250px;color:#000;" placeholder="Eg. Schizophrenia" type="text" maxlength="150"></p>';
 				dcontent += '<p style="color:#000;">Source:';
@@ -2119,9 +2098,7 @@ function AddNewGWASOverlay(ispqtl) {
 				dcontent += '<p style="color:#000;">Pvalue: <input class="ak_new_gwas_overlay" id="new_gwas_pvalue" style="text-align:center;width:105px;color:#000;" placeholder="Eg. 3.0e-13" type="text" maxlength="15"></p>';
 				dcontent += '<p style="color:#000;">OR/Beta: <input class="ak_new_gwas_overlay" id="new_gwas_orbeta" style="text-align:center;width:105px;color:#000;" placeholder="Eg. 1.11" type="text" maxlength="15"></p>';
 				dcontent += '<p style="color:#000; vertical-align: middle;">Comment: <textarea id="new_gwas_comment" rows="4" cols="50" style="color:#000; vertical-align: middle;" placeholder="Enter comment" class="ak_new_gwas_overlay ak_tablecell" type="text"></textarea></p>';
-				dcontent += '<p></p>';
-				dcontent += '<button id="ak_add_new_gwas_button" type="button" class="ak_new_gwas_overlay btn btn-primary btn-sm" onclick="SaveNewGWAS('+ispqtl+')">Save</button>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<button id="ak_add_new_gwas_button" style="margin-bottom:10px;" type="button" class="ak_new_gwas_overlay btn btn-primary btn-sm" onclick="SaveNewGWAS('+ispqtl+')">Save</button>';
 				dcontent += "</div>";
 				mydiv.innerHTML = dcontent;
 				var tmpb = document.createElement('button');

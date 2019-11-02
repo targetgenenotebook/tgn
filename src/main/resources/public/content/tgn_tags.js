@@ -340,8 +340,7 @@ function AddAssignByTGNOverlay() {
 				var mydiv = document.getElementById("assignbytgnoverlay");
 				mydiv.innerHTML = '';
 				var dcontent = '<div id="assignbytgndiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;">Edit Assignment By TGN</p>';
+				dcontent += '<p style="color:#000; font-size:20px; margin-top:10px;">Edit Assignment By TGN</p>';
 				dcontent += '<p style="color:#000;">';
 				dcontent += '<select id="tgn_selector" style="width:200px" onchange="ChangedTGNSelector(this)">';
 				current_tgn = all_tgns[0];
@@ -369,8 +368,6 @@ function AddAssignByTGNOverlay() {
 					}
 				}
 				dcontent+='</div></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
 				dcontent += "</div>";
 				mydiv.innerHTML = dcontent;
 				$('#tgn_selector').attr('data-ctgn', current_tgn);
@@ -382,7 +379,7 @@ function AddAssignByTGNOverlay() {
 				tmpb.style.display='inline-block';
 				tmpb.innerHTML = 'X';
 				mydiv.appendChild(tmpb);
-				$('#tag_selector').select2({minimumResultsForSearch: 20});
+				$('#tgn_selector').select2({minimumResultsForSearch: 20});
 				mydiv.style.display = 'block';
 				master_busy = false;		
 			} else {
@@ -445,8 +442,7 @@ function AddAssignByTagOverlay() {
 				var mydiv = document.getElementById("assignbytagoverlay");
 				mydiv.innerHTML = '';
 				var dcontent = '<div id="assignbytagdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;">Edit Assignment By Tag</p>';
+				dcontent += '<p style="color:#000; font-size: 20px; margin-top:10px;">Edit Assignment By Tag</p>';
 				dcontent += '<p style="color:#000;">';
 				dcontent += '<select id="tag_selector" style="width:130px" onchange="ChangedTagSelector(this)">';
 				var alltagrows = document.getElementsByClassName("a_tag_row");
@@ -478,8 +474,6 @@ function AddAssignByTagOverlay() {
 					}
 					dcontent+='</div></p>'
 				}
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
 				dcontent += "</div>";
 				mydiv.innerHTML = dcontent;
 				$('#tag_selector').attr('data-ctid', current_tag_id);
@@ -542,10 +536,7 @@ function AddPushWebReferenceOverlay() {
 				var mydiv = document.getElementById("pushwebreferenceoverlay");
 				mydiv.innerHTML = '';
 				var dcontent = '<div id="pushwebreferencediv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;">Push Web Reference to Notebooks</p>';
-				
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<p style="color:#000; font-size: 20px; margin-top:10px;">Push Web Reference to Notebooks</p>';
 				dcontent += '<p style="color:#000;">Year: <input class="ak_push_overlay" id="push_web_year" style="text-align:center;width:125px;color:#000;" placeholder="Eg. 2018" type="text" maxlength="4"></p>';
 				dcontent += '<p style="color:#000;"><input id="push_web_site" placeholder="https://www.google.com" class="ak_push_overlay" style="text-align:center;width:450px" type="list" list="siteList"></p>';
 				dcontent += '<datalist id="siteList">';
@@ -563,15 +554,12 @@ function AddPushWebReferenceOverlay() {
 				dcontent += '</datalist>';
 				dcontent += '</p>';
 				dcontent += '<p style="color:#000; vertical-align: middle;"><textarea id="push_web_description" rows="4" cols="48" style="color:#000; vertical-align: middle;" placeholder="Enter title" class="ak_push_overlay ak_tablecell" type="text"></textarea></p>';
-				dcontent += '<p></p>';
-				dcontent += '<button id="ak_push_button" type="button" class="ak_push_overlay btn btn-primary btn-sm" onclick="PushToDBs()">Push</button>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';	
+				dcontent += '<button id="ak_push_button" style="margin-bottom:10px;" type="button" class="ak_push_overlay btn btn-primary btn-sm" onclick="PushToDBs()">Push</button>';
 				dcontent += '<div style="width:600px; margin: 0 auto; display: flex; justify-content: space-between;">';
 				dcontent += '<button style="display:block; margin:auto;" class="ak_table_button ak_push_overlay" id="select_all_button" onclick="SelectAllDBs(1)">Select All</button>';
 				dcontent += '<button style="display:block; margin:auto;" class="ak_table_button ak_push_overlay" id="deselect_all_button" onclick="SelectAllDBs(0)">De-Select All</button>';	
 					
 				dcontent += '</div>';			
-				
 				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
 				dcontent += '<p style="color:#000;">';
 				for (var i=0; i<all_tgns.length; i+=6) {
@@ -585,8 +573,6 @@ function AddPushWebReferenceOverlay() {
 					}
 					dcontent+='</div></p>'
 				}
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
 				dcontent += "</div>";
 				mydiv.innerHTML = dcontent;
 				var tmpb = document.createElement('button');
@@ -739,8 +725,7 @@ function AddEditTagOverlay(current_tag_id) {
 				var mydiv = document.getElementById("edittagoverlay");
 				mydiv.innerHTML = '';
 				var dcontent = '<div id="edittagdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
-				dcontent += '<p style="color:#000; font-size: 20px;">Create/Edit Tag</p>';
+				dcontent += '<p style="color:#000; font-size: 20px; margin-top:10px;">Create/Edit Tag</p>';
 				dcontent += '<p style="color:#000;">Class:';
 				var s_html = '<select style="width:200px" class="ak_tag_overlay ak_tag_class_selector" >';
 				if (current_tagclass_id<0) {
@@ -764,9 +749,7 @@ function AddEditTagOverlay(current_tag_id) {
 				dcontent += '<p style="color:#000;">Long name: <input class="ak_tag_overlay" id="long_tag_name" style="text-align:center;width:250px;color:#000;" placeholder="Eg. Longer Tag Name" type="text" maxlength="150"></p>';
 				dcontent += '<p><button id="tag_color_button" class="tag-overlay-color-button ak_table_button ak_tag_overlay">Tag Color</button></p>'
 					dcontent += '<p style="color:#000; vertical-align: middle;">Description: <textarea id="tag_description" rows="4" cols="50" style="color:#000; vertical-align: middle;" placeholder="Enter description" class="ak_tag_overlay ak_tablecell" type="text"></textarea></p>';
-				dcontent += '<p></p>';
-				dcontent += '<button id="ak_save_tag_button" data-tag_id="'+current_tag_id+'" type="button" class="ak_tag_overlay btn btn-primary btn-sm" onclick="SaveTag()">Save</button>';
-				dcontent += '<p style="color:#000; font-size: 20px;"></p>';
+				dcontent += '<button id="ak_save_tag_button" style="margin-bottom:10px;" data-tag_id="'+current_tag_id+'" type="button" class="ak_tag_overlay btn btn-primary btn-sm" onclick="SaveTag()">Save</button>';
 				dcontent += "</div>";
 				mydiv.innerHTML = dcontent;
 				var tmpb = document.createElement('button');
