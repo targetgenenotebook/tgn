@@ -1018,7 +1018,7 @@ public class TGN {
 	static String publicFileFolder;
 	static String databaseFolder;
 	static Hashtable<String, Boolean> gene_synchronize_objects = new Hashtable<>();
-	static String backend_version = "1.2.14";
+	static String backend_version = "1.2.15";
 	static String backend_db_version = "1.1";
 
 	public static void main(String[] args) {
@@ -5390,7 +5390,7 @@ public class TGN {
 				sb.append("  <td class=\"ak_tablecell\"><a href=\""+StringEscapeUtils.escapeHtml4(outbound_link)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(column_display_text)+"</a></td>\n");		
 			}
 			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(document_year))+"</td>\n");
-			sb.append("  <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(sngpm.index_variant)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(sngpm.index_variant)+"</a></td>\n");
+			sb.append("  <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngpm.index_variant)+"</td>\n");
 			
 			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(sngpm.allele)/*+allele_mod*/+"</td>\n");			
 			sb.append("  <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pval_string)+"</td>\n");
@@ -5641,13 +5641,12 @@ public class TGN {
 			if (!ol.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+ol+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(cdt)+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(cdt)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(dy))+"</td>\n");		
-			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(snepm.indexvariant)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(snepm.indexvariant)+"</a></td>\n");
+			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snepm.indexvariant)+"</td>\n");
 			String pval_str = String.format("%.2e", Double.valueOf(pval));
 			String beta_str = String.format("%.3f", Double.valueOf(beta));	
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(pval_str)+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(beta_str)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(snepm.allele)+"</td>\n");
-
 			sb.append("  <td><select class=\"ak_cs_selector "+rowclass+"\" style=\"width:100%\" onchange=\"UpdateEQTLCredibleSet(this)\" data-ccs=\"Unset\" data-dbid=\""+eqtl_table_row_id+"\">\n");
 			sb.append("    <option selected=\"selected\" value=\"Unset\">Unset</option>\n");
 			sb.append("    <option value=\"None\">None</option>\n");
@@ -7291,7 +7290,7 @@ public class TGN {
 			sd.outbound_link = linkout;
 			sd.has_been_reviewed = hbr;
 			sd.curator_comment = cc;
-			if (resource.indexOf("Ensembl")>-1) sd.automatic = true;
+			if (!resource.startsWith("Manual")) sd.automatic = true;
 			else sd.automatic = false;
 			if (type.equals("pubmed")) {
 				String p_id = type_db_location.substring(type_db_location.indexOf(" ")+1);
@@ -7493,7 +7492,7 @@ public class TGN {
 			}
 			GWASResult gwr = new GWASResult();
 			String nm = rs.getString("mname");
-			if (nm.indexOf("Ensembl")>-1) gwr.automatic = true;
+			if (!nm.startsWith("Manual")) gwr.automatic = true;
 			if (is_pqtl==1) gwr.is_pqtl = true;
 			gwr.allele = allele;
 			gwr.allele_sup = allele_sup;
@@ -7764,7 +7763,7 @@ public class TGN {
 			
 			EQTLResult eqr = new EQTLResult();
 			String nm = rs.getString("mname");
-			if (nm.indexOf("Ensembl")>-1) eqr.automatic = true;
+			if (!nm.startsWith("Manual")) eqr.automatic = true;
 			eqr.effect_allele = effect_allele;
 			eqr.effect_allele_sup = effect_allele_sup;
 			eqr.svg_display_name = svg_display_name;
@@ -8424,7 +8423,7 @@ public class TGN {
 			if (!g.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+g.outbound_link+"\" target=\"_blank\">"+g.column_display_text+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+g.column_display_text+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.document_year))+"</td>\n");
-			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(g.index_variant_name)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(g.index_variant_name)+"</a></td>\n");
+			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.index_variant_name)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.allele)+g.allele_sup+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.pvalue))+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.or_beta))+"</td>\n");
@@ -8520,7 +8519,7 @@ public class TGN {
 			if (!g.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+g.outbound_link+"\" target=\"_blank\">"+g.column_display_text+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+g.column_display_text+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.document_year))+"</td>\n");
-			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(g.index_variant_name)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(g.index_variant_name)+"</a></td>\n");
+			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.index_variant_name)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(g.allele)+g.allele_sup+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.pvalue))+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(g.or_beta))+"</td>\n");
@@ -8618,7 +8617,7 @@ public class TGN {
 			if (!q.outbound_link.equals("")) sb.append("    <td class=\"ak_tablecell\"><a href=\""+q.outbound_link+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(q.column_display_text)+"</a></td>\n");
 			else sb.append("    <td class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.column_display_text)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(String.valueOf(q.document_year))+"</td>\n");
-			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(q.index_variant_name)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(q.index_variant_name)+"</a></td>\n");
+			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.index_variant_name)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.pvalue)+"</td>\n");			
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.beta)+"</td>\n");
 			sb.append("    <td style=\"text-align:center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(q.effect_allele)+"</td>\n");
@@ -8708,7 +8707,7 @@ public class TGN {
 			String ckd = "";
 			if (CV.show_in_ld_groups) ckd = "checked";
 			sb.append("    <td style=\"text-align:center\" ><input type=\"checkbox\" class=\"ldmarkers"+CV.name+"\" onclick=\"UpdateMarkerForLD(this)\" data-dbid=\""+CV.vm_id+"\" "+ckd+"></td>\n");
-			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\"><a href=\"http://gnomad-old.broadinstitute.org/dbsnp/"+StringEscapeUtils.escapeHtml4(CV.name)+"\" target=\"_blank\">"+StringEscapeUtils.escapeHtml4(CV.name)+"</a></td>\n");
+			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(CV.name)+"</td>\n");
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(CV.allele)+"</td>\n");
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(formatter.format(CV.start_1based))+"</td>\n");
 			sb.append("    <td style=\"text-align: center;\" class=\"ak_tablecell\">"+StringEscapeUtils.escapeHtml4(CV.gene_symbol)+"</td>\n");
