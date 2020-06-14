@@ -961,7 +961,7 @@ CreateCustomCredibleSetOverlay = function(selector,gwas_or_eqtl) {
 	tmpb.style.display='inline-block';
 	tmpb.innerHTML = 'X';
 	mydiv.appendChild(tmpb);
-	$('#akcrediblesettable').tablesorter({theme:'blue', widgets: ['resizable'], widgetOptions:{resizable_addLastColumn:false, resizable_widths:['150px','150px']}});
+	$('#akcrediblesettable').tablesorter({theme:'blue', widgets: ['resizable'], widgetOptions:{resizable_addLastColumn:false, resizable_widths:['50%','50%']}});
 	mydiv.style.display = 'block';
 };
 
@@ -2866,8 +2866,17 @@ fill_supl_div = function(supl, supl_id, supltype, classname) {
 	mydiv.appendChild(tmpb);
 	shown_supl_id = supl_id;
 	// 1 = gwas/eqtl summary table, 3 = ld group summary table
-	if (supltype=='1') {$('#aktmptable').tablesorter({theme:'blue', widgets: ['resizable'], widgetOptions:{resizable_addLastColumn:false, resizable_widths:['97px','85px','85px']}});}
-	else if (supltype=='3') {$('#aktmptable').tablesorter({theme:'blue', widgets: ['resizable'], widgetOptions:{resizable_addLastColumn:false, resizable_widths:['97px','100px','85px','83px','120px', '125px', '135px', '70px','88px']}});}
+	if (supltype=='1') {
+		var num_cols = $('#aktmptable').find('tr')[0].cells.length;
+		if (num_cols==3) {
+			$('#aktmptable').tablesorter({theme:'blue', widgets: ['resizable'], widgetOptions:{resizable_addLastColumn:false, resizable_widths:['40%','30%','30%']}});
+		} else {
+			$('#aktmptable').tablesorter({theme:'blue', widgets: ['resizable'], widgetOptions:{resizable_addLastColumn:false, resizable_widths:['25%', '39%','18%','28%']}});			
+		}
+	} else if (supltype=='3') {
+		$('#aktmptable').tablesorter({theme:'blue', widgets: ['resizable'], widgetOptions:{resizable_addLastColumn:false, resizable_widths:['11%','11%','9%','9%','13%', '14%', '15%', '9%','9%']}});
+	
+	}
 };
 
 clear_supl_div = function() {

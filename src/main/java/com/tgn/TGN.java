@@ -180,6 +180,7 @@ class GWASResult {
 	int gwas_table_row_id = -1;
 	String curator_comment = "";
 	String credible_set = "";
+	String dataset = "";
 	boolean show_in_svg = false;
 	String index_variant_name = "";
 	int index_variant_start = -1;
@@ -244,6 +245,7 @@ class EQTLResult {
 	double custom_credible_set_posterior = -1.0;
 	int custom_credible_set_member_count = 0;
 	String credible_set = "";
+	String dataset = "";
 	String svg_display_name = "";
 	String sum_1kgp3eur_maf_str = "n/a";
 	int association_overlap_count = 0;
@@ -1018,7 +1020,7 @@ public class TGN {
 	static String publicFileFolder;
 	static String databaseFolder;
 	static Hashtable<String, Boolean> gene_synchronize_objects = new Hashtable<>();
-	static String backend_version = "1.2.15";
+	static String backend_version = "1.2.16";
 	static String backend_db_version = "1.1";
 
 	public static void main(String[] args) {
@@ -2763,7 +2765,7 @@ public class TGN {
 		sb.append("  var backend_version = '"+backend_version+"';\n");
 		sb.append("  var master_busy = true;\n");
 		sb.append("</script>\n");	
-		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=11022019\"></script>\n");
+		sb.append("<script type=\"text/javascript\" src=\"content/tgn.js?v=06032020\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"content/tgn_tags.js?v=11022019\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"jquery/jquery-2.2.4.js\"></script>\n");
 		sb.append("<script type=\"text/javascript\" src=\"FileSaver.js-master/FileSaver.js\"></script>\n");
@@ -6813,6 +6815,22 @@ public class TGN {
 		}
 	}
 
+	public static String getPopSumMAF(String name, int sloc, String pop, PreparedStatement s_pst) throws Exception {
+		s_pst.setString(1, pop);
+		s_pst.setString(2, name);
+		s_pst.setInt(3, sloc);
+		ResultSet rs = s_pst.executeQuery();
+		String sum_maf = "";
+		while (rs.next()) {
+			Double mf = rs.getDouble(1);
+			BigDecimal bd1 = new BigDecimal(1.0-mf);
+			bd1 = bd1.setScale(3, RoundingMode.HALF_UP);
+			sum_maf = bd1.toString();
+		}
+		rs.close();
+		return sum_maf;
+	}
+	
 	public static Vector<ArrayList<Integer>> GetAllGWASOverlaps(Connection connection, int eqtl_id) throws Exception {
 		Vector<ArrayList<Integer>> toreturn = new Vector<>();
 		ArrayList<Integer> eqtl_ids = new ArrayList<>(2000);
@@ -6853,8 +6871,6 @@ public class TGN {
 				gwr.gwas_table_row_id = gwas_table_row_id;
 				gwr.credible_set = credible_set;
 				gwr.custom_credible_set_name = custom_credible_set_name;
-				//gwr.lowest_cs_pos = index_variant_location_start;
-				//gwr.highest_cs_pos = index_variant_location_end;
 				gwr.all_cs_variant_mapping_ids.add(Integer.valueOf(index_variant_mapping_id));
 				agr.add(gwr);
 				if (credible_set.equals("Custom")) {
@@ -6863,8 +6879,6 @@ public class TGN {
 						int s1b = rs2.getInt("start_1based1");
 						int e1b = rs2.getInt("end_1based1");
 						Integer vmid = rs2.getInt("variant_mapping_id");
-						//if (s1b<gwr.lowest_cs_pos) gwr.lowest_cs_pos = s1b;
-						//if (e1b>gwr.highest_cs_pos) gwr.highest_cs_pos = e1b;
 						gwr.all_cs_variant_mapping_ids.add(vmid);
 					}
 					rs2.close();	
@@ -6878,8 +6892,6 @@ public class TGN {
 						int e1b = rs2.getInt("end_1based1");
 						Integer vmid = rs2.getInt("vid1");
 						gwr.all_cs_variant_mapping_ids.add(vmid);
-						//if (s1b<gwr.lowest_cs_pos) gwr.lowest_cs_pos = s1b;
-						//if (e1b>gwr.highest_cs_pos) gwr.highest_cs_pos = e1b;
 					}
 					rs2.close();
 				}
@@ -6954,25 +6966,18 @@ public class TGN {
 					er.index_variant_name = index_variant_name;
 					er.index_variant_start = index_variant_location_start;
 					er.index_variant_end = index_variant_location_end;
-					//er.lowest_cs_pos = index_variant_location_start;
-					//er.highest_cs_pos = index_variant_location_end;
 					er.all_cs_variant_mapping_ids.add(Integer.valueOf(index_variant_mapping_id));
 					pstb_e.setInt(1, index_variant_mapping_id);
 					rs2 = pstb_e.executeQuery();	
 					while (rs2.next()) {
-						//int s1b = rs2.getInt("start_1based1");
-						//int e1b = rs2.getInt("end_1based1");
 						Integer vmid = rs2.getInt("vid1");
 						er.all_cs_variant_mapping_ids.add(vmid);
-						//if (s1b<er.lowest_cs_pos) er.lowest_cs_pos = s1b;
-						//if (e1b>er.highest_cs_pos) er.highest_cs_pos = e1b;
 					}
 					rs2.close();
 
 					int association_result_overlap_count = 0;
 					for (int i=0; i<agr.size(); ++i) {
 						GWASResult gw = agr.get(i);
-						//if (er.highest_cs_pos<gw.lowest_cs_pos || er.lowest_cs_pos>gw.highest_cs_pos) continue;
 						boolean found = false;
 						for (int k=0; k<er.all_cs_variant_mapping_ids.size(); ++k) {
 							Integer e_vmid = er.all_cs_variant_mapping_ids.get(k);
@@ -7035,6 +7040,7 @@ public class TGN {
 		Vector<SourceDocument> allsourcedocuments = new Vector<>();		
 		Hashtable<Integer, String> ld_datasets_by_id = new Hashtable<>();
 		Hashtable<String, IndexVariant> assoc_result_hash = new Hashtable<>();
+		Hashtable<String, String> sumMAFforpop = new Hashtable<>();
 		connection = DriverManager.getConnection("jdbc:sqlite:"+storage_dir+gene_symbol+".sqlite");
 		Statement statement = connection.createStatement();
 		Statement statement2 = connection.createStatement();
@@ -7428,6 +7434,9 @@ public class TGN {
 		PreparedStatement pst = connection.prepareStatement("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, (select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = v1.id) and is_coding_impact=1) as v1chk, v2.id as vid2, v2.name as name2, v2.start_1based as start_1based2, v2.end_1based as end_1based2, (select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = v2.id) and is_coding_impact=1) as v2chk,r.r2_value as r2_value from r2_values r inner join variant_mappings v1 on  v1.id=r.variant_mapping_id1 inner join variant_mappings v2 on v2.id=r.variant_mapping_id2 where r.reference_dataset_id = (select id from reference_datasets where name = ? ) and (r.variant_mapping_id1 = ? or r.variant_mapping_id2 = ?) and r.r2_value >= 0.6");
 		PreparedStatement pstb = connection.prepareStatement("select v1.id as vid1, v1.name as name1, v1.start_1based as start_1based1, v1.end_1based as end_1based1, (select count(*) from variant_mapping_alternate_allele_impacts where variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = v1.id) and is_coding_impact=1) as v1chk,r.r2_value as r2_value from ld_credible_set_r2_values r, variant_mappings v1 where v1.id=r.variant_mapping_id2 and r.reference_dataset_id = (select id from reference_datasets where name = ? ) and r.index_variant_mapping_id = ? and r.r2_value >= 0.6 order by v1.start_1based");
 
+		PreparedStatement summaf_pst = connection.prepareStatement("select max(frequency) from variant_mapping_allele_frequencies where reference_dataset_id = (select id from reference_datasets where name = ?) and variant_mapping_allele_id in (select id from variant_mapping_alleles where variant_mapping_id = (select id from variant_mappings where name = ? and start_1based = ?))");
+		
+		
 		rs = statement.executeQuery("select v.name as name, m.name as mname, svg_display_name, v.id as vm_id, g.id as id, v.start_1based as start_1based, v.end_1based as end_1based, trait, column_display_text, outbound_link, document_year, pvalue, or_beta, allele, allele_is_fstrand_audited, g.curator_comment as curator_comment, show_in_svg, credible_set, custom_credible_set_name, custom_credible_set_posterior, is_pqtl from variant_mapping_gwas_results g, variant_mappings v, source_documents p, meta_resources m where g.index_variant_mapping_id = v.id and p.id=source_document_id and m.id=g.meta_resource_id order by document_year desc");
 		while(rs.next()) {
 			long g_cmillis = System.currentTimeMillis();
@@ -7651,7 +7660,14 @@ public class TGN {
 			
 			if (!credible_set.equals("None") && !credible_set.equals("Unset") && !credible_set.equals("Custom")) {
 				String sel_dataset = credible_set.substring(3); // trim off leading "LD "
-
+				gwr.dataset = sel_dataset;
+				if (!sumMAFforpop.contains(gwr.index_variant_name+"@"+gwr.index_variant_start+"@"+sel_dataset)) {
+					String summaf = getPopSumMAF(gwr.index_variant_name, gwr.index_variant_start, sel_dataset, summaf_pst);
+					if (!summaf.equals("")) {
+						sumMAFforpop.put(gwr.index_variant_name+"@"+gwr.index_variant_start+"@"+sel_dataset, summaf);
+					}
+				}
+				
 				gwr.typed_in_accepted_dataset = false;
 				int idx = gwr.LDdatasets.indexOf(credible_set);
 				if (idx>-1) {
@@ -7678,6 +7694,12 @@ public class TGN {
 					gwr.cs_locs_ends.add(Integer.valueOf(e1b));
 					gwr.cs_variants.add(lvn);
 					gwr.cs_r2.add(r2);
+					if (!sumMAFforpop.contains(lvn+"@"+s1b+"@"+sel_dataset)) {
+						String summaf = getPopSumMAF(lvn, s1b, sel_dataset, summaf_pst);
+						if (!summaf.equals("")) {
+							sumMAFforpop.put(lvn+"@"+s1b+"@"+sel_dataset, summaf);
+						}
+					}
 					if (v_is_coding) gwr.cs_coding.add("1");
 					else gwr.cs_coding.add("0");
 
@@ -7688,7 +7710,6 @@ public class TGN {
 			g_delta = g_cmillis - g_pmillis;		
 			if (output_profile) System.out.println(" stage 3: "+g_delta+" ms");
 			g_pmillis = g_cmillis;
-
 		}
 		rs.close();
 		cmillis = System.currentTimeMillis();
@@ -7923,7 +7944,13 @@ public class TGN {
 			
 			if (!credible_set.equals("None") && !credible_set.equals("Unset") && !credible_set.equals("Custom")) {
 				String sel_dataset = credible_set.substring(3); // trim off leading "LD "
-
+				eqr.dataset = sel_dataset;
+				if (!sumMAFforpop.contains(eqr.index_variant_name+"@"+eqr.index_variant_start+"@"+sel_dataset)) {
+					String summaf = getPopSumMAF(eqr.index_variant_name, eqr.index_variant_start, sel_dataset, summaf_pst);
+					if (!summaf.equals("")) {
+						sumMAFforpop.put(eqr.index_variant_name+"@"+eqr.index_variant_start+"@"+sel_dataset, summaf);
+					}
+				}
 				eqr.typed_in_accepted_dataset = false;
 				int idx = eqr.LDdatasets.indexOf(credible_set);
 				if (idx>-1) {
@@ -7950,6 +7977,12 @@ public class TGN {
 					eqr.cs_locs_ends.add(Integer.valueOf(e1b));
 					eqr.cs_variants.add(lvn);
 					eqr.cs_r2.add(r2);
+					if (!sumMAFforpop.contains(lvn+"@"+s1b+"@"+sel_dataset)) {
+						String summaf = getPopSumMAF(lvn, s1b, sel_dataset, summaf_pst);
+						if (!summaf.equals("")) {
+							sumMAFforpop.put(lvn+"@"+s1b+"@"+sel_dataset, summaf);
+						}
+					}
 					if (v_is_coding) eqr.cs_coding.add("1");
 					else eqr.cs_coding.add("0");
 
@@ -7967,6 +8000,7 @@ public class TGN {
 		pstm.close();
 		pst.close();
 		pstb.close();
+		summaf_pst.close();
 		
 		Vector<ArrayList<Integer>> v = GetAllGWASOverlaps(connection, -1);
 		ArrayList<Integer> eqtl_ids = v.elementAt(0);
@@ -8274,7 +8308,7 @@ public class TGN {
 			GeneAnnotation g = OverlappingGenes.get(i);
 			layout.TranscriptLayout(g, document, svg);
 		}	
-		layout.AssocLayout(gwas_eqtl_index_variants, assoc_result_hash, document, svg, svg_mode);
+		layout.AssocLayout(gwas_eqtl_index_variants, assoc_result_hash, document, svg, svg_mode, sumMAFforpop);
 		layout.LDGroupLayout(ldgroups, document, svg, svg_mode, target_name);
 		layout.KBTrackLayout(TargetAnnotation,  document, svg);
 		

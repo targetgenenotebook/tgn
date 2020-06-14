@@ -202,7 +202,7 @@ class Layout {
 
 	}
 
-	void AssocLayout(Vector<String> index_variants, Hashtable<String, IndexVariant> assoc_result_hash, Document d, Element par, String svg_mode) {
+	void AssocLayout(Vector<String> index_variants, Hashtable<String, IndexVariant> assoc_result_hash, Document d, Element par, String svg_mode, Hashtable<String, String> sumMAFforpop) {
 
 		String vis = "";//"visible"; /* don't use explicit visible, since it will override loading hidden of html parent */
 		if (svg_mode.equals("LD Summary")) vis = "hidden";
@@ -304,7 +304,6 @@ class Layout {
 					}
 				}	
 			}
-			
 			
 			if (!max_key.equals("")) {
 				BitSet used = new BitSet(number_index_variants);
@@ -627,37 +626,60 @@ class Layout {
 							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
 							ttt+="<p>"+g.svg_display_name+"</p>";					
 							ttt+="<p>Credible Set: "+g.credible_set+"</p>";
-							ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							if (!g.dataset.equals("")) {
+								ttt+="<table id=\"aktmptable\" style=\"width:493px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">Sum MAF "+g.dataset+"</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							} else {
+								ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							}
 							ttt+="<tbody>";
+							
+							String iv_extra = "";
+							if (!g.dataset.equals("")) {
+								String summaf = "n/a";
+								if (sumMAFforpop.containsKey(giv.index_variant_name+"@"+giv.index_variant_location_start+"@"+g.dataset)) {
+									summaf = sumMAFforpop.get(giv.index_variant_name+"@"+giv.index_variant_location_start+"@"+g.dataset);
+								}
+								iv_extra = "<td>"+summaf+"</td>";
+							}
+							
 							boolean index_placed = false;
 							for (int k=0; k<g.cs_locs_starts.size(); ++k) {
 								Integer spot_start = g.cs_locs_starts.get(k);
+								
+								String extra = "";
+								if (!g.dataset.equals("")) {
+									String summaf = "n/a";
+									if (sumMAFforpop.containsKey(g.cs_variants.get(k)+"@"+spot_start+"@"+g.dataset)) {
+										summaf = sumMAFforpop.get(g.cs_variants.get(k)+"@"+spot_start+"@"+g.dataset);
+									}
+									extra = "<td>"+summaf+"</td>";
+								}
 								if (!index_placed) {
 									if (k==0) {
 										if (giv.index_variant_location_start<spot_start) {
-											if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-											else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+											if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+											else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 											index_placed = true;
 										}
 									}
 								}
-								if (g.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+g.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.cs_r2.get(k)))+"</td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+g.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(g.cs_r2.get(k)))+"</td><td></td></tr>";
+								if (g.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+g.cs_variants.get(k)+"</td>"+extra+"<td>"+String.format("%.3f", Double.valueOf(g.cs_r2.get(k)))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+g.cs_variants.get(k)+"</td>"+extra+"<td>"+String.format("%.3f", Double.valueOf(g.cs_r2.get(k)))+"</td><td></td></tr>";
 								if (!index_placed) {
 									if (k==g.cs_locs_starts.size()-1) {
-										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+										else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 										index_placed = true;
 									} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<g.cs_locs_starts.get(k+1)) {
-										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+										else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 										index_placed = true;
 									}
 								}	    
 							}
 							if (!index_placed) {
-								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 							}
 							ttt+="</tbody>";
 							ttt+="</table>";
@@ -797,37 +819,62 @@ class Layout {
 							ttt="<div id=\"aktmpdiv\" style=\"width: 900px; display: inline-block; font-size: 12px;\">";
 							ttt+="<p>"+q.svg_display_name+"</p>";					
 							ttt+="<p>Credible Set: "+q.credible_set+"</p>";
-							ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							if (!q.dataset.equals("")) {
+								ttt+="<table id=\"aktmptable\" style=\"width:493px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">Sum MAF "+q.dataset+"</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							} else {
+								ttt+="<table id=\"aktmptable\" style=\"width:300px\"><thead><tr><th style=\"text-align: center;\" class=\"resizable-false\">Marker</th><th style=\"text-align: center;\" class=\"resizable-false\">r2</th><th style=\"text-align: center;\" class=\"resizable-false\">Coding</th></tr></thead>";
+							}
 							ttt+="<tbody>";
+							
+							String iv_extra = "";
+							if (!q.dataset.equals("")) {
+								String summaf = "n/a";
+								if (sumMAFforpop.containsKey(giv.index_variant_name+"@"+giv.index_variant_location_start+"@"+q.dataset)) {
+									summaf = sumMAFforpop.get(giv.index_variant_name+"@"+giv.index_variant_location_start+"@"+q.dataset);
+								}
+								iv_extra = "<td>"+summaf+"</td>";
+							}
+							
 							boolean index_placed = false;
 							for (int k=0; k<q.cs_locs_starts.size(); ++k) {
 								Integer spot_start = q.cs_locs_starts.get(k);
+								
+								String extra = "";
+								if (!q.dataset.equals("")) {
+									String summaf = "n/a";
+									if (sumMAFforpop.containsKey(q.cs_variants.get(k)+"@"+spot_start+"@"+q.dataset)) {
+										summaf = sumMAFforpop.get(q.cs_variants.get(k)+"@"+spot_start+"@"+q.dataset);
+									}
+									extra = "<td>"+summaf+"</td>";
+								}
 								if (!index_placed) {
 									if (k==0) {
 										if (giv.index_variant_location_start<spot_start) {
-											if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-											else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+											if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+											else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 											index_placed = true;
 										}
 									}
 								}
-								if (q.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+q.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(q.cs_r2.get(k)))+"</td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+q.cs_variants.get(k)+"</td><td>"+String.format("%.3f", Double.valueOf(q.cs_r2.get(k)))+"</td><td></td></tr>";
+								
+								if (q.cs_coding.get(k).equals("1")) ttt+="<tr><td>"+q.cs_variants.get(k)+"</td>"+extra+"<td>"+String.format("%.3f", Double.valueOf(q.cs_r2.get(k)))+"</td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+q.cs_variants.get(k)+"</td>"+extra+"<td>"+String.format("%.3f", Double.valueOf(q.cs_r2.get(k)))+"</td><td></td></tr>";
+								
 								if (!index_placed) {
 									if (k==q.cs_locs_starts.size()-1) {
-										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+										else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 										index_placed = true;
 									} else if (giv.index_variant_location_start>=spot_start && giv.index_variant_location_start<q.cs_locs_starts.get(k+1)) {
-										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-										else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+										if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+										else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 										index_placed = true;
 									}
 								}	    
 							}
 							if (!index_placed) {
-								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td>Y</td></tr>";
-								else ttt+="<tr><td>"+giv.index_variant_name+"</td><td></td><td></td></tr>";
+								if (giv.is_coding) ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td>Y</td></tr>";
+								else ttt+="<tr><td>"+giv.index_variant_name+"</td>"+iv_extra+"<td></td><td></td></tr>";
 							}
 							ttt+="</tbody>";
 							ttt+="</table>";
