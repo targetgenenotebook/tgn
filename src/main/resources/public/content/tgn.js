@@ -929,10 +929,10 @@ CreateCustomCredibleSetOverlay = function(selector,gwas_or_eqtl) {
 	var rsn = '';
 	if (gwas_or_eqtl=='gwas') {
 		tr = document.getElementById("gwasrow"+db_id);
-		rsn = tr.cells[4].getElementsByTagName("A")[0].text;
+		rsn = tr.cells[4].innerText;
 	} else {
 		tr = document.getElementById("eqtlrow"+db_id);
-		rsn = tr.cells[5].getElementsByTagName("A")[0].text;		
+		rsn = tr.cells[5].innerText;		
 	}
 	var mydiv = document.getElementById("customcrediblesetoverlay");
 	mydiv.innerHTML = '';
@@ -1665,7 +1665,7 @@ function AddBiorxivOverlay() {
 	mydiv.innerHTML = '';
 	var dcontent = '<div id="aknewbiorxivdiv" style="background-color:#eeeeee; width: 800px; display: inline-block; font-size: 12px;">';
 	dcontent += '<p style="color:#000; font-size:20px; margin-top:10px;">New bioRxiv</p>';
-	dcontent += '<p style="color:#000;">bioRxiv ID: <input class="ak_biorxiv_overlay" id="new_biorxiv_id" style="text-align:center;width:250px;color:#000;" placeholder="Eg. 10.1101/045831" type="text" maxlength="15"></p>';
+	dcontent += '<p style="color:#000;">bioRxiv ID: <input class="ak_biorxiv_overlay" id="new_biorxiv_id" style="text-align:center;width:250px;color:#000;" placeholder="Eg. 10.1101/045831" type="text" maxlength="30"></p>';
 	dcontent += '<button id="ak_add_biorxiv_button" style="margin-bottom:10px;" type="button" class="ak_biorxiv_overlay btn btn-primary btn-sm" onclick="SaveNewBiorxiv()">Save</button>';
 	dcontent += "</div>";
 	mydiv.innerHTML = dcontent;
